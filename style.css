@@ -1,0 +1,229 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+}
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+nav ul li {
+    display: inline;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+nav ul li a:hover {
+    color: #007BFF;
+}
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f9f9f9;
+}
+.hero h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+.hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+.hero a {
+    text-decoration: none;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+.hero a:hover {
+    background-color: #0056b3;
+}
+
+
+a{
+    color: unset;
+    text-decoration: none;
+}
+
+
+/* lista prodotti*/
+.container {                /*contenitore prodotto*/
+    width: 900px;
+    max-width: 90vw;
+    margin: auto;
+    padding-top: 10px;
+    text-align: center;
+}
+.title {
+    font-size: xx-large;
+    padding: 20px 0;
+}
+.listProduct .item img{      /*adatta l'immagine al contenitore lasciando un altezza dissa*/  
+    width: 200px; 
+    height: 200px; 
+    object-fit: cover; 
+    filter: drop-shadow(0 50px 20px #0009);/*ombreggiatura sotto foto prodotti*/
+}
+.listProduct {        
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.listProduct .item {
+    background-color: #eeeee6;
+    border-radius: 20px;
+    padding: 20px;
+}
+.listProduct .item h2{
+    font-size: large;
+    font-weight: 500;
+}
+.listProduct .item .price{
+    font-size: small;
+    letter-spacing: 4px;
+}
+
+
+@media screen and (max-width: 992px) {      /*aggiustamento dimensioni foto in base alla dim schermo*/
+    .listProduct {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .detail{
+        grid-template-columns: 40% 1fr;
+    }
+}
+
+@media screen and (max-width: 768px) {      /*aggiustamento dimensioni foto in base alla dim schermo*/
+    .listProduct {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .detail{
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .detail .image img{
+        width: unset;
+        height: 40hv;
+        /*width: 100%; 
+        height: 300px; 
+        object-fit: cover; 
+        border-radius: 10px;*/
+    }
+
+    .detail .name{
+        font-size: x-large;
+        margin: 0;
+    }
+    .detail .buttons button{
+        font-size: small;
+    }
+    .detail .buttons{
+        justify-content: center;
+    }
+}
+
+
+
+                        /*details.html*/
+
+
+
+.details {                /*contenitore prodotto*/
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+    text-align: left;
+}
+.details .image img{        /*ombreggiatura sotto foto prodotti*/
+    width: 100%;      
+    height: 100%;      
+
+}
+.detail .image{
+    position: relative;   
+
+}
+.detail .image::before{
+    content: '';
+    position: absolute;
+    top: 50px;              
+    left: calc(50% - 150px);        
+    width: 300px;       
+    height: 300px;       
+    background-color: #94817733;
+    z-index: -1;
+    border-radius: 190px 100px 170px 180px; 
+}
+.detail .name{
+    font-size: xxx-large;
+    padding: 40px 0 0 0;
+    margin: 0 0 10px 0;
+}
+
+.detail .price{
+    font-size: x-large;
+    font-weight: bold;
+    letter-spacing: 4px;
+    margin-bottom:20px;
+}
+.detail .buttons{
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.detail .buttons button{
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: large;
+    font-family: Arial;
+}
+
+.detail .buttons svg{
+    width: 20px;
+}
+.detail .buttons span{
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eeeee6;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+
+.detail .buttons button:nth-child(2){
+    background-color: #eeeee6;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px #eeeee6;
+}
+
+.detail .description{
+    font-weight: 300;
+}

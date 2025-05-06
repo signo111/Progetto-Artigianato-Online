@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettagli Prodotto</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<header>
+    <div class="logo"><a href="index.html">Artigianato Online</a></div>
+    <nav>       
+        <ul>        <!-- Menu di navigazione -->
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="account.html">Account</a></li>
+            <li><a href="cart.html">Carrello</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+    <div class="container">
+        <div class="title">Dettagli Prodotto</div>
+        <div class="detail">
+            <div class="image">
+                <img src="" alt="Immagine Prodotto" id="productImage">
+            </div>
+            <div class="content">
+                <h1 class="name"></h1>
+                <div class="price"></div>
+                <div class="buttons">
+                    <button>Checkout</button>
+                    <button>Aggiungi al carrello
+                        <span>
+                            <!--  AGGIUNGERE ICONA CARRELLO  -->
+                        </span>
+                    </button>
+                </div>
+                <div class="description"></div>
+            </div>
+        </div>
+        <div class="title">Prodotti simili</div>
+        <div class="listProduct"></div>
+    </div>
+
+    <script>        //prendi i dati dei prodotti dal file JSON
+        let products = null;
+        fetch('/images/products.json')
+        .then(response => response.json())
+        .then(data => {
+            products = data;
+            showDetail();
+        })
+
+        function showDetail(){
+            let detail = document.querySelector('.detail');
+            let productID = new URLSearchParams(window.location.search).get('id');
+            let thisProduct = products.filter(value =>{
+                return value.id == productID;
+            })[0]; //prende il primo prodotto che corrisponde all'id
+            //se il prodotto non c'è ritorna alla home page
+            if(thisProduct == undefined){
+                window.location.href = '/';
+            }
+            detail.querySelector('.image img').src = thisProduct.image;
+            detail.querySelector('.name').innerText = thisProduct.name;
+            detail.querySelector('.price').innerText = '€' + thisProduct.price;
+            detail.querySelector('.description').innerText = thisProduct.description;
+            
+            //lista prodotti simili
+            let listProduct = document.querySelector('.listProduct');
+            (products.filter(value => value.id != productID))
+            .forEach(product => {
+                let newProduct = document.createElement('a');
+                newProduct.href = '/details.html?id='+product.id;
+                newProduct.classList.add('item');
+                newProduct.innerHTML = `
+                        <img src="${product.image}" alt="Immagine Prodotto">
+                        <h2>${product.name}</h2>
+                        <div class="price">${product.price}</div>
+            `;
+            listProduct.appendChild(newProduct);
+            });
+            
+        }
+    </script>
+</body>
+</html>

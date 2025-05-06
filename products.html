@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prodotti</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="index.html">Artigianato Online</a></div>
+        <nav>       
+            <ul>        <!-- Menu di navigazione -->
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="account.html">Account</a></li>
+                <li><a href="cart.html">Carrello</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div class="container">
+        <div class="title">Esplora il catalogo</div>
+        <div class="listProduct"></div>
+    </div>
+    
+    <script>                    //prende i dati dei prodotti dal file JSON
+        let products = null;
+        fetch('/images/products.json')
+        .then(response => response.json())
+        .then(data =>{
+            products = data;
+            console.log(products);          
+            addDataToHTML();
+        })
+        let listProduct = document.querySelector('.listProduct');
+        function addDataToHTML(){       //aggiunge i dati dei prodotti alla pagina HTML
+            products.forEach(product => {
+                //crea elemento in item
+                let newProduct = document.createElement('a');
+                newProduct.href = '/details.html?id='+product.id;
+                newProduct.classList.add('item');
+                newProduct.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h2>${product.name}</h2>
+                    <p>${product.price}</p>
+                `;
+
+                //crea elemento nella classe listProduct
+                listProduct.appendChild(newProduct);
+            });
+        }
+        </script>
+                
+
+
+</body>
+</html>
