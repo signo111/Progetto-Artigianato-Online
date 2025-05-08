@@ -110,6 +110,9 @@ a{
     .detail{
         grid-template-columns: 40% 1fr;
     }
+    .account{
+        grid-template-columns: 40% 1fr;
+    }
 }
 
 @media screen and (max-width: 768px) {      /*aggiustamento dimensioni foto in base alla dim schermo*/
@@ -139,6 +142,27 @@ a{
     .detail .buttons{
         justify-content: center;
     }
+    .account{
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .account .image img{
+        width: unset;
+        height: 40hv;
+        /*width: 100%; 
+        height: 300px; 
+        object-fit: cover; 
+        border-radius: 10px;*/
+    }
+
+    .account .buttons button{
+        font-size: small;
+    }
+    .account .buttons{
+        justify-content: center;
+    }
+
+    
 }
 
 
@@ -225,5 +249,89 @@ a{
 }
 
 .detail .description{
+    font-weight: 300;
+}
+                    /*account.html*/
+.accounts {                /*contenitore account*/
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+    text-align: left;
+}
+.accounts .image img{        /*ombreggiatura sotto foto account*/
+    width: 100%;      
+    height: 100%;      
+
+}
+.account .image{
+    position: relative;   
+
+}
+.account .image::before{
+    content: '';
+    position: absolute;
+    top: 50px;              
+    left: calc(50% - 150px);        
+    width: 300px;       
+    height: 300px;       
+    background-color: #94817733;
+    z-index: -1;
+    border-radius: 190px 100px 170px 180px; 
+}
+.account .username{
+    font-size: xxx-large;
+    padding: 40px 0 0 0;
+    margin: 0 0 10px 0;
+}
+.account .email{
+    font-size: xxx-large;
+    padding: 40px 0 0 0;
+    margin: 0 0 10px 0;
+}
+.account .password{
+    font-size: xxx-large;
+    padding: 40px 0 0 0;
+    margin: 0 0 10px 0;
+}
+.account .buttons{
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.account .buttons button{
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: large;
+    font-family: Arial;
+}
+
+.account .buttons svg{
+    width: 20px;
+}
+.account .buttons span{
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eeeee6;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+
+.account .buttons button:nth-child(2){
+    background-color: #eeeee6;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px #eeeee6;
+}
+
+.account .description{
     font-weight: 300;
 }

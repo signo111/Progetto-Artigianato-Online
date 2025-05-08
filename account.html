@@ -2,8 +2,65 @@
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Artigianato Online</title>
+      <title>Informazioni account</title>
       <link rel="stylesheet" href="style.css">
     </head>
+    <header>
+      <div class="logo"><a href="index.html">Artigianato Online</a></div>
+      <nav>       
+          <ul>        <!-- Menu di navigazione -->
+              <li><a href="index.html">Home</a></li>
+              <li><a href="products.html">Products</a></li>
+              <li><a href="account.html">Account</a></li>
+              <li><a href="cart.html">Carrello</a></li>
+              <li><a href="accedi.html">Accedi</a></li>
+          </ul>
+      </nav>
+  </header>
+  <body>
+   <div class="container">
+      <div class="title">Informazioni account</div>
+      <div class="account">
+          <div class="image">
+              <img src="" alt="Immagine profilo" id="profileImage">
+          </div>
+          <div class="content">
+              <h1 class="username"></h1>
+              <div class="email"></div>
+              <div class="password"></div>
+               <div class="buttons">
+                  <button>Modifica informazioni</button>
+                  <button>Elimina account</button>
+                  <button>Torna alla Home</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <script>        //prendi i dati degli account dal file JSON
+   let accounts = null;
+   fetch('/images/account.json')
+   .then(response => response.json())
+   .then(data => {
+      accounts = data;
+       showAccount();
+   })
+
+   function showAccount(){
+    let accountID = 1; // ID dell'account da visualizzare
+    let thisAccount = accounts.filter(value => {
+        return value.id == accountID;
+    })[0];
+
+    if(thisAccount == undefined){
+        window.location.href = '/';
+    }
+
+    document.getElementById('profileImage').src = thisAccount.image;
+    document.querySelector('.username').innerText = thisAccount.username;
+    document.querySelector('.email').innerText = thisAccount.email;
+    document.querySelector('.password').innerText = thisAccount.password;
+}
+</script>
+  </body>
     
 </html>

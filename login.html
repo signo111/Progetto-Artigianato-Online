@@ -15,14 +15,27 @@
                 <li><a href="products.html">Products</a></li>
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
-                <li><a href="accedi.html">Accedi</a></li>
+                <!-- <li><a href="accedi.html">Accedi</a></li> non serve in quanto siamo già intenti a fare il login -->
             </ul>
         </nav>
     </header>
     <section class="hero">
-        <h1>Benvenuti su Artigianato Online</h1>
-        <p>Scopri i migliori prodotti artigianali realizzati con passione e cura.</p>
-        <a href="products.html">Esplora i Prodotti</a>
+        <h1>Accedi al tuo account</h1>
+        <form action="" method="">
+            <p>
+                <label for="username">Nome utente:</label>
+                <input type="text" id="username" name="username" required>
+            </p>
+           <p>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+           </p>
+            
+            <button type="submit">Accedi</button>
+        </form>
+        <p>Non hai un account?</p> 
+        <a href="registrati.html">Registrati ora</a>
+        <a href="index.html">Torna alla home</a>
     </section>
 </body>
 </html>
