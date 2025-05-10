@@ -60,7 +60,7 @@
                 return value.id == productID;
             })[0]; //prende il primo prodotto che corrisponde all'id
             //se il prodotto non c'è ritorna alla home page
-            if(thisProduct == undefined){
+            if(!thisProduct){
                 window.location.href = '/';
             }
             detail.querySelector('.image img').src = thisProduct.image;
