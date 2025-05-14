@@ -17,13 +17,28 @@
                 <li><a href="cart.html">Carrello</a></li>
                 <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
                 <li><a href="accedi.html">Accedi</a></li>
+               
             </ul>
         </nav>
     </header>
     <section class="hero">
-        <h1>Benvenuti su Artigianato Online</h1>
-        <p>Scopri i migliori prodotti artigianali realizzati con passione e cura.</p>
-        <a href="products.html">Esplora i Prodotti</a>
+        <h1>Inserimento Nuovo prodotto</h1>
+                <form id="productForm">
+        <label>Nome:
+            <input type="text" id="name" required>
+        </label>
+         <label>Immagine:
+        <input type="file" id="image" accept="image/*" required>
+    </label>
+        <label>Descrizione:
+            <input type="text" id="description" required>
+        </label>
+        <label>Prezzo:
+            <input type="number" id="price" required step="0.01">
+        </label>
+        <button type="submit">Aggiungi Prodotto</button>
+    </form>
     </section>
+
 </body>
 </html>

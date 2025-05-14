@@ -13,8 +13,73 @@
               <li><a href="products.html">Products</a></li>
               <li><a href="account.html">Account</a></li>
               <li><a href="cart.html">Carrello</a></li>
+               <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
              <li><a href="accedi.html">Accedi</a></li>
           </ul>
       </nav>
   </header>
+  <body>
+      <section class="hero">
+       <div class="cart-container">
+        <h2>Il tuo Carrello</h2>
+        <div id="cart">
+            <!-- Gli elementi del carrello verranno aggiunti dinamicamente qui -->
+        </div>
+        <div class="total">
+            Totale: <span id="totalPrice">0.00</span>€
+        </div>
+        <button class="checkout-btn">Procedi al pagamento</button>
+    </div>
+      </section>
+      <script>
+        const cart = [
+            { id: 1, name: "Prodotto 1", price: 19.99, image: "images/1.png", quantity: 1 },
+            { id: 2, name: "Prodotto 2", price: 29.99, image: "images/2.jpg", quantity: 2 }
+        ];
+
+        function updateCart() {
+            const cartContainer = document.getElementById("cart");
+            cartContainer.innerHTML = "";
+            let total = 0;
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                cartContainer.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="details">
+                            <h3>${item.name}</h3>
+                            <p>Prezzo: ${item.price}€</p>
+                            <p>Quantità: <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${item.id}, this.value)"></p>
+                        </div>
+                        <div class="actions">
+                            <button onclick="removeItem(${item.id})">Rimuovi</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById("totalPrice").textContent = total.toFixed(2);
+        }
+
+        function removeItem(id) {
+            const index = cart.findIndex(item => item.id === id);
+            if (index !== -1) {
+                cart.splice(index, 1);
+            }
+            updateCart();
+        }
+
+        function updateQuantity(id, quantity) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity = parseInt(quantity);
+            }
+            updateCart();
+        }
+
+        updateCart();
+    </script>
+   </body>
+
 </html>
