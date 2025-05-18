@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica Prodotto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="index.html">Artigianato Online</a></div>
+        <nav>       
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Prodotti</a></li>
+                <li><a href="account.html">Account</a></li>
+                <li><a href="cart.html">Carrello</a></li>
+                <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                <li><a href="accedi.html">Accedi</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="edit-product">
+<section class="hero">
+        <h1>Modifica Prodotto</h1>
+        <form action="" method="POST">
+            <p>
+                <label for="product-name">Nome Prodotto:</label>
+                <input type="text" id="product-name" name="product-name" required>
+            </p>
+            <p>
+                <label for="product-description">Descrizione:</label>
+                <input type="text" id="product-description" name="product-description" required>
+            </p>
+            <p>
+                <label for="product-image">Immagine Prodotto:</label>
+                <input type="file" id="product-image" name="product-image">
+            </p>
+             <p>
+                <label for="product-price">Prezzo:</label>
+                <input type="number" id="product-price" name="product-price" required>
+            </p>
+            <label>Quantità:
+            <input type="number" id="quantity" required step="1">
+        </label>
+            <div class="buttons">
+                <button type="submit">Salva Modifiche</button>
+                <button type="button" onclick="window.location.href='products.html'">Annulla</button>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

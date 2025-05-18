@@ -16,6 +16,7 @@
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
                 <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li><a href="modificaprodotto.html">Modifica prodotto</a></li>
                 <li><a href="accedi.html">Accedi</a></li>
                
             </ul>
@@ -31,10 +32,13 @@
         <input type="file" id="image" accept="image/*" required>
     </label>
         <label>Descrizione:
-            <input type="text" id="description" required>
+            <input type="text-field" id="description" required>
         </label>
         <label>Prezzo:
             <input type="number" id="price" required step="0.01">
+        </label>
+         <label>Quantità:
+            <input type="number" id="quantity" required step="1">
         </label>
         <button type="submit">Aggiungi Prodotto</button>
     </form>

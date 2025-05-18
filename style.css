@@ -252,88 +252,95 @@ a{
     font-weight: 300;
 }
                     /*account.html*/
-.accounts {                /*contenitore account*/
+/* Stile account */
+.account {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 50px;
     text-align: left;
+    max-width: 800px;
+    margin: auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
-.accounts .image img{        /*ombreggiatura sotto foto account*/
-    width: 100%;      
-    height: 100%;      
 
+/* Immagine profilo */
+.account .image {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.account .image{
-    position: relative;   
 
+.account .image img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #007BFF;
 }
-.account .image::before{
-    content: '';
-    position: absolute;
-    top: 50px;              
-    left: calc(50% - 150px);        
-    width: 300px;       
-    height: 300px;       
-    background-color: #94817733;
-    z-index: -1;
-    border-radius: 190px 100px 170px 180px; 
+
+/* Informazioni utente */
+.account .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-.account .username{
-    font-size: xxx-large;
-    padding: 40px 0 0 0;
-    margin: 0 0 10px 0;
+
+.account .username {
+    font-size: xx-large;
+    font-weight: bold;
+    color: #007BFF;
+    margin-bottom: 10px;
 }
-.account .email{
-    font-size: xxx-large;
-    padding: 40px 0 0 0;
-    margin: 0 0 10px 0;
+
+.account .email, 
+.account .password {
+    font-size: large;
+    color: #777;
+    margin-bottom: 10px;
 }
-.account .password{
-    font-size: xxx-large;
-    padding: 40px 0 0 0;
-    margin: 0 0 10px 0;
-}
-.account .buttons{
+
+/* Pulsanti */
+.account .buttons {
     display: flex;
     gap: 20px;
     margin-top: 20px;
 }
 
-.account .buttons button{
+.account .buttons button {
     background-color: #007BFF;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
     border-radius: 5px;
-    font-size: large;
-    font-family: Arial;
+    transition: background 0.3s ease;
 }
 
-.account .buttons svg{
-    width: 20px;
-}
-.account .buttons span{
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #eeeee6;
-    border-radius: 50%;
-    margin-left: 20px;
+.account .buttons button:hover {
+    background-color: #0056b3;
 }
 
-.account .buttons button:nth-child(2){
-    background-color: #eeeee6;
-    color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 10px #eeeee6;
-}
+/* Adattamenti per schermi piccoli */
+@media screen and (max-width: 768px) {
+    .account {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
 
-.account .description{
-    font-weight: 300;
+    .account .image::before {
+        width: 150px;
+        height: 150px;
+    }
+
+    .account .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
 }
 form {
     max-width: 400px;
@@ -357,6 +364,27 @@ form input {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1em;
+}
+/* Stile della checkbox */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #007BFF; /* Colore della spunta */
+}
+
+.checkbox-container label {
+    font-size: 1em;
+    cursor: pointer;
+    color: #333;
 }
 
 button {
