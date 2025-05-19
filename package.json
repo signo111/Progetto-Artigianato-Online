@@ -1,0 +1,20 @@
+{
+  "name": "progetto-artigianato-online",
+  "version": "1.0.0",
+  "description": "Artigianato Online Project",
+  "main": "Backend/server.js",
+  "scripts": {
+     "start": "node Backend/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.0"
+  }
+}
