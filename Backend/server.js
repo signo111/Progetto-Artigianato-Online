@@ -11,10 +11,10 @@ app.use(cors());
 // REGISTER USER (Save in Database)
 app.post("/api/register", async (req, res) => {
     try {
-        console.log("Incoming request body:", req.body); // Debugging
+        console.log("Incoming request body:", req.body);
 
-        const { username, email, password } = req.body;
-        
+        const { username, email, password, ruolo } = req.body; // Get `ruolo` dynamically
+
         if (!username || !email || !password) {
             return res.status(400).json({ error: "Missing required fields!" });
         }
@@ -26,18 +26,16 @@ app.post("/api/register", async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const createdAt = new Date();
-        const ruolo = "cliente";
 
         await pool.query("INSERT INTO utenti (name, email, password, created_at, ruolo) VALUES ($1, $2, $3, $4, $5)", 
-                         [username, email, hashedPassword, createdAt, ruolo]);
+                         [username, email, hashedPassword, createdAt, ruolo]); // Now using dynamic `ruolo`
 
-        res.json({ message: "Registrazione completata!" });
+        res.json({ message: `Registrazione completata con ruolo: ${ruolo}` });
 
     } catch (error) {
         console.error("Errore durante la registrazione:", error);
         res.status(500).json({ error: "Errore interno del server" });
     }
 });
-
 // Start server
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
