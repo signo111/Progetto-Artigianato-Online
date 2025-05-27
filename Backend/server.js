@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const pool = require("./db");// PostgreSQL connection
+require("dotenv").config();
 
 // Initialize Express app
 const app = express();
@@ -39,3 +40,8 @@ app.post("/api/register", async (req, res) => {
 });
 // Start server
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+
+
+
+
+
