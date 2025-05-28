@@ -40,10 +40,10 @@
             </p>
              <p>
                 <label for="product-price">Prezzo:</label>
-                <input type="number" id="product-price" name="product-price" required>
+                <input type="number" id="product-price" name="product-price" required step="0.01" min="0">
             </p>
             <label>Quantità:
-            <input type="number" id="quantity" required step="1">
+            <input type="number" id="quantity" required step="1" min="0">
         </label>
             <div class="buttons">
                 <button type="submit">Salva Modifiche</button>
