@@ -25,9 +25,21 @@
 
     <div class="container">
         <div class="title">Esplora il catalogo</div>
+        <!-- Filtro -->
+        <div class="filter-bar">
+            <label for="category-filter">Filtra per categoria:</label>
+            <select id="category-filter" name="category-filter">
+                <option selected>---</option>
+                <option>Alfabetico</option>
+                <option>Caricato di Recente</option>
+                <option>Prezzo</option>
+                <option>Disponibilità</option>
+                <option>Quantità</option>
+            </select>
+        </div>
         <div class="listProduct"></div>
     </div>
-    
+
     <script>                    //prende i dati dei prodotti dal file JSON
         let products = null;
         fetch('/images/products.json')

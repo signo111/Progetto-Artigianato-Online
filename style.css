@@ -102,6 +102,20 @@ a{
     letter-spacing: 4px;
 }
 
+.filter-bar{
+    margin-bottom: 20px;
+}
+label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+select {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+
+}
+
 
 @media screen and (max-width: 992px) {      /*aggiustamento dimensioni foto in base alla dim schermo*/
     .listProduct {
