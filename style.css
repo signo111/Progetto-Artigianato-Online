@@ -490,3 +490,39 @@ form input[type="file"] {
         .checkout-btn:hover {
             background-color: #218838;
         }
+/*tabella storico ordini*/
+.order-history {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.order-history h2 {
+    font-size: 1.8em;
+    color: #007BFF;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.order-history table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-history th, .order-history td {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.order-history th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.order-history tr:hover {
+    background-color: #f9f9f9;
+}

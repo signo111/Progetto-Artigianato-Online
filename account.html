@@ -38,6 +38,24 @@
           </div>
       </div>
   </div>
+   <!-- Storico ordini -->
+        <div class="order-history">
+            <h2>Storico Ordini</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Ordine</th>
+                        <th>Data</th>
+                        <th>Totale</th>
+                        <th>Stato</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                    <!-- I dati degli ordini verranno inseriti qui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
   <script>        //prendi i dati degli account dal file JSON
    let accounts = null;
    fetch('/images/account.json')
