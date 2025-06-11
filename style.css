@@ -11,6 +11,77 @@ header {
     background-color: #f4f4f4;
     border-bottom: 1px solid #ddd;
 }
+.burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    width: 42px;
+    height: 35px;
+    /*margin-left: 20px;*/
+    z-index: 1002;
+    background: none;
+    border: none;
+}
+.burger span {
+    height: 4px;
+    width: 100%;
+    background: #333;
+    margin: 5px 0;
+    border-radius: 2px;
+    transition: 0.3s;
+    display: block;
+}
+
+.burger-menu{
+    width: 28px;
+    height: 3px;
+    rx: 1.5;
+    fill: #333;
+}
+
+/* Mobile nav hidden by default */
+@media (max-width: 768px) {
+    nav {
+        position: relative;
+        padding-right: 10px;
+        
+    }
+    .burger {
+        display: flex;
+    }
+    nav ul {
+        position: fixed;
+        top: 0;
+        right: -250px;
+        width: 220px;
+        height: 100vh;
+        background: #fff;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 60px 20px 20px 20px;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        transition: right 0.3s;
+        z-index: 1001;
+        display: flex;
+    }
+    nav ul.open {
+        right: 0;
+    }
+    nav ul li {
+        display: block;
+        width: 100%;
+        margin: 0 0 15px 0;
+    }
+    nav ul li a {
+        width: 100%;
+        display: block;
+        padding: 10px 0;
+        color: #333;
+    }
+}
 .logo {
     font-size: 1.5em;
     font-weight: bold;
@@ -18,7 +89,7 @@ header {
 nav ul {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 10;
     display: flex;
     gap: 15px;
 }
@@ -404,7 +475,7 @@ form input {
 button {
     background-color: #007BFF;
     color: white;
-    padding: 10px;
+    /*padding: 10px;*/
     border: none;
     border-radius: 5px;
     font-size: 1em;

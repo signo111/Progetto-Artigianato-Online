@@ -9,10 +9,17 @@
 <body>
     <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
-        <nav>       
-            <ul>
+        <nav> <!-- Burger menu che si vede solo su mobile -->
+            <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect y="5" class="burger-menu"/>
+                    <rect y="12.5" class="burger-menu"/>
+                    <rect y="20" class="burger-menu"/>
+                </svg>
+            </button>
+            <ul id="nav-list">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Prodotti</a></li>
+                <li><a href="products.html">Products</a></li>
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
                 <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
@@ -21,6 +28,24 @@
             </ul>
         </nav>
     </header>
+    <script>
+        // Burger menu toggle
+        const burger = document.getElementById('menuCheckbox');
+        const navList = document.getElementById('nav-list');
+        // apertura
+        burger.onclick = function() {
+            navList.classList.toggle('open');
+        };
+
+        // chiusura
+        document.addEventListener('click', function(event) {
+        if (navList.classList.contains('open')) {
+            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+                navList.classList.remove('open');
+            }
+        }
+    });
+    </script>
 
     <section class="edit-product">
 <section class="hero">
