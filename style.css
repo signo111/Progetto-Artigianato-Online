@@ -173,6 +173,42 @@ a{
     letter-spacing: 4px;
 }
 
+@media screen and (min-width: 1px) and (max-width: 480px) {
+    .listProduct {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 16px;
+    }
+    .listProduct .item {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .listProduct .item img {
+        width: 100px;
+        height: 100px;
+        border-radius: 12px;
+        object-fit: cover;
+        margin-right: 16px;
+    }
+    .listProduct .item h2,
+    .listProduct .item p {
+        text-align: left;
+        margin: 0;
+    }
+    .listProduct .item h2 {
+        font-size: 1.1em;
+    }
+    .listProduct .item p {
+        font-size: 1em;
+        color: #555;
+    }
+}
+
 .filter-bar{
     margin-bottom: 20px;
 }
@@ -188,7 +224,7 @@ select {
 }
 
 
-@media screen and (max-width: 992px) {      /*aggiustamento dimensioni foto in base alla dim schermo*/
+@media screen and (min-width: 769px )and (max-width: 992px){      /*aggiustamento dimensioni foto in base alla dim schermo*/
     .listProduct {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -200,7 +236,7 @@ select {
     }
 }
 
-@media screen and (max-width: 768px) {      /*aggiustamento dimensioni foto in base alla dim schermo*/
+@media screen and (min-width: 481px ) and (max-width: 768px) {      /*aggiustamento dimensioni foto in base alla dim schermo*/
     .listProduct {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -211,10 +247,7 @@ select {
     .detail .image img{
         width: unset;
         height: 40hv;
-        /*width: 100%; 
-        height: 300px; 
-        object-fit: cover; 
-        border-radius: 10px;*/
+
     }
 
     .detail .name{
@@ -234,10 +267,6 @@ select {
     .account .image img{
         width: unset;
         height: 40hv;
-        /*width: 100%; 
-        height: 300px; 
-        object-fit: cover; 
-        border-radius: 10px;*/
     }
 
     .account .buttons button{
