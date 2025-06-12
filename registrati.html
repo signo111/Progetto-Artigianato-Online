@@ -6,6 +6,9 @@
     <title>Artigianato Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
+
+
 <body>
     <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
@@ -22,8 +25,8 @@
                 <li><a href="products.html">Prodotti</a></li>
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
-                <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                <li><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
                 <li><a href="accedi.html">Accedi</a></li>
             </ul>
         </nav>
@@ -76,4 +79,44 @@
         <a href="index.html">Torna alla home</a>    
         </p>
 </body>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const ruolo = document.getElementById("artisan").checked ? "artigiano" : "cliente";
+
+        try {
+        const res = await fetch("http://localhost:3000/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password, ruolo })
+        });
+
+        const data = await res.json();
+        console.log("Risposta backend:", data); // <-- Vedi la risposta in console
+
+        if (res.ok) {
+            localStorage.setItem("ruolo", ruolo);
+            alert(data.message || "Registrazione completata!");
+            // window.location.href = "index.html"; // Sblocca se vuoi reindirizzare
+        } else {
+            alert(data.error || "Errore di registrazione");
+        }
+        } catch (err) {
+        alert("Errore di rete o server");
+        console.error(err);
+        }
+    });
+    });
+    </script>
+
+</body>
+</html>
+
 </html>

@@ -1,14 +1,34 @@
-require("dotenv").config({ path: "C:/Users/preinstaller/Desktop/LavoroWeb/Progetto-Artigianato-Online/variabili.env" });
+const { Client } = require("pg");
 
-const { Pool } = require("pg");
-
-const pool = new Pool({
-  user: process.env.DB_USER || "postgres", // Default to "postgres"
-  host: process.env.DB_HOST || "localhost",
-  database: process.env.DB_NAME || "Artigianato",
-  password: process.env.DB_PASS || "labb", // Ensure password is always a string
-  port: process.env.DB_PORT || 5432,
+const client = new Client({
+  host: "databaseartigianato1.cx2eimkaozun.eu-north-1.rds.amazonaws.com",
+  user: "postgres",
+  database: "DBArtigianato",
+  password: "PasDB2025!",
+  port: 5432,
+  ssl: {
+    require: true,
+    rejectUnauthorized: false
+  }
 });
 
+client.connect()
+  .then(() => { console.log("connected to pg"); })
+  .catch((err) => {
+    console.log("can't connect to pg");
+    console.error(err); // Stampa l'errore dettagliato
+  });
 
-module.exports = pool;
+module.exports = { client };
+
+/*
+client.query('Select * From utenti', (err, res)=>{
+  if(!err){
+    console.log(res.rows);
+  }else{
+    console.log(err.message);
+  }
+  client.end;
+})
+*/
+
