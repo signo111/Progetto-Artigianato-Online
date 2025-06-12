@@ -291,26 +291,44 @@ select {
     gap: 50px;
     text-align: left;
 }
-.detail .image img{        /*adatta l'immagine al contenitore lasciando un altezza dissa*/
-    width: 100%;            
 
-}
-.detail .image{
-    position: relative;   
 
+.detail .image {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
-.detail .image::before{     /*ombreggiatura sotto foto prodotto*/
+
+.detail .image::before {
     content: '';
     position: absolute;
-    top: 50px;              
-          
-    width: 300px;       
-    height: 300px;       
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
     background-color: #94817733;
-    z-index: -1;
-    border-radius: 190px 100px 170px 180px; 
-    left: calc(50% - 150px);  
+    z-index: 0;
+    border-radius: 190px 100px 170px 180px;
 }
+
+.detail .image img {
+    position: relative;
+    width: 70%;
+    height: 70%;
+    object-fit: cover;
+    border-radius: 10px;
+    z-index: 1;
+    filter: drop-shadow(0 50px 20px #0009);/*ombreggiatura sotto foto prodotti*/
+}
+
+
+
+
 .detail .name{
     font-size: xxx-large;
     padding: 40px 0 0 0;
@@ -337,20 +355,11 @@ select {
     border-radius: 5px;
     font-size: large;
     font-family: Arial;
+    margin-bottom: 20px;
 }
 
 .detail .buttons svg{
     width: 20px;
-}
-.detail .buttons span{
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #eeeee6;
-    border-radius: 50%;
-    margin-left: 20px;
 }
 
 .detail .buttons button:nth-child(2){
@@ -364,7 +373,40 @@ select {
 
 .detail .description{
     font-weight: 300;
+    margin-bottom: 40px;
 }
+
+@media screen and (max-width: 746px) {
+    .detail {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 10px;
+        text-align: center;
+    }
+    .detail .image {
+        order: -1;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .detail .content {
+        order: 0;
+    }
+
+    .detail .name{
+        font-size: xxx-large;
+        padding: 20px 0 0 0;
+        margin: 0 0 10px 0;
+    }
+}
+
+@media screen and (min-width: 1px) and (max-width: 480px) {
+    .detail .buttons{
+        justify-content: center;
+    }
+}
+
+
                     /*account.html*/
 /* Stile account */
 .account {
