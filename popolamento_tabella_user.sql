@@ -19,4 +19,3 @@ INSERT INTO utenti (name, email, password, ruolo) VALUES
 ('Sala Tinteggiature', 'stefano.sala@example.com', 'salaSecure88', 'artigiano'),
 ('Valentina Pini', 'valentina.pini@example.com', 'vpini456', 'cliente'),
 ('Grassi Impianti Elettrici', 'nicola.grassi@example.com', 'grassiElec@', 'artigiano');
-('admin', 'admin@example.com', 'adminSecure!', 'amministratore');
