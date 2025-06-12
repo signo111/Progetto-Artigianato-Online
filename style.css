@@ -516,7 +516,7 @@ form label {
 
 form input {
     width: 100%;
-    padding: 5 px;
+    padding: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1em;
@@ -668,3 +668,5 @@ form input[type="file"] {
 .order-history tr:hover {
     background-color: #f9f9f9;
 }
+
+

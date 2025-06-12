@@ -1,0 +1,22 @@
+INSERT INTO utenti (name, email, password, ruolo) VALUES
+('Anna Bianchi', 'anna.bianchi@example.com', 'cliente123', 'cliente'),
+('Falegnameria Verdi', 'luca.verdi@example.com', 'artigiano456', 'artigiano'),
+('Chiara Neri', 'chiara.neri@example.com', 'cliente456', 'cliente'),
+('Rizzo Legnami', 'marco.rizzo@example.com', 'woodwork2024', 'artigiano'),
+('Elisa Gallo', 'elisa.gallo@example.com', 'elisa789', 'cliente'),
+('Serramenti De Luca', 'fabio.deluca@example.com', 'fabioPower!', 'artigiano'),
+('Giulia Serra', 'giulia.serra@example.com', 'serraSecure1', 'cliente'),
+('Officina Conti', 'davide.conti@example.com', 'contiFabbro$', 'artigiano'),
+('Martina Bruno', 'martina.bruno@example.com', 'bruno1234', 'cliente'),
+('Elettrotecnica Greco', 'simone.greco@example.com', 'grecoFixIt', 'artigiano'),
+('Sara Moretti', 'sara.moretti@example.com', 'moretti777', 'cliente'),
+('Impianti Longo', 'matteo.longo@example.com', 'mLongo!', 'artigiano'),
+('Alessia Costa', 'alessia.costa@example.com', 'aleC123', 'cliente'),
+('Leone Restauri', 'tommaso.leone@example.com', 'leone2025', 'artigiano'),
+('Irene Fabbri', 'irene.fabbri@example.com', 'ifabbri$', 'cliente'),
+('Orlando Costruzioni', 'giorgio.orlando@example.com', 'orlandoFixer', 'artigiano'),
+('Francesca Ferri', 'francesca.ferri@example.com', 'franci@1', 'cliente'),
+('Sala Tinteggiature', 'stefano.sala@example.com', 'salaSecure88', 'artigiano'),
+('Valentina Pini', 'valentina.pini@example.com', 'vpini456', 'cliente'),
+('Grassi Impianti Elettrici', 'nicola.grassi@example.com', 'grassiElec@', 'artigiano');
+('admin', 'admin@example.com', 'adminSecure!', 'amministratore');
