@@ -69,9 +69,27 @@ async function getData() {
 
 getData()
 
-app.listen(3000,()=>{
-    console.log("port connected")
-})
+app.post("/api/login", async (req, res) => {
+  const { username, password } = req.body;
+  console.log("Tentativo login:", username);
+  try {
+    const result = await client.query("SELECT * FROM utenti WHERE name = $1", [username]);
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: "Utente non trovato" });
+    }
+
+    const utente = result.rows[0];
+    const isPasswordValid = await bcrypt.compare(password, utente.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Password errata" });
+    }
+
+    res.json({ message: "Login effettuato con successo", ruolo: utente.ruolo });
+  } catch (err) {
+    console.error("Errore login:", err);
+    res.status(500).json({ error: "Errore login" });
+  }
+});
 
 app.post("/api/register", async (req, res) => {
   const { username, email, password, ruolo } = req.body;
@@ -94,3 +112,6 @@ app.post("/api/register", async (req, res) => {
     res.status(500).json({ error: "Errore server" });
   }
 });
+app.listen(3000,()=>{
+    console.log("port connected")
+})

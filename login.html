@@ -1,86 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artigianato Online</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Artigianato Online</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-        <div class="logo"><a href="index.html">Artigianato Online</a></div>
-        <nav> <!-- Burger menu che si vede solo su mobile -->
-            <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect y="5" class="burger-menu"/>
-                    <rect y="12.5" class="burger-menu"/>
-                    <rect y="20" class="burger-menu"/>
-                </svg>
-            </button>
-            <ul id="nav-list">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Prodotti</a></li>
-                <li><a href="account.html">Account</a></li>
-                <li><a href="cart.html">Carrello</a></li>
-                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                <li><a href="accedi.html">Accedi</a></li>
-            </ul>
-        </nav>
-    </header>
-    <script>
-        // Burger menu toggle
-        const burger = document.getElementById('menuCheckbox');
-        const navList = document.getElementById('nav-list');
-        // apertura
-        burger.onclick = function() {
-            navList.classList.toggle('open');
-        };
+  <header>
+    <div class="logo"><a href="index.html">Artigianato Online</a></div>
+    <nav>
+      <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="button">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect y="5" class="burger-menu"/>
+          <rect y="12.5" class="burger-menu"/>
+          <rect y="20" class="burger-menu"/>
+        </svg>
+      </button>
+      <ul id="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Prodotti</a></li>
+        <li><a href="account.html">Account</a></li>
+        <li><a href="cart.html">Carrello</a></li>
+        <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+        <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+        <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+      </ul>
+    </nav>
+  </header>
 
-        // chiusura
-        document.addEventListener('click', function(event) {
-        if (navList.classList.contains('open')) {
-            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
-                navList.classList.remove('open');
-            }
+  <section class="hero">
+    <h1>Accedi al tuo account</h1>
+    <form id="loginForm">
+      <p>
+        <label for="username">Nome utente:</label>
+        <input type="text" id="username" name="username" required />
+      </p>
+      <p>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+      </p>
+      <button type="submit">Accedi</button>
+    </form>
+    <p>Non hai un account?</p> 
+    <a href="registrati.html">Registrati ora</a>
+    <a href="index.html">Torna alla home</a>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Menu burger
+      const burger = document.getElementById("menuCheckbox");
+      const navList = document.getElementById("nav-list");
+
+      burger.onclick = function () {
+        navList.classList.toggle("open");
+      };
+
+      document.addEventListener("click", function (event) {
+        if (navList.classList.contains("open")) {
+          if (!navList.contains(event.target) && !burger.contains(event.target)) {
+            navList.classList.remove("open");
+          }
         }
-    });
-    </script>
-    <section class="hero">
-        <h1>Accedi al tuo account</h1>
-        <form action="" method="">
-            <p>
-                <label for="username">Nome utente:</label>
-                <input type="text" id="username" name="username" required>
-            </p>
-           <p>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-           </p>
-            
-            <button type="submit">Accedi</button>
-        </form>
-        <p>Non hai un account?</p> 
-        <a href="registrati.html">Registrati ora</a>
-        <a href="index.html">Torna alla home</a>
-    </section>
-     
-    <script>
-                document.addEventListener('DOMContentLoaded', function() {
-            const ruolo = localStorage.getItem('ruolo');
-            console.log('Ruolo attuale:', ruolo); // <-- debug
-            if (ruolo !== 'artigiano') {
-                document.getElementById('nav-nuovo').style.display = 'none';
-                document.getElementById('nav-modifica').style.display = 'none';
-            } else {
-                document.getElementById('nav-nuovo').style.display = '';
-                document.getElementById('nav-modifica').style.display = '';
+      });
+
+      // Mostra le voci admin se ruolo è 'artigiano'
+      const ruolo = localStorage.getItem("ruolo");
+      if (ruolo === "artigiano") {
+        document.getElementById("nav-nuovo").style.display = "";
+        document.getElementById("nav-modifica").style.display = "";
+      }
+
+      // Login
+      const loginForm = document.getElementById("loginForm");
+      if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const res = await fetch("http://localhost:3000/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+            console.log("Risposta backend:", data);
+
+            if (res.ok) {
+  localStorage.setItem("ruolo", data.ruolo);
+  
+  if (data.ruolo === "artigiano") {
+    alert("Benvenuto, artigiano!");
+  } else if (data.ruolo === "cliente") {
+    alert("Benvenuto, cliente!");
+  } else {
+    alert("Login effettuato!");
+  }
+
+  window.location.href = "index.html";
+} else {
+              alert(data.error || "Credenziali non valide");
             }
+          } catch (err) {
+            alert("Errore di rete o server");
+            console.error(err);
+          }
         });
-    </script>
-
-
+      }
+    });
+ 
+  </script>
 </body>
-
-
 </html>
