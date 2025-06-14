@@ -74,93 +74,27 @@ if (ruolo === "artigiano") {
     
 
   <body>
-   <div class="container">
-      <div class="title">Informazioni account</div>
-      <div class="account">
-          <div class="image">
-              <img src="" alt="Immagine profilo" id="profileImage">
-          </div>
-          <div class="content">
-              <h1 class="username"></h1>
-              <div class="email"></div>
-              <div class="password"></div>
-               <div class="buttons">
-                  <button><a href="modificaaccount.html">Modifica informazioni</a></button>
-                  <button>Elimina account</button>
-                  <button><a href="index.html">Torna alla Home</a></button>
-                  <button id="logoutBtn">Logout</button>
-              </div>
-          </div>
-      </div>
-  </div>
    <!-- Storico ordini -->
         <div class="tabella">
-            <h2>Storico Ordini</h2>
+            <h2>Prodotti</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>ID Ordine</th>
-                        <th>Data</th>
-                        <th>Totale</th>
-                        <th>Stato</th>
+                        <th>ID Prodotto</th>
+                        <th>Nome</th>
+                        <th>Immagine</th>
+                        <th>Descrizione</th>
+                        <th>Prezzo</th>
+                        <th>Quantità</th>
+                        <th>Disponibilità</th>
                     </tr>
                 </thead>
                 <tbody id="orderTableBody">
-                    <!-- I dati degli ordini verranno inseriti qui -->
+                    <!-- I dati dei prodotti verranno inseriti qui -->
                 </tbody>
             </table>
         </div>
     </div>
-  <script>        //prendi i dati degli account dal file JSON
-   let accounts = null;
-   fetch('/images/account.json')
-   .then(response => response.json())
-   .then(data => {
-      accounts = data;
-       showAccount();
-   })
-
-   function showAccount(){
-    let accountID = 1; // ID dell'account da visualizzare
-    let thisAccount = accounts.filter(value => {
-        return value.id == accountID;
-    })[0];
-
-    if(thisAccount == undefined){
-        window.location.href = '/';
-    }
-
-    document.getElementById('profileImage').src = thisAccount.image;
-    document.querySelector('.username').innerText = thisAccount.username;
-    document.querySelector('.email').innerText = thisAccount.email;
-    document.querySelector('.password').innerText = thisAccount.password;
-}
-</script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Script navbar
-            const ruolo = localStorage.getItem('ruolo');
-            console.log('Ruolo attuale:', ruolo);
-            if (ruolo !== 'artigiano') {
-                document.getElementById('nav-nuovo').style.display = 'none';
-                document.getElementById('nav-modifica').style.display = 'none';
-            } else {
-                document.getElementById('nav-nuovo').style.display = '';
-                document.getElementById('nav-modifica').style.display = '';
-            }
-
-            // Script logout
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function() {
-                    localStorage.clear();
-                    window.location.href = "accedi.html";
-                });
-            }
-        });
-    </script>
 
 </body>
     
