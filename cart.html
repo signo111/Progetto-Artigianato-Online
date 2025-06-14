@@ -1,138 +1,122 @@
-<html>
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Carrello</title>
-      <link rel="stylesheet" href="style.css">
-      <script src="Pricing.js"></script>
-   </head>
-   <header>
-        <div class="logo"><a href="index.html">Artigianato Online</a></div>
-        <nav> <!-- Burger menu che si vede solo su mobile -->
-            <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect y="5" class="burger-menu"/>
-                    <rect y="12.5" class="burger-menu"/>
-                    <rect y="20" class="burger-menu"/>
-                </svg>
-            </button>
-            <ul id="nav-list">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Prodotti</a></li>
-                <li><a href="account.html">Account</a></li>
-                <li><a href="cart.html">Carrello</a></li>
-                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
-            </ul>
-        </nav>
-    </header>
-    <script>
-        // Burger menu toggle
-        const burger = document.getElementById('menuCheckbox');
-        const navList = document.getElementById('nav-list');
-        // apertura
-        burger.onclick = function() {
-            navList.classList.toggle('open');
-        };
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carrello</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo"><a href="index.html">Artigianato Online</a></div>
+    <nav>
+      <button class="burger" id="menuCheckbox" aria-label="Apri menu">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect y="5" class="burger-menu"/>
+          <rect y="12.5" class="burger-menu"/>
+          <rect y="20" class="burger-menu"/>
+        </svg>
+      </button>
+      <ul id="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Prodotti</a></li>
+        <li><a href="account.html">Account</a></li>
+        <li><a href="cart.html">Carrello</a></li>
+        <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+        <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+        <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+      </ul>
+    </nav>
+  </header>
 
-        // chiusura
-        document.addEventListener('click', function(event) {
-        if (navList.classList.contains('open')) {
-            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
-                navList.classList.remove('open');
-            }
-        }
-    });
-    </script>
-  <body>
-      <section class="hero">
-       <div class="cart-container">
+  <main>
+    <section class="hero">
+      <div class="cart-container">
         <h2>Il tuo Carrello</h2>
-        <div id="cart">
-            <!-- Gli elementi del carrello verranno aggiunti dinamicamente qui -->
-        </div>
+        <div id="cart"></div>
         <div class="total">
-            Totale: <span id="totalPrice">0.00</span>€
+          Totale: <span id="totalPrice">0.00</span>€
         </div>
-        <button class="checkout-btn" onclick= "window.location.href='https://buy.stripe.com/test_8x2cN57RQct68eq6AEfrW00' ">Procedi al pagamento</button>
-        
-    </div>
-      </section>
-      <script>
-        const cart = [
-            { id: 1, name: "Prodotto 1", price: 19.99, image: "images/1.png", quantity: 1 },
-            { id: 2, name: "Prodotto 2", price: 29.99, image: "images/2.jpg", quantity: 2 }
-        ];
+        <button class="checkout-btn" onclick="window.location.href='https://buy.stripe.com/test_8x2cN57RQct68eq6AEfrW00'">Procedi al pagamento</button>
+      </div>
+    </section>
+  </main>
 
-        function updateCart() {
-            const cartContainer = document.getElementById("cart");
-            cartContainer.innerHTML = "";
-            let total = 0;
+  <script>
+    // Burger menu
+    const burger = document.getElementById('menuCheckbox');
+    const navList = document.getElementById('nav-list');
+    burger.onclick = () => navList.classList.toggle('open');
+    document.addEventListener('click', (event) => {
+      if (navList.classList.contains('open') && !navList.contains(event.target) && event.target !== burger) {
+        navList.classList.remove('open');
+      }
+    });
 
-            cart.forEach(item => {
-                total += item.price * item.quantity;
-                cartContainer.innerHTML += `
-                    <div class="cart-item">
-                        <img src="${item.image}" alt="${item.name}">
-                        <div class="details">
-                            <h3>${item.name}</h3>
-                            <p>Prezzo: ${item.price}€</p>
-                            <p>Quantità: <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${item.id}, this.value)"></p>
-                        </div>
-                        <div class="actions">
-                            <button onclick="removeItem(${item.id})">Rimuovi</button>
-                        </div>
-                    </div>
-                `;
-            });
+    // Gestione login/logout
+    const navAuth = document.getElementById("nav-auth");
+    if (localStorage.getItem("ruolo")) {
+      navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+      document.getElementById("logoutLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("ruolo");
+        alert("Logout effettuato");
+        window.location.reload();
+      });
+    }
 
-            document.getElementById("totalPrice").textContent = total.toFixed(2);
-        }
+    const ruolo = localStorage.getItem("ruolo");
+    document.getElementById("nav-nuovo").style.display = ruolo === "artigiano" ? "" : "none";
+    document.getElementById("nav-modifica").style.display = ruolo === "artigiano" ? "" : "none";
 
-        function removeItem(id) {
-            const index = cart.findIndex(item => item.id === id);
-            if (index !== -1) {
-                cart.splice(index, 1);
-            }
-            updateCart();
-        }
+    // Carrello
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        function updateQuantity(id, quantity) {
-            const item = cart.find(item => item.id === id);
-            if (item) {
-                item.quantity = parseInt(quantity);
-            }
-            updateCart();
-        }
+    function updateCart() {
+      const cartContainer = document.getElementById("cart");
+      cartContainer.innerHTML = "";
+      let total = 0;
 
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
+      }
+
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        cartContainer.innerHTML += `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.name}" width="100">
+            <div class="details">
+              <h3>${item.name}</h3>
+              <p>Prezzo: €${item.price}</p>
+              <p>Quantità: <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)"></p>
+            </div>
+            <div class="actions">
+              <button onclick="removeItem(${item.id})">Rimuovi</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById("totalPrice").textContent = total.toFixed(2);
+    }
+
+    function updateQuantity(id, quantity) {
+      const item = cart.find(p => p.id === id);
+      if (item) {
+        item.quantity = parseInt(quantity);
+        localStorage.setItem("cart", JSON.stringify(cart));
         updateCart();
-        const navAuth = document.getElementById("nav-auth");
-if (localStorage.getItem("ruolo")) {
-  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-  
-  // Azione logout
-  document.getElementById("logoutLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    localStorage.removeItem("ruolo");
-    alert("Logout effettuato");
-    window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
-  });
-} else {
-  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-}
+      }
+    }
 
-const ruolo = localStorage.getItem("ruolo");
+    function removeItem(id) {
+      cart = cart.filter(item => item.id !== id);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCart();
+    }
 
-if (ruolo === "artigiano") {
-  document.getElementById("nav-nuovo").style.display = "";
-  document.getElementById("nav-modifica").style.display = "";
-} else {
-  // Nascondi comunque, anche se qualcuno ha forzato visibilità
-  document.getElementById("nav-nuovo").style.display = "none";
-  document.getElementById("nav-modifica").style.display = "none";
-}
-    </script>
-   </body>
-
+    updateCart();
+  </script>
+</body>
 </html>

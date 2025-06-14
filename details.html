@@ -58,7 +58,7 @@
                 <div class="price"></div>
                 <div class="buttons">
                     <button>Checkout</button>
-                    <button>Aggiungi al carrello</button>             
+                    <button id="addToCartBtn">Aggiungi al carrello</button>            
                 </div>
                 <div class="description"></div>
             </div>
@@ -107,6 +107,30 @@
             });
             
         }
+        document.getElementById('addToCartBtn').addEventListener('click', function () {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    let productID = new URLSearchParams(window.location.search).get('id');
+    let thisProduct = products.find(p => p.id == productID);
+
+    // Verifica se già nel carrello
+    let existingProduct = cart.find(p => p.id == thisProduct.id);
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+    } else {
+        cart.push({
+            id: thisProduct.id,
+            name: thisProduct.name,
+            image: thisProduct.image,
+            price: thisProduct.price,
+            quantity: 1
+        });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert("Prodotto aggiunto al carrello!");
+});
+
     </script>
 </body>
 </html>
