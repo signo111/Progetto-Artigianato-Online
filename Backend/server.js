@@ -48,6 +48,7 @@ const cors = require("cors");
 app.use(cors());
 const {client}=require("./db")
 const bcrypt = require("bcrypt");
+const stripe = require('stripe')('sk_test_51RTTSLFbljXrIje8zNiNi30WK064OWmPaUT4exuXiH2soQYraahkGExdLaBFvFFeSDUTJUBhqaecHABVziDZJiGx00lM6MNpdS');
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))

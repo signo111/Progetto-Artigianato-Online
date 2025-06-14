@@ -56,9 +56,12 @@ if (localStorage.getItem("ruolo")) {
   // Azione logout
   document.getElementById("logoutLink").addEventListener("click", (e) => {
     e.preventDefault();
-    localStorage.removeItem("ruolo");
-    alert("Logout effettuato");
-    window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
+    if (confirm("Sei sicuro di voler uscire?")) {
+      localStorage.removeItem("ruolo");
+      alert("Logout effettuato");
+      window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
+    }
+    // Se premi "Annulla", non succede nulla
   });
 } else {
   navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';

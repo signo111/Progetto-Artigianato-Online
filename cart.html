@@ -37,8 +37,8 @@
         <div class="total">
           Totale: <span id="totalPrice">0.00</span>€
         </div>
-        <button class="checkout-btn" onclick="window.location.href='https://buy.stripe.com/test_8x2cN57RQct68eq6AEfrW00'">Procedi al pagamento</button>
-      </div>
+          <button class="checkout-btn" onclick="window.location.href='https://buy.stripe.com/test_8x2cN57RQct68eq6AEfrW00'">Procedi al pagamento</button>
+        </div>
     </section>
   </main>
 
@@ -57,12 +57,18 @@
     const navAuth = document.getElementById("nav-auth");
     if (localStorage.getItem("ruolo")) {
       navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+
       document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
-        localStorage.removeItem("ruolo");
-        alert("Logout effettuato");
-        window.location.reload();
+        if (confirm("Sei sicuro di voler uscire?")) {
+          localStorage.removeItem("ruolo");
+          alert("Logout effettuato");
+          window.location.reload();
+        }
+        // Se premi "Annulla", non succede nulla
       });
+    } else {
+      navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
 
     const ruolo = localStorage.getItem("ruolo");

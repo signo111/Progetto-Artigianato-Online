@@ -90,6 +90,13 @@
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const ruolo = document.getElementById("artisan").checked ? "artigiano" : "cliente";
+        
+        // Controllo password sicura
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            alert("La password deve contenere almeno 8 caratteri, una lettera maiuscola, un numero e un carattere speciale.");
+            return;
+        }
 
         try {
         const res = await fetch("http://localhost:3000/api/register", {
@@ -105,6 +112,7 @@
             localStorage.setItem("ruolo", ruolo);
             alert(data.message || "Registrazione completata!");
             // window.location.href = "index.html"; // Sblocca se vuoi reindirizzare
+            window.location.href = "index.html";
         } else {
             alert(data.error || "Errore di registrazione");
         }
