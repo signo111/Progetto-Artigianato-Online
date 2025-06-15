@@ -155,7 +155,8 @@ a{
     border-radius: 20px;
     filter: drop-shadow(0 50px 20px #0009);/*ombreggiatura sotto foto prodotti*/
 }
-.listProduct {        
+.listProduct {     
+    justify-content: center;   
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;

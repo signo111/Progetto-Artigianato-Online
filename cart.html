@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
+    <header>
     <div class="logo"><a href="index.html">Artigianato Online</a></div>
     <nav>
-      <button class="burger" id="menuCheckbox" aria-label="Apri menu">
+      <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="button">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect y="5" class="burger-menu"/>
           <rect y="12.5" class="burger-menu"/>
@@ -48,9 +48,11 @@
     const navList = document.getElementById('nav-list');
     burger.onclick = () => navList.classList.toggle('open');
     document.addEventListener('click', (event) => {
-      if (navList.classList.contains('open') && !navList.contains(event.target) && event.target !== burger) {
-        navList.classList.remove('open');
-      }
+      if (navList.classList.contains('open')) {
+            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+                navList.classList.remove('open');
+            }
+        }
     });
 
     // Gestione login/logout
