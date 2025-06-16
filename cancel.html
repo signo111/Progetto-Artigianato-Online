@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artigianato Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="index.html">Artigianato Online</a></div>
+        <nav> <!-- Burger menu che si vede solo su mobile -->
+            <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect y="5" class="burger-menu"/>
+                    <rect y="12.5" class="burger-menu"/>
+                    <rect y="20" class="burger-menu"/>
+                </svg>
+            </button>
+            <ul id="nav-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Prodotti</a></li>
+                <li><a href="account.html">Account</a></li>
+                <li><a href="cart.html">Carrello</a></li>
+               <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+<li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+            </ul>
+           
+
+        </nav>
+        
+    </header>
+    <script>
+        // Burger menu toggle
+        const burger = document.getElementById('menuCheckbox');
+        const navList = document.getElementById('nav-list');
+        // apertura
+        burger.onclick = function() {
+            navList.classList.toggle('open');
+        };
+
+        // chiusura
+        document.addEventListener('click', function(event) {
+        if (navList.classList.contains('open')) {
+            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+                navList.classList.remove('open');
+            }
+        }
+    });
+       // Gestione pulsante login/logout
+const navAuth = document.getElementById("nav-auth");
+if (localStorage.getItem("ruolo")) {
+  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+  
+  // Azione logout
+  document.getElementById("logoutLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (confirm("Sei sicuro di voler uscire?")) {
+      localStorage.removeItem("ruolo");
+      alert("Logout effettuato");
+      window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
+    }
+    // Se premi "Annulla", non succede nulla
+  });
+} else {
+  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+}
+
+const ruolo = localStorage.getItem("ruolo");
+
+if (ruolo === "artigiano") {
+  document.getElementById("nav-nuovo").style.display = "";
+  document.getElementById("nav-modifica").style.display = "";
+} else {
+  // Nascondi comunque, anche se qualcuno ha forzato visibilità
+  document.getElementById("nav-nuovo").style.display = "none";
+  document.getElementById("nav-modifica").style.display = "none";
+}
+      
+    </script>
+    <section class="hero">
+        <h1>Acquisto non riuscito</h1>
+        <a href="cart.html">Torna al carrello</a>
+    </section>
+</body>
+</html>

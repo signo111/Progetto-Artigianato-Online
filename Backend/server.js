@@ -53,9 +53,14 @@ const stripe = require('stripe')('sk_test_51RTTSLFbljXrIje8zNiNi30WK064OWmPaUT4e
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
-app.get("/",(req,res)=>{
-    res.send("hello from backend")
-})
+const path = require("path");
+
+// Serve la cartella principale del progetto (la cartella padre rispetto a Backend)
+app.use(express.static(path.join(__dirname, "..")));  // serve tutti i file statici dalla root
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "index.html"));  // serve index.html alla root
+});
 
 async function getData() {
   try {
@@ -113,6 +118,46 @@ app.post("/api/register", async (req, res) => {
     res.status(500).json({ error: "Errore server" });
   }
 });
+
+
+
+app.post("/create-checkout-session", async (req, res) => {
+  const items = req.body.items;
+
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: "Nessun prodotto nel carrello" });
+  }
+
+  const line_items = items.map(item => ({
+    price_data: {
+      currency: "eur",
+      product_data: {
+        name: item.name,
+      },
+      unit_amount: item.amount, // deve essere in centesimi!
+    },
+    quantity: item.quantity,
+  }));
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items,
+      mode: "payment",
+      success_url: "http://localhost:5500/success.html",
+      cancel_url: "http://localhost:5500/cancel.html",
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error("Errore Stripe:", error);
+    res.status(500).json({ error: "Errore durante la creazione della sessione di pagamento" });
+  }
+});
+
+
+
+
 app.listen(3000,()=>{
     console.log("port connected")
 })

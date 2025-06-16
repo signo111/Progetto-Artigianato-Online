@@ -37,7 +37,7 @@
         <div class="total">
           Totale: <span id="totalPrice">0.00</span>€
         </div>
-          <button class="checkout-btn" onclick="window.location.href='https://buy.stripe.com/test_8x2cN57RQct68eq6AEfrW00'">Procedi al pagamento</button>
+          <button class="checkout-btn" onclick="checkout()">Procedi al pagamento</button>
         </div>
     </section>
   </main>
@@ -125,6 +125,43 @@
     }
 
     updateCart();
+
+  async function checkout() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cart.length === 0) {
+      alert("Il carrello è vuoto!");
+      return;
+    }
+
+    const items = cart.map(item => ({
+      name: item.name,
+      amount: Math.round(item.price * 100), // euro → centesimi
+      quantity: item.quantity
+    }));
+
+    console.log("Prodotti da inviare:", items);
+
+    try {
+      const res = await fetch("http://localhost:3000/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items })
+      });
+
+      const data = await res.json();
+      console.log("Risposta dal server:", data);
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Errore nella creazione della sessione di pagamento.");
+      }
+    } catch (err) {
+      console.error("Errore durante fetch:", err);
+      alert("Si è verificato un errore durante il pagamento.");
+    }
+  }
   </script>
 </body>
 </html>
