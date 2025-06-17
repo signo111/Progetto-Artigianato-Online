@@ -1,7 +1,7 @@
 [
 {
     "id": 1,
-    "image": "images/6.jpg",
+    "image": "images/user_image1.png",
     "username": "Account 1",
     "email": "emailexample@gmail.com",
     "password": "password123" 
