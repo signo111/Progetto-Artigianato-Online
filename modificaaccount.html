@@ -22,13 +22,31 @@
                 <li><a href="products.html">Prodotti</a></li>
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
-                <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                <li><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                <li><a href="accedi.html">Accedi</a></li>
+                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
         </nav>
     </header>
     <script>
+        const navAuth = document.getElementById("nav-auth");
+
+        if (localStorage.getItem("ruolo")) {
+            navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+
+            document.getElementById("logoutLink").addEventListener("click", (e) => {
+                e.preventDefault();
+                if (confirm("Sei sicuro di voler uscire?")) {
+                localStorage.removeItem("ruolo");
+                localStorage.removeItem("userId");
+                alert("Logout effettuato");
+                window.location.reload();
+                }
+                // Se premi "Annulla", non succede nulla
+            });
+        } else {
+            navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+        }
         // Burger menu toggle
         const burger = document.getElementById('menuCheckbox');
         const navList = document.getElementById('nav-list');

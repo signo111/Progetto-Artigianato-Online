@@ -64,6 +64,7 @@
         e.preventDefault();
         if (confirm("Sei sicuro di voler uscire?")) {
           localStorage.removeItem("ruolo");
+          localStorage.removeItem("userId");
           alert("Logout effettuato");
           window.location.reload();
         }
@@ -118,11 +119,34 @@
       }
     }
 
-    function removeItem(id) {
-      cart = cart.filter(item => item.id !== id);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
+    async function removeItem(id) {
+      const userId = parseInt(localStorage.getItem("userId"));
+
+      // prima rimuoviamo dal database
+      try {
+        const res = await fetch("http://localhost:3000/api/remove-from-cart", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: userId, prodottoId: id })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // se la rimozione dal DB ha funzionato, aggiorniamo anche il localStorage
+          cart = cart.filter(item => item.id !== id);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCart();
+          alert(data.message);
+        } else {
+          alert(data.error || "Errore durante la rimozione");
+        }
+      } catch (err) {
+        console.error("Errore durante la rimozione:", err);
+        alert("Errore di connessione");
+      }
     }
+
 
     updateCart();
 

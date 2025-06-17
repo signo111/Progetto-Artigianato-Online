@@ -48,6 +48,8 @@
   </section>
 
   <script>
+    const navAuth = document.getElementById("nav-auth");
+
     document.addEventListener("DOMContentLoaded", function () {
       // Menu burger
       const burger = document.getElementById("menuCheckbox");
@@ -56,6 +58,23 @@
       burger.onclick = function () {
         navList.classList.toggle("open");
       };
+
+      if (localStorage.getItem("ruolo")) {
+        navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+
+        document.getElementById("logoutLink").addEventListener("click", (e) => {
+          e.preventDefault();
+          if (confirm("Sei sicuro di voler uscire?")) {
+            localStorage.removeItem("ruolo");
+            localStorage.removeItem("userId");
+            alert("Logout effettuato");
+            window.location.reload();
+          }
+          // Se premi "Annulla", non succede nulla
+        });
+      } else {
+      navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+      }
 
       document.addEventListener("click", function (event) {
         if (navList.classList.contains("open")) {
@@ -91,18 +110,19 @@
             console.log("Risposta backend:", data);
 
             if (res.ok) {
-  localStorage.setItem("ruolo", data.ruolo);
+              localStorage.setItem("ruolo", data.ruolo);
+              localStorage.setItem("userId", data.userId); 
   
-  if (data.ruolo === "artigiano") {
-    alert("Benvenuto, artigiano!");
-  } else if (data.ruolo === "cliente") {
-    alert("Benvenuto, cliente!");
-  } else {
-    alert("Login effettuato!");
-  }
+              if (data.ruolo === "artigiano") {
+                alert("Benvenuto, artigiano!");
+              } else if (data.ruolo === "cliente") {
+                alert("Benvenuto, cliente!");
+              } else {
+                alert("Login effettuato!");
+              }
 
-  window.location.href = "index.html";
-} else {
+              window.location.href = "index.html";
+            } else {
               alert(data.error || "Credenziali non valide");
             }
           } catch (err) {

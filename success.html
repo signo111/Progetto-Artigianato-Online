@@ -22,9 +22,9 @@
                 <li><a href="products.html">Prodotti</a></li>
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
-               <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-<li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
            
 
@@ -32,6 +32,8 @@
         
     </header>
     <script>
+      
+      
         // Burger menu toggle
         const burger = document.getElementById('menuCheckbox');
         const navList = document.getElementById('nav-list');
@@ -49,40 +51,44 @@
         }
     });
        // Gestione pulsante login/logout
-const navAuth = document.getElementById("nav-auth");
-if (localStorage.getItem("ruolo")) {
-  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-  
-  // Azione logout
-  document.getElementById("logoutLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    if (confirm("Sei sicuro di voler uscire?")) {
-      localStorage.removeItem("ruolo");
-      alert("Logout effettuato");
-      window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
-    }
-    // Se premi "Annulla", non succede nulla
-  });
-} else {
-  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-}
+      const navAuth = document.getElementById("nav-auth");
+      if (localStorage.getItem("ruolo")) {
+        navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+        
+        // Azione logout
+        document.getElementById("logoutLink").addEventListener("click", (e) => {
+          e.preventDefault();
+          if (confirm("Sei sicuro di voler uscire?")) {
+            localStorage.removeItem("ruolo");
+            alert("Logout effettuato");
+            window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
+          }
+          // Se premi "Annulla", non succede nulla
+        });
+      } else {
+        navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+      }
 
-const ruolo = localStorage.getItem("ruolo");
+      const ruolo = localStorage.getItem("ruolo");
 
-if (ruolo === "artigiano") {
-  document.getElementById("nav-nuovo").style.display = "";
-  document.getElementById("nav-modifica").style.display = "";
-} else {
-  // Nascondi comunque, anche se qualcuno ha forzato visibilità
-  document.getElementById("nav-nuovo").style.display = "none";
-  document.getElementById("nav-modifica").style.display = "none";
-}
+      if (ruolo === "artigiano") {
+        document.getElementById("nav-nuovo").style.display = "";
+        document.getElementById("nav-modifica").style.display = "";
+      } else {
+        // Nascondi comunque, anche se qualcuno ha forzato visibilità
+        document.getElementById("nav-nuovo").style.display = "none";
+        document.getElementById("nav-modifica").style.display = "none";
+      }
+
+      // Svuota il carrello al caricamento della pagina di successo
+      localStorage.removeItem('cart');
       
     </script>
     <section class="hero">
         <h1>Acquisto effettuato!</h1>
         <p>Grazie per averci scelti</p>
         <a href="products.html">Torna ad esplorare i Prodotti</a>
+        
     </section>
 </body>
 </html>

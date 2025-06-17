@@ -90,7 +90,11 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ error: "Password errata" });
     }
 
-    res.json({ message: "Login effettuato con successo", ruolo: utente.ruolo });
+    res.json({ 
+      message: "Login effettuato con successo", 
+      ruolo: utente.ruolo,
+      userId: utente.id  // <-- aggiungi questo
+    });
   } catch (err) {
     console.error("Errore login:", err);
     res.status(500).json({ error: "Errore login" });
@@ -107,12 +111,13 @@ app.post("/api/register", async (req, res) => {
       return res.status(400).json({ error: "Email già registrata" });
     }
     const hashed = await bcrypt.hash(password, 10);
-    await client.query(
-      "INSERT INTO utenti (name, email, password, ruolo, created_at) VALUES ($1, $2, $3, $4, NOW())",
+    const result = await client.query(
+      "INSERT INTO utenti (name, email, password, ruolo, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING id",
       [username, email, hashed, ruolo]
     );
-    console.log("Utente inserito!");
-    res.json({ message: "Registrazione completata", ruolo });
+    const newUserId = result.rows[0].id;
+    console.log("Utente inserito con id:", newUserId);
+    res.json({ message: "Registrazione completata", ruolo, id: newUserId });
   } catch (err) {
     console.error("Errore server:", err);
     res.status(500).json({ error: "Errore server" });
@@ -156,6 +161,42 @@ app.post("/create-checkout-session", async (req, res) => {
 });
 
 
+app.post("/api/add-to-cart", async (req, res) => {
+    const { id_utente, id_prodotto, prezzo_totale, stato_carrello } = req.body;
+    console.log("Ricevuto:", req.body);
+    try {
+        await client.query(
+            "INSERT INTO carrello (id_utente, id_prodotto, prezzo_totale, stato_carrello) VALUES ($1, $2, $3, $4)",
+            [id_utente, id_prodotto, prezzo_totale, stato_carrello]
+        );
+        res.json({ message: "Prodotto aggiunto al carrello nel DB" });
+    } catch (err) {
+        console.error("Errore aggiunta carrello:", err);
+        res.status(500).json({ error: "Errore inserimento carrello" });
+    }
+});
+
+app.delete("/api/remove-from-cart", async (req, res) => {
+  const { userId, prodottoId } = req.body;
+
+  try {
+    await client.query(
+      "DELETE FROM carrello WHERE id_utente = $1 AND id_prodotto = $2",
+      [userId, prodottoId]
+    );
+    res.json({ message: "Prodotto rimosso dal carrello" });
+  } catch (err) {
+    console.error("Errore rimozione carrello:", err);
+    res.status(500).json({ error: "Errore server" });
+  }
+});
+
+app.get('/api/orders/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  // leggi dal DB gli ordini di questo utente
+  const orders = await db.query('SELECT * FROM ordini WHERE user_id = $1', [userId]);
+  res.json(orders.rows);
+});
 
 
 app.listen(3000,()=>{

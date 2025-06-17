@@ -22,9 +22,9 @@
                 <li><a href="products.html">Prodotti</a></li>
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
-               <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-<li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
            
 
@@ -49,23 +49,25 @@
         }
     });
        // Gestione pulsante login/logout
-const navAuth = document.getElementById("nav-auth");
-if (localStorage.getItem("ruolo")) {
-  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+    const navAuth = document.getElementById("nav-auth");
+    if (localStorage.getItem("ruolo")) {
+        navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
   
-  // Azione logout
-  document.getElementById("logoutLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    if (confirm("Sei sicuro di voler uscire?")) {
-      localStorage.removeItem("ruolo");
-      alert("Logout effettuato");
-      window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
+        // Azione logout
+        document.getElementById("logoutLink").addEventListener("click", (e) => {
+            e.preventDefault();
+            if (confirm("Sei sicuro di voler uscire?")) {
+            localStorage.removeItem("ruolo");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("carrello");
+            alert("Logout effettuato");
+            window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
+            }
+        // Se premi "Annulla", non succede nulla
+        });
+    } else {
+        navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-    // Se premi "Annulla", non succede nulla
-  });
-} else {
-  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-}
 
 const ruolo = localStorage.getItem("ruolo");
 

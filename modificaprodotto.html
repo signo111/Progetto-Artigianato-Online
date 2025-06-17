@@ -47,36 +47,37 @@
     });
     const navAuth = document.getElementById("nav-auth");
     
-if (localStorage.getItem("ruolo")) {
-  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+    if (localStorage.getItem("ruolo")) {
+        navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
 
-  document.getElementById("logoutLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    if (confirm("Sei sicuro di voler uscire?")) {
-      localStorage.removeItem("ruolo");
-      alert("Logout effettuato");
-      window.location.reload();
+        document.getElementById("logoutLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (confirm("Sei sicuro di voler uscire?")) {
+        localStorage.removeItem("ruolo");
+        localStorage.removeItem("userId");
+        alert("Logout effettuato");
+        window.location.reload();
+        }
+        // Se premi "Annulla", non succede nulla
+    });
+    } else {
+        navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-    // Se premi "Annulla", non succede nulla
-  });
-} else {
-  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-}
 
-const ruolo = localStorage.getItem("ruolo");
+    const ruolo = localStorage.getItem("ruolo");
 
-if (ruolo === "artigiano") {
-  document.getElementById("nav-nuovo").style.display = "";
-  document.getElementById("nav-modifica").style.display = "";
-} else {
-  // Nascondi comunque, anche se qualcuno ha forzato visibilità
-  document.getElementById("nav-nuovo").style.display = "none";
-  document.getElementById("nav-modifica").style.display = "none";
-}
+        if (ruolo === "artigiano") {
+        document.getElementById("nav-nuovo").style.display = "";
+        document.getElementById("nav-modifica").style.display = "";
+        } else {
+        // Nascondi comunque, anche se qualcuno ha forzato visibilità
+        document.getElementById("nav-nuovo").style.display = "none";
+        document.getElementById("nav-modifica").style.display = "none";
+        }
     </script>
 
     <section class="edit-product">
-<section class="hero">
+    <section class="hero">
         <h1>Modifica Prodotto</h1>
         <form action="" method="POST">
             <p>

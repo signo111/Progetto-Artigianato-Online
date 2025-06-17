@@ -22,9 +22,9 @@
                 <li><a href="products.html">Prodotti</a></li>
                 <li><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
-                <li><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                <li><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                <li><a href="accedi.html">Accedi</a></li>
+                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
         </nav>
     </header>
@@ -57,7 +57,7 @@
                 <h1 class="name"></h1>
                 <div class="price"></div>
                 <div class="buttons">
-                    <button>Checkout</button>
+                    <button id="checkoutBtn" href="cart.html">Checkout</button>
                     <button id="addToCartBtn">Aggiungi al carrello</button>            
                 </div>
                 <div class="description"></div>
@@ -68,6 +68,11 @@
     </div>
 
     <script>        //prendi i dati dei prodotti dal file JSON
+
+        const ruolo = localStorage.getItem("ruolo");
+        document.getElementById("nav-nuovo").style.display = ruolo === "artigiano" ? "" : "none";
+        document.getElementById("nav-modifica").style.display = ruolo === "artigiano" ? "" : "none";
+        
         let products = null;
         fetch('/images/products.json')
         .then(response => response.json())
@@ -107,29 +112,108 @@
             });
             
         }
+
+        document.getElementById('checkoutBtn').onclick = function() {
+            window.location.href = 'cart.html';
+        };
+
+
+        const navAuth = document.getElementById("nav-auth");
+        if (localStorage.getItem("ruolo")) {
+            navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+
+            document.getElementById("logoutLink").addEventListener("click", (e) => {
+                e.preventDefault();
+                if (confirm("Sei sicuro di voler uscire?")) {
+                localStorage.removeItem("ruolo");
+                localStorage.removeItem("userId");
+                alert("Logout effettuato");
+                window.location.reload();
+                }
+                // Se premi "Annulla", non succede nulla
+            });
+        } else {
+            navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+        }
+
+        
         document.getElementById('addToCartBtn').addEventListener('click', function () {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    let productID = new URLSearchParams(window.location.search).get('id');
-    let thisProduct = products.find(p => p.id == productID);
+            const ruolo = localStorage.getItem("ruolo");
+            if (!ruolo) {
+                alert("Registrarsi o effettuare il login prima di aggiungere un prodotto");
+                return;
+            } else {
+                alert("Prodotto aggiunto al carrello!");
+                // qui aggiungi il prodotto al carrello
 
-    // Verifica se già nel carrello
-    let existingProduct = cart.find(p => p.id == thisProduct.id);
-    if (existingProduct) {
-        existingProduct.quantity += 1;
-    } else {
-        cart.push({
-            id: thisProduct.id,
-            name: thisProduct.name,
-            image: thisProduct.image,
-            price: thisProduct.price,
-            quantity: 1
+                const userId = parseInt(localStorage.getItem("userId"));
+                if (!userId) {
+                    alert("Errore: utente non identificato.");
+                    return;
+                }
+
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                let productID = new URLSearchParams(window.location.search).get('id');
+                let thisProduct = products.find(p => p.id == productID);
+
+                // Verifica se già nel carrello
+                let existingProduct = cart.find(p => p.id == thisProduct.id);
+                if (existingProduct) {
+                    existingProduct.quantity += 1;
+                } else {
+                    cart.push({
+                        id: thisProduct.id,
+                        name: thisProduct.name,
+                        image: thisProduct.image,
+                        price: thisProduct.price,
+                        quantity: 1
+                    });
+                    
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+
+                console.log("userId:", localStorage.getItem("userId"));
+                console.log("id_prodotto:", thisProduct.id);
+                console.log("prezzo_totale:", thisProduct.price);
+
+                console.log("userId da localStorage:", userId);
+                console.log("Tipo userId:", typeof userId);
+
+                
+
+                // Dopo aver aggiornato localStorage
+                fetch("http://localhost:3000/api/add-to-cart", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id_utente: userId,
+                    id_prodotto: thisProduct.id,
+                    prezzo_totale: thisProduct.price,
+                    stato_carrello: true
+                })
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error("Errore server");
+                    }
+                    return res.json();
+                })
+
+                .then(data => console.log(data))
+                .catch(err => console.error("Errore DB:", err));
+                
+            }
+
+            
+
+            
+            
+            
         });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert("Prodotto aggiunto al carrello!");
-});
 
     </script>
 </body>

@@ -47,21 +47,22 @@
     });
     const navAuth = document.getElementById("nav-auth");
     
-if (localStorage.getItem("ruolo")) {
-  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+    if (localStorage.getItem("ruolo")) {
+        navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
 
-  document.getElementById("logoutLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    if (confirm("Sei sicuro di voler uscire?")) {
-      localStorage.removeItem("ruolo");
-      alert("Logout effettuato");
-      window.location.reload();
+        document.getElementById("logoutLink").addEventListener("click", (e) => {
+            e.preventDefault();
+            if (confirm("Sei sicuro di voler uscire?")) {
+            localStorage.removeItem("ruolo");
+            localStorage.removeItem("userId");
+            alert("Logout effettuato");
+            window.location.reload();
+            }
+            // Se premi "Annulla", non succede nulla
+        });
+    } else {
+        navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-    // Se premi "Annulla", non succede nulla
-  });
-} else {
-  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-}
 
 const ruolo = localStorage.getItem("ruolo");
 
