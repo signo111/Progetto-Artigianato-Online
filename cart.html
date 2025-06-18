@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Carrello</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
+  <header>
     <div class="logo"><a href="index.html">Artigianato Online</a></div>
     <nav>
       <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="button">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect y="5" class="burger-menu"/>
-          <rect y="12.5" class="burger-menu"/>
-          <rect y="20" class="burger-menu"/>
+          <rect y="5" class="burger-menu" />
+          <rect y="12.5" class="burger-menu" />
+          <rect y="20" class="burger-menu" />
         </svg>
       </button>
       <ul id="nav-list">
         <li><a href="index.html">Home</a></li>
         <li><a href="products.html">Prodotti</a></li>
-        <li><a href="account.html">Account</a></li>
+        <li id="nav-acc"><a href="account.html">Account</a></li>
         <li><a href="cart.html">Carrello</a></li>
         <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
         <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
@@ -34,52 +34,46 @@
       <div class="cart-container">
         <h2>Il tuo Carrello</h2>
         <div id="cart"></div>
-        <div class="total">
-          Totale: <span id="totalPrice">0.00</span>€
-        </div>
-          <button class="checkout-btn" onclick="checkout()">Procedi al pagamento</button>
-        </div>
+        <div class="total">Totale: <span id="totalPrice">0.00</span>€</div>
+        <button class="checkout-btn" onclick="checkout()">Procedi al pagamento</button>
+      </div>
     </section>
   </main>
 
   <script>
-    // Burger menu
-    const burger = document.getElementById('menuCheckbox');
-    const navList = document.getElementById('nav-list');
-    burger.onclick = () => navList.classList.toggle('open');
-    document.addEventListener('click', (event) => {
-      if (navList.classList.contains('open')) {
-            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
-                navList.classList.remove('open');
-            }
-        }
+    const burger = document.getElementById("menuCheckbox");
+    const navList = document.getElementById("nav-list");
+    burger.onclick = () => navList.classList.toggle("open");
+    document.addEventListener("click", (event) => {
+      if (navList.classList.contains("open") &&
+          !navList.contains(event.target) &&
+          !burger.contains(event.target)) {
+        navList.classList.remove("open");
+      }
     });
 
-    // Gestione login/logout
     const navAuth = document.getElementById("nav-auth");
-    if (localStorage.getItem("ruolo")) {
+    const ruolo = localStorage.getItem("ruolo");
+    const userId = localStorage.getItem("userId");
+    const cartKey = userId ? `cart_${userId}` : "cart_guest";
+    let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    if (ruolo) {
       navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+      document.getElementById("nav-nuovo").style.display = ruolo === "artigiano" ? "" : "none";
+      document.getElementById("nav-modifica").style.display = ruolo === "artigiano" ? "" : "none";
 
       document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Sei sicuro di voler uscire?")) {
           localStorage.removeItem("ruolo");
           localStorage.removeItem("userId");
+          localStorage.removeItem(`cart_${userId}`);
           alert("Logout effettuato");
           window.location.reload();
         }
-        // Se premi "Annulla", non succede nulla
       });
-    } else {
-      navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-
-    const ruolo = localStorage.getItem("ruolo");
-    document.getElementById("nav-nuovo").style.display = ruolo === "artigiano" ? "" : "none";
-    document.getElementById("nav-modifica").style.display = ruolo === "artigiano" ? "" : "none";
-
-    // Carrello
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     function updateCart() {
       const cartContainer = document.getElementById("cart");
@@ -88,9 +82,11 @@
 
       if (cart.length === 0) {
         cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
+        document.getElementById("totalPrice").textContent = "0.00";
+        return;
       }
 
-      cart.forEach(item => {
+      cart.forEach((item) => {
         total += item.price * item.quantity;
         cartContainer.innerHTML += `
           <div class="cart-item">
@@ -98,7 +94,7 @@
             <div class="details">
               <h3>${item.name}</h3>
               <p>Prezzo: €${item.price}</p>
-              <p>Quantità: <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)"></p>
+              <p>Quantità: <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)" /></p>
             </div>
             <div class="actions">
               <button onclick="removeItem(${item.id})">Rimuovi</button>
@@ -111,81 +107,104 @@
     }
 
     function updateQuantity(id, quantity) {
-      const item = cart.find(p => p.id === id);
+      const item = cart.find((p) => p.id === id);
       if (item) {
         item.quantity = parseInt(quantity);
-        localStorage.setItem("cart", JSON.stringify(cart));
+        localStorage.setItem(cartKey, JSON.stringify(cart));
         updateCart();
       }
     }
 
     async function removeItem(id) {
-      const userId = parseInt(localStorage.getItem("userId"));
+      cart = cart.filter((item) => item.id !== id);
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+      updateCart();
 
-      // prima rimuoviamo dal database
+      if (userId) {
+        try {
+          const res = await fetch("http://localhost:3000/api/remove-from-cart", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: parseInt(userId), prodottoId: id }),
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            alert(data.message);
+          } else {
+            alert(data.error || "Errore durante la rimozione");
+          }
+        } catch (err) {
+          console.error("Errore durante la rimozione:", err);
+          alert("Errore di connessione");
+        }
+      }
+    }
+
+    async function checkout() {
+      if (!userId) {
+        alert("Devi effettuare l'accesso per completare l'acquisto.");
+        window.location.href = "accedi.html";
+        return;
+      }
+
+      const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+      if (cart.length === 0) {
+        alert("Il carrello è vuoto!");
+        return;
+      }
+
+      const items = cart.map((item) => ({
+        name: item.name,
+        amount: Math.round(item.price * 100),
+        quantity: item.quantity,
+      }));
+
       try {
-        const res = await fetch("http://localhost:3000/api/remove-from-cart", {
-          method: "DELETE",
+        const res = await fetch("http://localhost:3000/create-checkout-session", {
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: userId, prodottoId: id })
+          body: JSON.stringify({ items }),
         });
 
         const data = await res.json();
-
-        if (res.ok) {
-          // se la rimozione dal DB ha funzionato, aggiorniamo anche il localStorage
-          cart = cart.filter(item => item.id !== id);
-          localStorage.setItem("cart", JSON.stringify(cart));
-          updateCart();
-          alert(data.message);
+        if (data.url) {
+          window.location.href = data.url;
         } else {
-          alert(data.error || "Errore durante la rimozione");
+          alert("Errore nella creazione della sessione di pagamento.");
         }
       } catch (err) {
-        console.error("Errore durante la rimozione:", err);
-        alert("Errore di connessione");
+        console.error("Errore durante fetch:", err);
+        alert("Si è verificato un errore durante il pagamento.");
       }
     }
-
 
     updateCart();
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const ruolo = localStorage.getItem('ruolo');
 
-  async function checkout() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const navNuovo = document.getElementById('nav-nuovo');
+    const navModifica = document.getElementById('nav-modifica');
+    const navAcc = document.getElementById('nav-acc');
 
-    if (cart.length === 0) {
-      alert("Il carrello è vuoto!");
-      return;
+    if (ruolo === 'artigiano') {
+        navNuovo.style.display = '';
+        navModifica.style.display = '';
+        navAcc.style.display = '';
+    } else if (ruolo === 'cliente') {
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = '';
+    } else {
+        // Nessun ruolo -> utente non loggato
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = 'none';
     }
-
-    const items = cart.map(item => ({
-      name: item.name,
-      amount: Math.round(item.price * 100), // euro → centesimi
-      quantity: item.quantity
-    }));
-
-    console.log("Prodotti da inviare:", items);
-
-    try {
-      const res = await fetch("http://localhost:3000/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items })
-      });
-
-      const data = await res.json();
-      console.log("Risposta dal server:", data);
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert("Errore nella creazione della sessione di pagamento.");
-      }
-    } catch (err) {
-      console.error("Errore durante fetch:", err);
-      alert("Si è verificato un errore durante il pagamento.");
-    }
-  }
+});
   </script>
 </body>
 </html>

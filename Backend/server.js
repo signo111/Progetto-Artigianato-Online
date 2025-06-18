@@ -198,6 +198,23 @@ app.get('/api/orders/:userId', async (req, res) => {
   res.json(orders.rows);
 });
 
+app.get("/api/account/:id", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const result = await client.query(
+      "SELECT id, name, email, password, ruolo FROM utenti WHERE id = $1",
+      [userId]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Utente non trovato" });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Errore recupero account:", err);
+    res.status(500).json({ error: "Errore server" });
+  }
+});
+
 
 app.listen(3000,()=>{
     console.log("port connected")

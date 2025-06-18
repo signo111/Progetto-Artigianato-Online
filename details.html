@@ -20,7 +20,7 @@
             <ul id="nav-list">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="products.html">Prodotti</a></li>
-                <li><a href="account.html">Account</a></li>
+                <li id="nav-acc"><a href="account.html">Account</a></li>
                 <li><a href="cart.html">Carrello</a></li>
                 <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
                 <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
@@ -127,6 +127,7 @@
                 if (confirm("Sei sicuro di voler uscire?")) {
                 localStorage.removeItem("ruolo");
                 localStorage.removeItem("userId");
+                localStorage.removeItem(`cart_${localStorage.getItem("userId")}`);
                 alert("Logout effettuato");
                 window.location.reload();
                 }
@@ -138,83 +139,78 @@
 
         
         document.getElementById('addToCartBtn').addEventListener('click', function () {
+  const userId = localStorage.getItem("userId");
+  const cartKey = userId ? `cart_${userId}` : "cart_guest";
 
-            const ruolo = localStorage.getItem("ruolo");
-            if (!ruolo) {
-                alert("Registrarsi o effettuare il login prima di aggiungere un prodotto");
-                return;
-            } else {
-                alert("Prodotto aggiunto al carrello!");
-                // qui aggiungi il prodotto al carrello
+  alert("Prodotto aggiunto al carrello!");
 
-                const userId = parseInt(localStorage.getItem("userId"));
-                if (!userId) {
-                    alert("Errore: utente non identificato.");
-                    return;
-                }
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const productID = new URLSearchParams(window.location.search).get('id');
+  const thisProduct = products.find(p => p.id == productID);
 
-                let productID = new URLSearchParams(window.location.search).get('id');
-                let thisProduct = products.find(p => p.id == productID);
+  let existingProduct = cart.find(p => p.id === thisProduct.id);
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    cart.push({
+      id: thisProduct.id,
+      name: thisProduct.name,
+      image: thisProduct.image,
+      price: thisProduct.price,
+      quantity: 1
+    });
+  }
 
-                // Verifica se già nel carrello
-                let existingProduct = cart.find(p => p.id == thisProduct.id);
-                if (existingProduct) {
-                    existingProduct.quantity += 1;
-                } else {
-                    cart.push({
-                        id: thisProduct.id,
-                        name: thisProduct.name,
-                        image: thisProduct.image,
-                        price: thisProduct.price,
-                        quantity: 1
-                    });
-                    
-                }
+  localStorage.setItem(cartKey, JSON.stringify(cart));
 
-                localStorage.setItem('cart', JSON.stringify(cart));
+  // Solo se loggato: salva anche sul backend
+  if (userId) {
+    fetch("http://localhost:3000/api/add-to-cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_utente: parseInt(userId),
+        id_prodotto: thisProduct.id,
+        prezzo_totale: thisProduct.price,
+        stato_carrello: true
+      })
+    })
+    .then(res => res.ok ? res.json() : Promise.reject("Errore server"))
+    .then(data => console.log(data))
+    .catch(err => console.error("Errore DB:", err));
+  }
+});
 
-
-                console.log("userId:", localStorage.getItem("userId"));
-                console.log("id_prodotto:", thisProduct.id);
-                console.log("prezzo_totale:", thisProduct.price);
-
-                console.log("userId da localStorage:", userId);
-                console.log("Tipo userId:", typeof userId);
-
-                
-
-                // Dopo aver aggiornato localStorage
-                fetch("http://localhost:3000/api/add-to-cart", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    id_utente: userId,
-                    id_prodotto: thisProduct.id,
-                    prezzo_totale: thisProduct.price,
-                    stato_carrello: true
-                })
-                })
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error("Errore server");
-                    }
-                    return res.json();
-                })
-
-                .then(data => console.log(data))
-                .catch(err => console.error("Errore DB:", err));
-                
-            }
-
-            
-
-            
-            
-            
-        });
 
     </script>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+    const ruolo = localStorage.getItem('ruolo');
+
+    const navNuovo = document.getElementById('nav-nuovo');
+    const navModifica = document.getElementById('nav-modifica');
+    const navAcc = document.getElementById('nav-acc');
+
+    if (ruolo === 'artigiano') {
+        navNuovo.style.display = '';
+        navModifica.style.display = '';
+        navAcc.style.display = '';
+    } else if (ruolo === 'cliente') {
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = '';
+    } else {
+        // Nessun ruolo -> utente non loggato
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = 'none';
+    }
+});
+
+         
+
+        </script>
 </body>
 </html>

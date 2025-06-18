@@ -87,6 +87,7 @@ if (ruolo === "artigiano") {
               <h1 class="username"></h1>
               <div class="email"></div>
               <div class="password"></div>
+              <div class="ruolo"></div>
                <div class="buttons">
                   <button><a href="modificaaccount.html">Modifica informazioni</a></button>
                   <button>Elimina account</button>
@@ -114,31 +115,38 @@ if (ruolo === "artigiano") {
             </table>
         </div>
     </div>
-  <script>        //prendi i dati degli account dal file JSON
-   let accounts = null;
-   fetch('/images/account.json')
-   .then(response => response.json())
-   .then(data => {
-      accounts = data;
-       showAccount();
-   })
-
-   function showAccount(){
-    let accountID = 1; // ID dell'account da visualizzare
-    let thisAccount = accounts.filter(value => {
-        return value.id == accountID;
-    })[0];
-
-    if(thisAccount == undefined){
-        window.location.href = '/';
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Nessun utente autenticato.");
+      window.location.href = "accedi.html";
+      return;
     }
 
-    document.getElementById('profileImage').src = "images/user_image1.png"; // Imposta un'immagine di profilo predefinita
-    document.querySelector('.username').innerText = thisAccount.username;
-    document.querySelector('.email').innerText = thisAccount.email;
-    document.querySelector('.password').innerText = thisAccount.password;
-}
+    fetch(`http://localhost:3000/api/account/${userId}`)
+      .then(response => response.json())
+      .then(data => {
+         console.log("Dati ricevuti:", data);
+        if (data.error) {
+          alert("Errore nel caricamento dati.");
+          return;
+        }
+
+        
+        document.getElementById("profileImage").src = "images/user_image1.png";
+        document.querySelector(".username").innerText = data.name;
+        document.querySelector(".email").innerText = data.email;
+       document.querySelector(".ruolo").innerText = "Ruolo: " + data.ruolo;
+      
+      })
+      .catch(error => {
+        console.error("Errore fetch:", error);
+        alert("Errore di connessione.");
+      });
+  });
 </script>
+
 
 
     <script>
@@ -146,13 +154,27 @@ if (ruolo === "artigiano") {
             // Script navbar
             const ruolo = localStorage.getItem('ruolo');
             console.log('Ruolo attuale:', ruolo);
-            if (ruolo !== 'artigiano') {
-                document.getElementById('nav-nuovo').style.display = 'none';
-                document.getElementById('nav-modifica').style.display = 'none';
-            } else {
-                document.getElementById('nav-nuovo').style.display = '';
-                document.getElementById('nav-modifica').style.display = '';
-            }
+          document.addEventListener('DOMContentLoaded', function () {
+
+    const navNuovo = document.getElementById('nav-nuovo');
+    const navModifica = document.getElementById('nav-modifica');
+    const navAcc = document.getElementById('nav-acc');
+
+    if (ruolo === 'artigiano') {
+        navNuovo.style.display = '';
+        navModifica.style.display = '';
+        navAcc.style.display = '';
+    } else if (ruolo === 'cliente') {
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = '';
+    } else {
+        // Nessun ruolo -> utente non loggato
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = 'none';
+    }
+});
 
             // Script logout
             const logoutBtn = document.getElementById('logoutBtn');

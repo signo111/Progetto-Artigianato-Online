@@ -20,7 +20,7 @@
       <ul id="nav-list">
         <li><a href="index.html">Home</a></li>
         <li><a href="products.html">Prodotti</a></li>
-        <li><a href="account.html">Account</a></li>
+        <li id="nav-acc"><a href="account.html">Account</a></li>
         <li><a href="cart.html">Carrello</a></li>
         <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
         <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
@@ -86,10 +86,28 @@
 
       // Mostra le voci admin se ruolo è 'artigiano'
       const ruolo = localStorage.getItem("ruolo");
-      if (ruolo === "artigiano") {
-        document.getElementById("nav-nuovo").style.display = "";
-        document.getElementById("nav-modifica").style.display = "";
-      }
+    document.addEventListener('DOMContentLoaded', function () {
+    const ruolo = localStorage.getItem('ruolo');
+
+    const navNuovo = document.getElementById('nav-nuovo');
+    const navModifica = document.getElementById('nav-modifica');
+    const navAcc = document.getElementById('nav-acc');
+
+    if (ruolo === 'artigiano') {
+        navNuovo.style.display = '';
+        navModifica.style.display = '';
+        navAcc.style.display = '';
+    } else if (ruolo === 'cliente') {
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = '';
+    } else {
+        // Nessun ruolo -> utente non loggato
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = 'none';
+    }
+});
 
       // Login
       const loginForm = document.getElementById("loginForm");

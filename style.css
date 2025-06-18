@@ -455,7 +455,8 @@ select {
 }
 
 .account .email, 
-.account .password {
+.account .password,
+.account .ruolo {
     font-size: large;
     color: #777;
     margin-bottom: 10px;
