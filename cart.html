@@ -75,72 +75,95 @@
       });
     }
 
-    function updateCart() {
-      const cartContainer = document.getElementById("cart");
-      cartContainer.innerHTML = "";
-      let total = 0;
+    async function updateCart() {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    document.getElementById("cart").innerHTML = "<p>Effettua il login per vedere il carrello.</p>";
+    document.getElementById("totalPrice").textContent = "0.00";
+    return;
+  }
 
-      if (cart.length === 0) {
-        cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
-        document.getElementById("totalPrice").textContent = "0.00";
-        return;
-      }
+  try {
+    const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
+    const cart = await res.json();
+    console.log("Carrello ricevuto dal backend:", cart);
 
-      cart.forEach((item) => {
-        total += item.price * item.quantity;
+    let total = 0;
+    const cartContainer = document.getElementById("cart");
+    cartContainer.innerHTML = "";
+
+    if (cart.length === 0) {
+      cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
+    } else {
+      cart.forEach(item => {
+        console.log("immagine:", item.immagine);
+        total += parseFloat(item.prezzo_totale);
         cartContainer.innerHTML += `
           <div class="cart-item">
-            <img src="${item.image}" alt="${item.name}" width="100">
+            <img src="${item.immagine}" alt="${item.name}" width="100">
             <div class="details">
               <h3>${item.name}</h3>
-              <p>Prezzo: €${item.price}</p>
-              <p>Quantità: <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)" /></p>
+              <p>Prezzo: €${item.prezzo}</p>
+              <p>Quantità: <input type="number" min="1" value="${item.quantita || 1}" onchange="updateQuantity(${item.id_prodotto}, this.value)" />
             </div>
             <div class="actions">
-              <button onclick="removeItem(${item.id})">Rimuovi</button>
+              <button onclick="removeItem(${item.id_prodotto})">Rimuovi</button>
             </div>
           </div>
         `;
       });
-
-      document.getElementById("totalPrice").textContent = total.toFixed(2);
     }
+    document.getElementById("totalPrice").textContent = total.toFixed(2);
+  } catch (err) {
+    document.getElementById("cart").innerHTML = "<p>Errore nel caricamento del carrello.</p>";
+    document.getElementById("totalPrice").textContent = "0.00";
+  }
+}
 
-    function updateQuantity(id, quantity) {
-      const item = cart.find((p) => p.id === id);
-      if (item) {
-        item.quantity = parseInt(quantity);
-        localStorage.setItem(cartKey, JSON.stringify(cart));
-        updateCart();
-      }
+    async function updateQuantity(id_prodotto, quantity) {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+  try {
+    const res = await fetch("http://localhost:3000/api/update-cart-quantity", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: parseInt(userId),
+        prodottoId: id_prodotto,
+        quantity: parseInt(quantity)
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      updateCart(); // aggiorna la vista dopo la modifica
+    } else {
+      alert(data.error || "Errore durante l'aggiornamento");
     }
+  } catch (err) {
+    alert("Errore di connessione");
+  }
+}
 
-    async function removeItem(id) {
-      cart = cart.filter((item) => item.id !== id);
-      localStorage.setItem(cartKey, JSON.stringify(cart));
-      updateCart();
-
-      if (userId) {
-        try {
-          const res = await fetch("http://localhost:3000/api/remove-from-cart", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: parseInt(userId), prodottoId: id }),
-          });
-
-          const data = await res.json();
-          if (res.ok) {
-            alert(data.message);
-          } else {
-            alert(data.error || "Errore durante la rimozione");
-          }
-        } catch (err) {
-          console.error("Errore durante la rimozione:", err);
-          alert("Errore di connessione");
-        }
-      }
+    async function removeItem(id_prodotto) {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+  try {
+    const res = await fetch("http://localhost:3000/api/remove-from-cart", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: parseInt(userId), prodottoId: id_prodotto }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert(data.message);
+      updateCart(); // aggiorna la vista dopo la rimozione
+    } else {
+      alert(data.error || "Errore durante la rimozione");
     }
-
+  } catch (err) {
+    alert("Errore di connessione");
+  }
+}
     async function checkout() {
       if (!userId) {
         alert("Devi effettuare l'accesso per completare l'acquisto.");

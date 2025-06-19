@@ -162,18 +162,29 @@ app.post("/create-checkout-session", async (req, res) => {
 
 
 app.post("/api/add-to-cart", async (req, res) => {
-    const { id_utente, id_prodotto, prezzo_totale, stato_carrello } = req.body;
-    console.log("Ricevuto:", req.body);
-    try {
-        await client.query(
-            "INSERT INTO carrello (id_utente, id_prodotto, prezzo_totale, stato_carrello) VALUES ($1, $2, $3, $4)",
-            [id_utente, id_prodotto, prezzo_totale, stato_carrello]
-        );
-        res.json({ message: "Prodotto aggiunto al carrello nel DB" });
-    } catch (err) {
-        console.error("Errore aggiunta carrello:", err);
-        res.status(500).json({ error: "Errore inserimento carrello" });
+  const { id_utente, id_prodotto, prezzo_totale, stato_carrello, quantita } = req.body;
+  try {
+    const existing = await client.query(
+      "SELECT * FROM carrello WHERE id_utente = $1 AND id_prodotto = $2 AND stato_carrello = $3",
+      [id_utente, id_prodotto, stato_carrello]
+    );
+    if (existing.rows.length > 0) {
+      // Incrementa la quantità invece di resettarla!
+      await client.query(
+        "UPDATE carrello SET quantita = quantita + $1 WHERE id_utente = $2 AND id_prodotto = $3 AND stato_carrello = $4",
+        [quantita, id_utente, id_prodotto, stato_carrello]
+      );
+    } else {
+      await client.query(
+        "INSERT INTO carrello (id_utente, id_prodotto, prezzo_totale, stato_carrello, quantita) VALUES ($1, $2, $3, $4, $5)",
+        [id_utente, id_prodotto, prezzo_totale, stato_carrello, quantita]
+      );
     }
+    res.json({ message: "Prodotto aggiunto/aggiornato nel carrello" });
+  } catch (err) {
+    console.error("Errore aggiunta carrello:", err);
+    res.status(500).json({ error: "Errore inserimento carrello" });
+  }
 });
 
 app.delete("/api/remove-from-cart", async (req, res) => {
@@ -212,6 +223,43 @@ app.get("/api/account/:id", async (req, res) => {
   } catch (err) {
     console.error("Errore recupero account:", err);
     res.status(500).json({ error: "Errore server" });
+  }
+});
+
+app.get("/api/cart/:id_utente", async (req, res) => {
+  const id_utente = req.params.id_utente;
+  try {
+    // JOIN per prendere anche i dati del prodotto (nome, immagine, prezzo)
+    const result = await client.query(
+      `SELECT c.id_carrello, c.id_prodotto, c.prezzo_totale, c.stato_carrello, c.quantita, p.name, p.immagine, p.prezzo
+      FROM carrello c
+      JOIN prodotti p ON c.id_prodotto = p.id
+      WHERE c.id_utente = $1 AND c.stato_carrello = true`,
+      [id_utente]
+    );
+    result.rows.forEach(row => {
+      row.immagine = row.immagine
+        ? Buffer.from(row.immagine.slice(2), 'hex').toString()
+        : '';
+    });
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Errore recupero carrello:", err);
+    res.status(500).json({ error: "Errore recupero carrello" });
+  }
+});
+
+app.put("/api/update-cart-quantity", async (req, res) => {
+  const { userId, prodottoId, quantity } = req.body;
+  try {
+    await client.query(
+      "UPDATE carrello SET quantita = $1 WHERE id_utente = $2 AND id_prodotto = $3",
+      [quantity, userId, prodottoId]
+    );
+    res.json({ message: "Quantità aggiornata" });
+  } catch (err) {
+    console.error("Errore update quantity:", err);
+    res.status(500).json({ error: "Errore aggiornamento quantità" });
   }
 });
 
