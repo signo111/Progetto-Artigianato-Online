@@ -263,6 +263,35 @@ app.put("/api/update-cart-quantity", async (req, res) => {
   }
 });
 
+//informazioni prodotto
+app.get('/api/prodotti', async (req, res) => {
+  try {
+    const result = await client.query(
+      'SELECT id, name, prezzo, descrizione, disponibilita, immagine, quantita, id_utente FROM prodotti'
+    );
+
+    result.rows.forEach(row => {
+      if (row.immagine && typeof row.immagine === 'string') {
+        try {
+          const hex = row.immagine.replace(/^\\x/, '');
+          const decoded = Buffer.from(hex, 'hex').toString(); // es: 'images/1.png'
+          row.immagine = '/' + decoded; // es: '/images/1.png'
+        } catch (err) {
+          console.warn(`Errore parsing immagine prodotto ID ${row.id}:`, err);
+          row.immagine = '/images/placeholder.png';
+        }
+      }
+    });
+    console.log("Prodotti trovati:", result.rows);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Errore query prodotti:", err);
+    res.status(500).json({ error: 'Errore nella query SQL' });
+  }
+});
+
+
+
 
 app.listen(3000,()=>{
     console.log("port connected")

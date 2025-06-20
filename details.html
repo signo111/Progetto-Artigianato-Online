@@ -69,7 +69,7 @@
 
     <script>        //prendi i dati dei prodotti dal file JSON
 
-        const ruolo = localStorage.getItem("ruolo");
+      /*  const ruolo = localStorage.getItem("ruolo");
         document.getElementById("nav-nuovo").style.display = ruolo === "artigiano" ? "" : "none";
         document.getElementById("nav-modifica").style.display = ruolo === "artigiano" ? "" : "none";
         
@@ -180,8 +180,86 @@
     .then(data => console.log(data))
     .catch(err => console.error("Errore DB:", err));
   }
-});
+});*/
+let products = null;
+fetch('http://localhost:3000/api/prodotti')
+  .then(response => response.json())
+  .then(data => {
+    products = data;
+    showDetail();
+  });
 
+function showDetail() {
+  const productID = new URLSearchParams(window.location.search).get('id');
+  const thisProduct = products.find(p => p.id == productID);
+
+  if (!thisProduct) {
+    window.location.href = '/';
+    return;
+  }
+
+  document.getElementById("productImage").src = thisProduct.immagine;
+  document.querySelector(".name").innerText = thisProduct.name;
+  document.querySelector(".price").innerText = `€ ${thisProduct.prezzo}`;
+  document.querySelector(".description").innerText = thisProduct.descrizione;
+
+  const listProduct = document.querySelector('.listProduct');
+  products.filter(p => p.id != productID).forEach(product => {
+    const newProduct = document.createElement('a');
+    newProduct.href = `/details.html?id=${product.id}`;
+    newProduct.classList.add('item');
+    newProduct.innerHTML = `
+      <img src="${product.immagine}" alt="Immagine Prodotto">
+      <h2>${product.name}</h2>
+      <div class="price">${product.prezzo} €</div>
+    `;
+    listProduct.appendChild(newProduct);
+  });
+}
+ document.getElementById('checkoutBtn').onclick = function() {
+            window.location.href = 'cart.html';
+        };
+document.getElementById('addToCartBtn').addEventListener('click', function () {
+  const userId = localStorage.getItem("userId");
+  const cartKey = userId ? `cart_${userId}` : "cart_guest";
+
+  alert("Prodotto aggiunto al carrello!");
+
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+  let existingProduct = cart.find(p => p.id === thisProduct.id);
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    cart.push({
+      id: thisProduct.id,
+      name: thisProduct.name,
+      image: thisProduct.immagine,
+      price: thisProduct.prezzo,
+      quantity: 1
+    });
+  }
+
+  localStorage.setItem(cartKey, JSON.stringify(cart));
+
+  // Salva anche nel backend se loggato
+  if (userId) {
+    fetch("http://localhost:3000/api/add-to-cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_utente: parseInt(userId),
+        id_prodotto: thisProduct.id,
+        prezzo_totale: thisProduct.prezzo,
+        stato_carrello: true,
+        quantita: 1
+      })
+    })
+    .then(res => res.ok ? res.json() : Promise.reject("Errore server"))
+    .then(data => console.log(data))
+    .catch(err => console.error("Errore DB:", err));
+  }
+});
 
     </script>
     
