@@ -139,9 +139,9 @@ app.post("/create-checkout-session", async (req, res) => {
       product_data: {
         name: item.name,
       },
-      unit_amount: item.amount, // deve essere in centesimi!
+      unit_amount: Math.round(Number(item.prezzo) * 100), // deve essere in centesimi!
     },
-    quantity: item.quantity,
+    quantity: item.quantita || 1,
   }));
 
   try {

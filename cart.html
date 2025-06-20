@@ -76,49 +76,49 @@
     }
 
     async function updateCart() {
-  const userId = localStorage.getItem("userId");
-  if (!userId) {
-    document.getElementById("cart").innerHTML = "<p>Effettua il login per vedere il carrello.</p>";
-    document.getElementById("totalPrice").textContent = "0.00";
-    return;
-  }
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        document.getElementById("cart").innerHTML = "<p>Effettua il login per vedere il carrello.</p>";
+        document.getElementById("totalPrice").textContent = "0.00";
+        return;
+      }
 
-  try {
-    const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
-    const cart = await res.json();
-    console.log("Carrello ricevuto dal backend:", cart);
+      try {
+        const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
+        const cart = await res.json();
+        console.log("Carrello ricevuto dal backend:", cart);
 
-    let total = 0;
-    const cartContainer = document.getElementById("cart");
-    cartContainer.innerHTML = "";
+        let total = 0;
+        const cartContainer = document.getElementById("cart");
+        cartContainer.innerHTML = "";
 
-    if (cart.length === 0) {
-      cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
-    } else {
-      cart.forEach(item => {
-        console.log("immagine:", item.immagine);
-        total += parseFloat(item.prezzo_totale);
-        cartContainer.innerHTML += `
-          <div class="cart-item">
-            <img src="${item.immagine}" alt="${item.name}" width="100">
-            <div class="details">
-              <h3>${item.name}</h3>
-              <p>Prezzo: €${item.prezzo}</p>
-              <p>Quantità: <input type="number" min="1" value="${item.quantita || 1}" onchange="updateQuantity(${item.id_prodotto}, this.value)" />
-            </div>
-            <div class="actions">
-              <button onclick="removeItem(${item.id_prodotto})">Rimuovi</button>
-            </div>
-          </div>
-        `;
-      });
+        if (cart.length === 0) {
+          cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
+        } else {
+          cart.forEach(item => {
+            console.log("immagine:", item.immagine);
+            total += parseFloat(item.prezzo) * (item.quantita || 1);
+            cartContainer.innerHTML += `
+              <div class="cart-item">
+                <img src="${item.immagine}" alt="${item.name}" width="100">
+                <div class="details">
+                  <h3>${item.name}</h3>
+                  <p>Prezzo: €${item.prezzo}</p>
+                  <p>Quantità: <input type="number" min="1" value="${item.quantita || 1}" onchange="updateQuantity(${item.id_prodotto}, this.value)" />
+                </div>
+                <div class="actions">
+                  <button onclick="removeItem(${item.id_prodotto})">Rimuovi</button>
+                </div>
+              </div>
+            `;
+          });
+        }
+        document.getElementById("totalPrice").textContent = total.toFixed(2);
+      } catch (err) {
+        document.getElementById("cart").innerHTML = "<p>Errore nel caricamento del carrello.</p>";
+        document.getElementById("totalPrice").textContent = "0.00";
+      }
     }
-    document.getElementById("totalPrice").textContent = total.toFixed(2);
-  } catch (err) {
-    document.getElementById("cart").innerHTML = "<p>Errore nel caricamento del carrello.</p>";
-    document.getElementById("totalPrice").textContent = "0.00";
-  }
-}
 
     async function updateQuantity(id_prodotto, quantity) {
   const userId = localStorage.getItem("userId");
@@ -171,7 +171,8 @@
         return;
       }
 
-      const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+      const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
+      const cart = await res.json();
 
       if (cart.length === 0) {
         alert("Il carrello è vuoto!");
@@ -180,8 +181,8 @@
 
       const items = cart.map((item) => ({
         name: item.name,
-        amount: Math.round(item.price * 100),
-        quantity: item.quantity,
+        prezzo: item.prezzo,
+        quantita: item.quantita,
       }));
 
       try {
