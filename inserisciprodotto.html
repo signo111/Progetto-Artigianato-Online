@@ -96,6 +96,55 @@ if (ruolo === "artigiano") {
         <button type="submit">Aggiungi Prodotto</button>
     </form>
     </section>
+<script>
+document.getElementById("productForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+        alert("Utente non autenticato.");
+        return;
+    }
+
+    const nome = document.getElementById("name").value;
+    const descrizione = document.getElementById("description").value;
+    const prezzo = parseFloat(document.getElementById("price").value);
+    const quantità = parseInt(document.getElementById("quantity").value, 10);
+    const immagine = document.getElementById("image").files[0];
+
+    const formData = new FormData();
+    formData.append("nome", nome);
+    formData.append("descrizione", descrizione);
+    formData.append("prezzo", prezzo);
+    formData.append("quantita", quantità);
+    formData.append("id_utente", userId);
+    formData.append("immagine", immagine);
+
+    try {
+        for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+}
+        const res = await fetch("http://localhost:3000/api/prodotti", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            alert("Prodotto inserito con successo!");
+            window.location.href = "products.html";
+        } else {
+            alert("Errore: " + data.message);
+        }
+    } catch (err) {
+        console.error("Errore di rete:", err);
+        alert("Errore durante l'invio del prodotto.");
+    }
+});
+
+
+
+</script>
 
 </body>
 </html>

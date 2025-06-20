@@ -49,9 +49,10 @@ app.use(cors());
 const {client}=require("./db")
 const bcrypt = require("bcrypt");
 const stripe = require('stripe')('sk_test_51RTTSLFbljXrIje8zNiNi30WK064OWmPaUT4exuXiH2soQYraahkGExdLaBFvFFeSDUTJUBhqaecHABVziDZJiGx00lM6MNpdS');
-
+const multer = require('multer');
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
+
 
 const path = require("path");
 
@@ -320,6 +321,74 @@ app.get('/api/orders/:userId', async (req, res) => {
   } catch (err) {
     console.error("Errore recupero ordini:", err);
     res.status(500).json({ error: "Errore recupero ordini" });
+  }
+});
+
+
+//inserimento prodotti zeryab
+app.post('/api/insert-product', async (req, res) => {
+  const { userId, name, prezzo, descrizione, disponibilita, immagine, quantita } = req.body;
+
+  if (!userId || !name || !prezzo) {
+    return res.status(400).json({ error: "Campi obbligatori mancanti" });
+  }
+
+  try {
+    await client.query(
+      `INSERT INTO prodotti 
+       (id_utente, name, prezzo, descrizione, disponibilita, immagine, quantita) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [userId, name, prezzo, descrizione, disponibilita, immagine, quantita]
+    );
+    res.json({ message: "Prodotto inserito correttamente" });
+  } catch (err) {
+    console.error("Errore inserimento prodotto:", err);
+    res.status(500).json({ error: "Errore server durante inserimento prodotto" });
+  }
+});
+
+// Multer per il caricamento immagini
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "images/"),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext);
+  }
+});
+const upload = multer({ storage });
+
+app.use(express.static("public")); // per servire HTML e CSS
+app.use("/images", express.static("images")); // per accedere alle immagini
+
+app.post("/api/prodotti", upload.single("immagine"), (req, res) => {
+  const { nome, descrizione, prezzo, quantita, id_utente } = req.body;
+  const disponibilita = quantita > 0;
+
+  const immagine = req.file ? req.file.filename : null;
+
+  if (!id_utente) {
+    return res.status(400).json({ message: "ID utente mancante." });
+  }
+const sql = `
+  INSERT INTO prodotti (name, descrizione, prezzo, quantita, id_utente, immagine,disponibilita)
+  VALUES ($1, $2, $3, $4, $5, $6, $7)
+  RETURNING id`;
+  client.query(sql, [nome, descrizione, prezzo, quantita, id_utente, immagine], (err, result) => {
+    if (err) {
+      console.error("Errore DB:", err);
+      return res.status(500).json({ message: "Errore durante l'inserimento." });
+    }
+    res.status(201).json({ message: "Prodotto inserito!", id: result.rows[0]?.id });
+
+  });
+});
+
+// Solo se la sequenza esiste già (es: hai usato SERIAL)
+client.query(`SELECT setval('prodotti_id_seq', (SELECT MAX(id) FROM prodotti))`, (err) => {
+  if (err) {
+    console.error("❌ Errore nel riallineare la sequenza prodotti_id_seq:", err);
+  } else {
+    console.log("✅ Sequenza prodotti_id_seq riallineata con l'ID massimo corrente.");
   }
 });
 
