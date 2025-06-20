@@ -46,32 +46,32 @@
 
     const navAuth = document.getElementById("nav-auth");
     
-if (localStorage.getItem("ruolo")) {
-  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+    if (localStorage.getItem("ruolo")) {
+    navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
 
-  document.getElementById("logoutLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    if (confirm("Sei sicuro di voler uscire?")) {
-      localStorage.removeItem("ruolo");
-      alert("Logout effettuato");
-      window.location.reload();
+    document.getElementById("logoutLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (confirm("Sei sicuro di voler uscire?")) {
+        localStorage.removeItem("ruolo");
+        alert("Logout effettuato");
+        window.location.reload();
+        }
+        // Se premi "Annulla", non succede nulla
+    });
+    } else {
+    navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-    // Se premi "Annulla", non succede nulla
-  });
-} else {
-  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-}
 
-const ruolo = localStorage.getItem("ruolo");
+    const ruolo = localStorage.getItem("ruolo");
 
-if (ruolo === "artigiano") {
-  document.getElementById("nav-nuovo").style.display = "";
-  document.getElementById("nav-modifica").style.display = "";
-} else {
-  // Nascondi comunque, anche se qualcuno ha forzato visibilità
-  document.getElementById("nav-nuovo").style.display = "none";
-  document.getElementById("nav-modifica").style.display = "none";
-}
+    if (ruolo === "artigiano") {
+    document.getElementById("nav-nuovo").style.display = "";
+    document.getElementById("nav-modifica").style.display = "";
+    } else {
+    // Nascondi comunque, anche se qualcuno ha forzato visibilità
+    document.getElementById("nav-nuovo").style.display = "none";
+    document.getElementById("nav-modifica").style.display = "none";
+    }
     </script>
 
     
@@ -137,14 +137,39 @@ if (ruolo === "artigiano") {
         document.getElementById("profileImage").src = "images/user_image1.png";
         document.querySelector(".username").innerText = data.name;
         document.querySelector(".email").innerText = data.email;
-       document.querySelector(".ruolo").innerText = "Ruolo: " + data.ruolo;
+        document.querySelector(".ruolo").innerText = "Ruolo: " + data.ruolo;
       
-      })
-      .catch(error => {
-        console.error("Errore fetch:", error);
-        alert("Errore di connessione.");
-      });
+    })
+    .catch(error => {
+    console.error("Errore fetch:", error);
+    alert("Errore di connessione.");
+    });
+
+    fetch(`http://localhost:3000/api/orders/${userId}`)
+        .then(response => response.json())
+        .then(orders => {
+        const tbody = document.getElementById("orderTableBody");
+        tbody.innerHTML = "";
+        orders.forEach(order => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td>${order.id_ordine}</td>
+            <td>${order.chiusura_ordine ? new Date(order.chiusura_ordine).toLocaleString() : ""}</td>
+            <td>${order.totale || order.prezzo || ""}</td>
+            <td>${order.stato_ordine}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    })
+    .catch(error => {
+    console.error("Errore fetch ordini:", error);
+    });
+
+      
   });
+
+  
+
 </script>
 
 

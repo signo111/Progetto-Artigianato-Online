@@ -202,13 +202,6 @@ app.delete("/api/remove-from-cart", async (req, res) => {
   }
 });
 
-app.get('/api/orders/:userId', async (req, res) => {
-  const userId = req.params.userId;
-  // leggi dal DB gli ordini di questo utente
-  const orders = await db.query('SELECT * FROM ordini WHERE user_id = $1', [userId]);
-  res.json(orders.rows);
-});
-
 app.get("/api/account/:id", async (req, res) => {
   const userId = req.params.id;
   try {
@@ -289,7 +282,46 @@ app.get('/api/prodotti', async (req, res) => {
   }
 });
 
+app.post("/api/complete-order", async (req, res) => {
+  const { userId } = req.body;
+  try {
+    // Prendi tutti i prodotti nel carrello dell'utente
+    const carrello = await client.query(
+      "SELECT * FROM carrello WHERE id_utente = $1 AND stato_carrello = true",
+      [userId]
+    );
 
+    // Per ogni prodotto nel carrello, crea un ordine
+    for (const item of carrello.rows) {
+      await client.query(
+        "INSERT INTO ordine (id_utente, id_carrello, stato_ordine, chiusura_ordine) VALUES ($1, $2, $3, NOW())",
+        [userId, item.id_carrello, 'completato']
+      );
+    }
+
+    // Svuota il carrello dell'utente
+    await client.query(
+      "DELETE FROM carrello WHERE id_utente = $1 AND stato_carrello = true",
+      [userId]
+    );
+
+    res.json({ message: "Ordine completato e carrello svuotato" });
+  } catch (err) {
+    console.error("Errore completamento ordine:", err);
+    res.status(500).json({ error: "Errore completamento ordine" });
+  }
+});
+
+app.get('/api/orders/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const orders = await client.query('SELECT * FROM ordine WHERE id_utente = $1', [userId]);
+    res.json(orders.rows);
+  } catch (err) {
+    console.error("Errore recupero ordini:", err);
+    res.status(500).json({ error: "Errore recupero ordini" });
+  }
+});
 
 
 app.listen(3000,()=>{

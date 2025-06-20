@@ -80,6 +80,18 @@
         document.getElementById("nav-modifica").style.display = "none";
       }
 
+      
+      document.addEventListener("DOMContentLoaded", async function() {
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          await fetch("http://localhost:3000/api/complete-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId })
+          });
+        }
+      });
+
       // Svuota il carrello al caricamento della pagina di successo
       localStorage.removeItem('cart');
       
