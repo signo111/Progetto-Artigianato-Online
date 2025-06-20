@@ -282,7 +282,6 @@ app.get('/api/prodotti', async (req, res) => {
         }
       }
     });
-    console.log("Prodotti trovati:", result.rows);
     res.json(result.rows);
   } catch (err) {
     console.error("Errore query prodotti:", err);

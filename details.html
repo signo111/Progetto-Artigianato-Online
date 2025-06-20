@@ -182,6 +182,9 @@
   }
 });*/
 let products = null;
+let thisProduct = null;
+
+// Carica i prodotti dal backend e mostra i dettagli
 fetch('http://localhost:3000/api/prodotti')
   .then(response => response.json())
   .then(data => {
@@ -191,7 +194,7 @@ fetch('http://localhost:3000/api/prodotti')
 
 function showDetail() {
   const productID = new URLSearchParams(window.location.search).get('id');
-  const thisProduct = products.find(p => p.id == productID);
+  thisProduct = products.find(p => p.id == productID);
 
   if (!thisProduct) {
     window.location.href = '/';
@@ -216,9 +219,13 @@ function showDetail() {
     listProduct.appendChild(newProduct);
   });
 }
- document.getElementById('checkoutBtn').onclick = function() {
-            window.location.href = 'cart.html';
-        };
+
+// Pulsante "Checkout"
+document.getElementById('checkoutBtn').onclick = function () {
+  window.location.href = 'cart.html';
+};
+
+// Pulsante "Aggiungi al carrello"
 document.getElementById('addToCartBtn').addEventListener('click', function () {
   const userId = localStorage.getItem("userId");
   const cartKey = userId ? `cart_${userId}` : "cart_guest";
@@ -242,7 +249,7 @@ document.getElementById('addToCartBtn').addEventListener('click', function () {
 
   localStorage.setItem(cartKey, JSON.stringify(cart));
 
-  // Salva anche nel backend se loggato
+  // Salvataggio backend solo se loggato
   if (userId) {
     fetch("http://localhost:3000/api/add-to-cart", {
       method: "POST",
@@ -258,6 +265,48 @@ document.getElementById('addToCartBtn').addEventListener('click', function () {
     .then(res => res.ok ? res.json() : Promise.reject("Errore server"))
     .then(data => console.log(data))
     .catch(err => console.error("Errore DB:", err));
+  }
+});
+
+// Mostra voci menu in base al ruolo
+document.addEventListener('DOMContentLoaded', function () {
+  const ruolo = localStorage.getItem('ruolo');
+
+  const navNuovo = document.getElementById('nav-nuovo');
+  const navModifica = document.getElementById('nav-modifica');
+  const navAcc = document.getElementById('nav-acc');
+  const navAuth = document.getElementById("nav-auth");
+
+  if (ruolo === 'artigiano') {
+    navNuovo.style.display = '';
+    navModifica.style.display = '';
+    navAcc.style.display = '';
+  } else if (ruolo === 'cliente') {
+    navNuovo.style.display = 'none';
+    navModifica.style.display = 'none';
+    navAcc.style.display = '';
+  } else {
+    navNuovo.style.display = 'none';
+    navModifica.style.display = 'none';
+    navAcc.style.display = 'none';
+  }
+
+  // Gestione login/logout
+  if (ruolo) {
+    navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+    document.getElementById("logoutLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      if (confirm("Sei sicuro di voler uscire?")) {
+        localStorage.removeItem("ruolo");
+        const userId = localStorage.getItem("userId");
+        localStorage.removeItem("userId");
+        localStorage.removeItem(`cart_${userId}`);
+        alert("Logout effettuato");
+        window.location.reload();
+      }
+    });
+  } else {
+    navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
   }
 });
 
