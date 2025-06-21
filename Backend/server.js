@@ -489,6 +489,43 @@ app.delete('/api/utenti/:id', async (req, res) => {
     }
 });
 
+
+app.put('/api/utenti/:id', async(req, res) => {
+  const { id } = req.params;
+  const { ruolo, password } = req.body;
+
+  // Se viene fornita anche la password, aggiorna entrambi
+  if (password && password.trim() !== "") {
+      const hashedPassword = await bcrypt.hash(password, 10); // 👈 await ora è valido!
+    client.query(
+      'UPDATE utenti SET ruolo = $1, password = $2 WHERE id = $3',
+      [ruolo, hashedPassword, id],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: 'Errore aggiornamento dati' });
+        res.json({ message: 'Dati aggiornati con successo' });
+      }
+    );
+  } else {
+    // Altrimenti aggiorna solo il ruolo
+    client.query(
+      'UPDATE utenti SET ruolo = $1 WHERE id = $2',
+      [ruolo, id],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: 'Errore aggiornamento ruolo' });
+        res.json({ message: 'Ruolo aggiornato con successo' });
+      }
+    );
+  }
+});
+
+app.get('/api/utenti', (req, res) => {
+  client.query('SELECT id, name, email, ruolo FROM utenti', (err, result) => {
+    if (err) return res.status(500).json({ error: 'Errore nel caricamento utenti' });
+    res.json(result.rows);
+  });
+});
+
+
 // Avvia il server sulla porta 3000
 app.listen(3000, () => {
   console.log("port connected");

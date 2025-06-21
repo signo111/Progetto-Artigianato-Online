@@ -121,7 +121,8 @@ const ruolo = localStorage.getItem("ruolo");
                         <th>ID Utente</th>
                         <th>Nome</th>
                         <th>Email</th>
-                        <th>Ruolo</th>
+                       <th>Ruolo</th>
+                         <th>Password</th>
                         <th>Modifica</th>
                         <th>Elimina</th>
                     </tr>
@@ -132,6 +133,79 @@ const ruolo = localStorage.getItem("ruolo");
             </table>
         </div>
     </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  fetch("http://localhost:3000/api/utenti")
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.getElementById("orderTableBody");
+      data.forEach(utente => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${utente.id}</td>
+          <td>${utente.name}</td>
+          <td>${utente.email}</td>
+        
+          <td>
+            <select data-id="${utente.id}" class="selectRuolo">
+              <option value="cliente" ${utente.ruolo === "cliente" ? "selected" : ""}>cliente</option>
+              <option value="artigiano" ${utente.ruolo === "artigiano" ? "selected" : ""}>artigiano</option>
+              <option value="amministratore" ${utente.ruolo === "amministratore" ? "selected" : ""}>amministratore</option>
+            </select>
+          </td>
+          <td><input type="password" class="nuovaPassword" data-id="${utente.id}" placeholder="Nuova password"></td>
+          <td><button class="salvaBtn" data-id="${utente.id}">Salva</button></td>
+          <td><button class="eliminaBtn" data-id="${utente.id}">Elimina</button></td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      // Listener per salvataggio ruolo
+      document.querySelectorAll(".salvaBtn").forEach(button => {
+  button.addEventListener("click", () => {
+    const id = button.getAttribute("data-id");
+    const nuovoRuolo = document.querySelector(`select[data-id="${id}"]`).value;
+    const nuovaPassword = document.querySelector(`input.nuovaPassword[data-id="${id}"]`).value;
+
+    fetch(`http://localhost:3000/api/utenti/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ruolo: nuovoRuolo, password: nuovaPassword })
+    })
+    .then(res => res.json())
+    .then(result => {
+      alert(result.message);
+    })
+    .catch(err => {
+      console.error("Errore aggiornamento:", err);
+      alert("Errore durante il salvataggio.");
+    });
+  });
+});
+
+      // Listener per eliminazione
+      document.querySelectorAll(".eliminaBtn").forEach(button => {
+        button.addEventListener("click", () => {
+          const id = button.getAttribute("data-id");
+          if (confirm("Sei sicuro di voler eliminare questo utente?")) {
+            fetch(`http://localhost:3000/api/utenti/${id}`, { method: "DELETE" })
+              .then(res => res.json())
+              .then(result => {
+                alert(result.message);
+                window.location.reload(); // aggiorna la tabella
+              })
+              .catch(err => {
+                console.error("Errore eliminazione:", err);
+                alert("Errore durante l'eliminazione.");
+              });
+          }
+        });
+      });
+    });
+});
+</script>
 
 </body>
     
