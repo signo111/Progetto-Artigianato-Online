@@ -274,17 +274,27 @@ app.post("/api/complete-order", async (req, res) => {
   }
 });
 
-// Restituisce tutti gli ordini dell'utente
+// Restituisce tutti gli ordini dell'utente se non si è loggati come amministratore altrimenti stampa tutti gli ordini 
 app.get('/api/orders/:userId', async (req, res) => {
   const userId = req.params.userId;
+  const isAdmin = req.user && req.user.role === 'amministratore'; // Assicurati che req.user sia disponibile tramite autenticazione middleware
+
   try {
-    const orders = await client.query('SELECT * FROM ordine WHERE id_utente = $1', [userId]);
+    let orders;
+
+    if (isAdmin) {
+      orders = await client.query('SELECT * FROM ordine');
+    } else {
+      orders = await client.query('SELECT * FROM ordine WHERE id_utente = $1', [userId]);
+    }
+
     res.json(orders.rows);
   } catch (err) {
     console.error("Errore recupero ordini:", err);
     res.status(500).json({ error: "Errore recupero ordini" });
   }
 });
+
 
 // Inserimento prodotto (endpoint alternativo)
 app.post('/api/insert-product', async (req, res) => {
@@ -462,6 +472,7 @@ app.post("/api/modifica-account", async (req, res) => {
     res.status(500).json({ message: "Errore server" });
   }
 });
+
 
 // Avvia il server sulla porta 3000
 app.listen(3000, () => {

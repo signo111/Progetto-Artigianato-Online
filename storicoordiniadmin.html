@@ -1,0 +1,211 @@
+<html>
+   <head>
+    <link rel="icon" href="images/logo.png" type="image/png">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Storico ordini admin</title>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    <header>
+        <div class="logo"><a href="index.html">Artigianato Online</a></div>
+        <nav> <!-- Burger menu che si vede solo su mobile -->
+            <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect y="5" class="burger-menu"/>
+                    <rect y="12.5" class="burger-menu"/>
+                    <rect y="20" class="burger-menu"/>
+                </svg>
+            </button>
+           <ul id="nav-list">
+  <li><a href="index.html">Home</a></li>
+  <li><a href="products.html">Prodotti</a></li>
+  <li id="nav-acc"><a href="account.html">Account</a></li>
+  <li><a href="cart.html">Carrello</a></li>
+  <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+  <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+
+  <!-- Link admin nascosti di default -->
+  <li id="nav-admin-acc" style="display: none;"><a href="admin_visualizzazione_account.html">Account Utenti</a></li>
+  <li id="nav-admin-prod" style="display: none;"><a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
+  <li id="nav-admin-storico" style="display: none;"><a href="storicoordiniadmin.html">Storico Ordini</a></li>
+
+  <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+</ul>
+        </nav>
+    </header>
+    <script>
+        // Burger menu toggle
+        const burger = document.getElementById('menuCheckbox');
+        const navList = document.getElementById('nav-list');
+        // apertura
+        burger.onclick = function() {
+            navList.classList.toggle('open');
+        };
+
+        // chiusura
+        document.addEventListener('click', function(event) {
+        if (navList.classList.contains('open')) {
+            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+                navList.classList.remove('open');
+            }
+        }
+    });
+
+    const navAuth = document.getElementById("nav-auth");
+    
+    if (localStorage.getItem("ruolo")) {
+    navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+
+    document.getElementById("logoutLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (confirm("Sei sicuro di voler uscire?")) {
+        localStorage.removeItem("ruolo");
+        alert("Logout effettuato");
+        window.location.reload();
+        }
+        // Se premi "Annulla", non succede nulla
+    });
+    } else {
+    navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+    }
+
+    const ruolo = localStorage.getItem("ruolo");
+
+    if (ruolo === "artigiano") {
+    document.getElementById("nav-nuovo").style.display = "";
+    document.getElementById("nav-modifica").style.display = "";
+    } else {
+    // Nascondi comunque, anche se qualcuno ha forzato visibilità
+    document.getElementById("nav-nuovo").style.display = "none";
+    document.getElementById("nav-modifica").style.display = "none";
+    }
+    </script>
+
+    
+
+  <body>
+
+   <!-- Storico ordini -->
+        <div class="tabella">
+            <h2>Storico Ordini</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Ordine</th>
+                        <th>Data</th>
+                        <th>Totale</th>
+                        <th>Stato</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                    <!-- I dati degli ordini verranno inseriti qui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+  const burger = document.getElementById("menuCheckbox");
+  burger.onclick = function () {
+    navList.classList.toggle("open");
+  };
+
+  document.addEventListener("click", function (event) {
+    if (navList.classList.contains("open")) {
+      if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+        navList.classList.remove("open");
+      }
+    }
+  });
+
+  if (ruolo) {
+    navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+    document.getElementById("logoutLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      if (confirm("Sei sicuro di voler uscire?")) {
+        localStorage.removeItem("ruolo");
+        localStorage.removeItem("userId");
+        alert("Logout effettuato");
+        window.location.reload();
+      }
+    });
+  } else {
+    navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+  }
+
+  // Gestione visibilità link artigiano
+  if (ruolo === "artigiano") {
+    document.getElementById("nav-nuovo").style.display = "";
+    document.getElementById("nav-modifica").style.display = "";
+  } else {
+    document.getElementById("nav-nuovo").style.display = "none";
+    document.getElementById("nav-modifica").style.display = "none";
+  }
+
+  // Aggiunta link per admin
+  if (ruolo === "amministratore") {
+    const adminLinks = `
+      <li><a href="admin_visualizzazione_account.html">Account Utenti</a></li>
+      <li><a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
+      <li><a href="storicoordiniadmin.html">Storico Ordini</a></li>
+    `;
+    navList.insertAdjacentHTML("beforeend", adminLinks);
+  }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Nessun utente autenticato.");
+      window.location.href = "accedi.html";
+      return;
+    }
+
+    fetch(`http://localhost:3000/api/account/${userId}`)
+      .then(response => response.json())
+      .then(data => {
+         console.log("Dati ricevuti:", data);
+        if (data.error) {
+          alert("Errore nel caricamento dati.");
+          return;
+        }
+
+        
+        document.getElementById("profileImage").src = "images/user_image1.png";
+        document.querySelector(".username").innerText = data.name;
+        document.querySelector(".email").innerText = data.email;
+        document.querySelector(".ruolo").innerText = "Ruolo: " + data.ruolo;
+      
+    })
+    .catch(error => {
+    console.error("Errore fetch:", error);
+    alert("Errore di connessione.");
+    });
+
+    fetch(`http://localhost:3000/api/orders/${userId}`)
+        .then(response => response.json())
+        .then(orders => {
+        const tbody = document.getElementById("orderTableBody");
+        tbody.innerHTML = "";
+        orders.forEach(order => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td>${order.id_ordine}</td>
+            <td>${order.chiusura_ordine ? new Date(order.chiusura_ordine).toLocaleString() : ""}</td>
+            <td>${order.totale || order.prezzo || ""}</td>
+            <td>${order.stato_ordine}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    })
+    .catch(error => {
+    console.error("Errore fetch ordini:", error);
+    });
+
+      
+  });
+
+  
+
+</script>
+</body>
+</html>
