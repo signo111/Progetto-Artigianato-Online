@@ -125,7 +125,7 @@ const ruolo = localStorage.getItem('ruolo');
                         <th>Quantità</th>
                         <th>Disponibilità</th>
                         <th>Aggiorna</th>
-                        <th>Elmina</th>
+                        <th>Elimina</th>
                         
                     </tr>
                 </thead>
@@ -145,20 +145,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
-          <td>${prodotto.id}</td>
-          <td><input value="${prodotto.name}" class="name" data-id="${prodotto.id}"></td>
-    <td>
+          <td data-label="ID Prodotto">${prodotto.id}</td>
+          <td data-label="Nome"><input value="${prodotto.name}" class="name" data-id="${prodotto.id}"></td>
+          <td data-label="Immagine"><input value="${prodotto.immagine}" class="immagine" data-id="${prodotto.id}" hidden>
+          <input type="file" class="file-input" data-id="${prodotto.id}" accept="image/*">
+          </td>
 
-  <input value="${prodotto.immagine}" class="immagine" data-id="${prodotto.id}" hidden>
-  <input type="file" class="file-input" data-id="${prodotto.id}" accept="image/*">
-</td>
-
-          <td><input value="${prodotto.descrizione}" class="descrizione" data-id="${prodotto.id}"></td>
-          <td><input type="number" value="${prodotto.prezzo}" class="prezzo" data-id="${prodotto.id}"></td>
-          <td><input type="number" value="${prodotto.quantita}" class="quantita" data-id="${prodotto.id}"></td>
-          <td><input value="${prodotto.disponibilita}" class="disponibilita" data-id="${prodotto.id}"></td>
-          <td><button class="salvaProdotto" data-id="${prodotto.id}">Salva</button></td>
-          <td><button class="eliminaProdotto" data-id="${prodotto.id}">Elimina</button></td>
+          <td data-label="Descrizione"><input value="${prodotto.descrizione}" class="descrizione" data-id="${prodotto.id}"></td>
+          <td data-label="Prezzo"><input type="number" value="${prodotto.prezzo}" class="prezzo" data-id="${prodotto.id}"></td>
+          <td data-label="Quantità"><input type="number" value="${prodotto.quantita}" class="quantita" data-id="${prodotto.id}"></td>
+          <td data-label="Disponibilità"><input value="${prodotto.disponibilita}" class="disponibilita" data-id="${prodotto.id}"></td>
+          <td data-label="Aggiorna"><button class="salvaProdotto" data-id="${prodotto.id}">Salva</button></td>
+          <td data-label="Elimina"><button class="eliminaProdotto" data-id="${prodotto.id}">Elimina</button></td>
         `;
         tbody.appendChild(tr);
       });

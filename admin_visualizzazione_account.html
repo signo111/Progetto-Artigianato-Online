@@ -143,20 +143,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
-          <td>${utente.id}</td>
-          <td>${utente.name}</td>
-          <td>${utente.email}</td>
+          <td data-label="ID Utente">${utente.id}</td>
+          <td data-label="Nome">${utente.name}</td>
+          <td data-label="Email">${utente.email}</td>
         
-          <td>
+          <td data-label="Ruolo">
             <select data-id="${utente.id}" class="selectRuolo">
               <option value="cliente" ${utente.ruolo === "cliente" ? "selected" : ""}>cliente</option>
               <option value="artigiano" ${utente.ruolo === "artigiano" ? "selected" : ""}>artigiano</option>
               <option value="amministratore" ${utente.ruolo === "amministratore" ? "selected" : ""}>amministratore</option>
             </select>
           </td>
-          <td><input type="password" class="nuovaPassword" data-id="${utente.id}" placeholder="Nuova password"></td>
-          <td><button class="salvaBtn" data-id="${utente.id}">Salva</button></td>
-          <td><button class="eliminaBtn" data-id="${utente.id}">Elimina</button></td>
+          <td data-label="Password"><input type="password" class="nuovaPassword" data-id="${utente.id}" placeholder="Nuova password"></td>
+          <td data-label="Modifica"><button class="salvaBtn" data-id="${utente.id}">Salva</button></td>
+          <td data-label="Elimina"><button class="eliminaBtn" data-id="${utente.id}">Elimina</button></td>
         `;
 
         tbody.appendChild(tr);

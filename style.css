@@ -637,7 +637,7 @@ form input[type="file"] {
         }
 /*sezione tabella*/
 .tabella {
-    max-width: 800px;
+    max-width: 75%; 
     margin: 20px auto;
     background-color: #fff;
     padding: 20px;
@@ -655,12 +655,20 @@ form input[type="file"] {
 .tabella table {
     width: 100%;
     border-collapse: collapse;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    table-layout: fixed;
+    overflow-x: auto;
 }
 
 .tabella th,  .tabella td {
     border-bottom: 1px solid #ddd;
     padding: 10px;
     text-align: left;
+     background: transparent;
+    word-break: break-word;
+    box-sizing: border-box;
 }
 
 .tabella th {
@@ -672,4 +680,60 @@ form input[type="file"] {
     background-color: #f9f9f9;
 }
 
+.tabella > table {
+    margin-left: 0;
+    margin-right: 0;
+}
 
+.nuovaPassword{
+    width: 75%;
+}
+.tabella input,
+.tabella select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 600px) {
+  .tabella table, .tabella thead, .tabella tbody, .tabella tr, .tabella th, .tabella td {
+    display: block;
+    width: 100%;
+  }
+  .tabella thead {
+    display: none;
+  }
+  
+  .tabella tr {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    background: #fff;
+    box-shadow: 0 2px 6px #0001;
+    border-radius: 8px;
+    padding: 10px 0;
+  }
+  .tabella td {
+    position: relative;
+    padding-left: 50%;
+    min-height: 36px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    box-sizing: border-box;
+    text-align: left;
+    background: none;
+    vertical-align: middle;
+  }
+  .tabella td:before {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45%;
+    white-space: pre-wrap;
+    font-weight: bold;
+    color: #000000;
+    content: attr(data-label);
+    font-size: 0.98em;
+    display: block;
+  }
+}
