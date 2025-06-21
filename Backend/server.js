@@ -472,7 +472,22 @@ app.post("/api/modifica-account", async (req, res) => {
     res.status(500).json({ message: "Errore server" });
   }
 });
+app.delete('/api/utenti/:id', async (req, res) => {
+    const userId = req.params.id;
 
+    try {
+        const result = await client.query('DELETE FROM utenti WHERE id = $1', [userId]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Utente non trovato' });
+        }
+
+        res.json({ message: 'Utente eliminato con successo' });
+    } catch (error) {
+        console.error('Errore durante l\'eliminazione dell\'utente:', error);
+        res.status(500).json({ error: 'Errore interno del server' });
+    }
+});
 
 // Avvia il server sulla porta 3000
 app.listen(3000, () => {
