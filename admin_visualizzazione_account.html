@@ -16,14 +16,18 @@
                     <rect y="20" class="burger-menu"/>
                 </svg>
             </button>
-            <ul id="nav-list">
+                  <ul id="nav-list">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Prodotti</a></li>
-                <li><a href="account.html">Account</a></li>
-                <li><a href="cart.html">Carrello</a></li>
-                 <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                 <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+                <li id="prodotti"><a href="products.html">Prodotti</a></li>
+                <li id="nav-acc"><a href="account.html">Account</a></li>
+                <li id="carrello"><a href="cart.html">Carrello</a></li>
+                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+                <li id="nav-admin1" style="display: none;"><a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
+                <li id="nav-admin2" style="display: none;"><a href="admin_visualizzazione_account.html">Gestione Account</a></li>
+                <li id="nav-admin3" style="display: none;"><a href="storicoordiniadmin.html">Storico Ordini</a></li>
+
+                <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
         </nav>
     </header>
@@ -62,14 +66,47 @@ if (localStorage.getItem("ruolo")) {
 
 const ruolo = localStorage.getItem("ruolo");
 
-if (ruolo === "artigiano") {
-  document.getElementById("nav-nuovo").style.display = "";
-  document.getElementById("nav-modifica").style.display = "";
-} else {
-  // Nascondi comunque, anche se qualcuno ha forzato visibilità
-  document.getElementById("nav-nuovo").style.display = "none";
-  document.getElementById("nav-modifica").style.display = "none";
-}
+
+    const navNuovo = document.getElementById('nav-nuovo');
+    const navModifica = document.getElementById('nav-modifica');
+    const navAcc = document.getElementById('nav-acc');
+        const navAdmin1 = document.getElementById('nav-admin1');
+    const navAdmin2 = document.getElementById('nav-admin2');
+    const navAdmin3 = document.getElementById('nav-admin3');
+        const carello = document.getElementById('carrello');
+    const prodotti = document.getElementById('prodotti');
+   if (ruolo === 'amministratore') {
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = 'none';
+         carello.style.display='none'
+          prodotti.style.display='none'
+        navAdmin1.style.display = '';
+        navAdmin2.style.display = '';
+        navAdmin3.style.display = '';
+    } else if (ruolo === 'artigiano') {
+        navNuovo.style.display = '';
+        navModifica.style.display = '';
+        navAcc.style.display = '';
+        navAdmin1.style.display = 'none';
+        navAdmin2.style.display = 'none';
+        navAdmin3.style.display = 'none';
+    } else if (ruolo === 'cliente') {
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = '';
+        navAdmin1.style.display = 'none';
+        navAdmin2.style.display = 'none';
+        navAdmin3.style.display = 'none';
+    } else {
+        // Nessun ruolo
+        navNuovo.style.display = 'none';
+        navModifica.style.display = 'none';
+        navAcc.style.display = 'none';
+        navAdmin1.style.display = 'none';
+        navAdmin2.style.display = 'none';
+        navAdmin3.style.display = 'none';
+    }
     </script>
 
     
