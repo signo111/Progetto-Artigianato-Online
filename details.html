@@ -229,6 +229,14 @@ document.getElementById('checkoutBtn').onclick = function () {
 // Pulsante "Aggiungi al carrello"
 document.getElementById('addToCartBtn').addEventListener('click', function () {
   const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    alert("Devi effettuare l'accesso per aggiungere prodotti al carrello!");
+    window.location.href = "accedi.html";
+    return;
+  }
+
+
   const cartKey = userId ? `cart_${userId}` : "cart_guest";
 
   alert("Prodotto aggiunto al carrello!");
