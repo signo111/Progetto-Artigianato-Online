@@ -1,109 +1,160 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifica Prodotto</title>
-    <link rel="stylesheet" href="style.css">
+<link rel="icon" href="images/logo.png" type="image/png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modifica Prodotto</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo"><a href="index.html">Artigianato Online</a></div>
-        <nav> <!-- Burger menu che si vede solo su mobile -->
-            <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect y="5" class="burger-menu"/>
-                    <rect y="12.5" class="burger-menu"/>
-                    <rect y="20" class="burger-menu"/>
-                </svg>
-            </button>
-            <ul id="nav-list">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Prodotti</a></li>
-                <li><a href="account.html">Account</a></li>
-                <li><a href="cart.html">Carrello</a></li>
-                 <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                 <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
-            </ul>
-        </nav>
-    </header>
-    <script>
-        // Burger menu toggle
-        const burger = document.getElementById('menuCheckbox');
-        const navList = document.getElementById('nav-list');
-        // apertura
-        burger.onclick = function() {
-            navList.classList.toggle('open');
-        };
+  <header>
+    <div class="logo"><a href="index.html">Artigianato Online</a></div>
+    <nav>
+      <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="button">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect y="5" class="burger-menu"/>
+          <rect y="12.5" class="burger-menu"/>
+          <rect y="20" class="burger-menu"/>
+        </svg>
+      </button>
+      <ul id="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Prodotti</a></li>
+        <li><a href="account.html">Account</a></li>
+        <li><a href="cart.html">Carrello</a></li>
+        <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+        <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+        <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+      </ul>
+    </nav>
+  </header>
 
-        // chiusura
-        document.addEventListener('click', function(event) {
-        if (navList.classList.contains('open')) {
-            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
-                navList.classList.remove('open');
-            }
+  <section class="edit-product">
+    <section class="hero">
+      <h1>Modifica Prodotto</h1>
+      <form action="" method="POST" enctype="multipart/form-data">
+        <p>
+          <label for="product-name">Nome Prodotto:</label>
+          <input type="text" id="product-name" name="name" required>
+        </p>
+        <p>
+          <label for="product-description">Descrizione:</label>
+          <input type="text" id="product-description" name="descrizione">
+        </p>
+        <p>
+          <label for="product-image">Immagine Prodotto:</label>
+          <input type="file" id="product-image" name="immagine">
+        </p>
+        <p>
+          <label for="product-price">Prezzo:</label>
+          <input type="number" id="product-price" name="prezzo" step="0.01" min="0">
+        </p>
+        <p>
+          <label for="quantity">Quantità:</label>
+          <input type="number" id="quantity" name="quantita" step="1" min="0">
+        </p>
+        <div class="buttons">
+          <button type="submit">Salva Modifiche</button>
+          <button type="button" onclick="window.location.href='products.html'">Annulla</button>
+        </div>
+      </form>
+    </section>
+  </section>
+
+  <script>
+    const burger = document.getElementById("menuCheckbox");
+    const navList = document.getElementById("nav-list");
+
+    burger.onclick = function () {
+      navList.classList.toggle("open");
+    };
+
+    document.addEventListener("click", function (event) {
+      if (navList.classList.contains("open")) {
+        if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+          navList.classList.remove("open");
         }
+      }
     });
-    const navAuth = document.getElementById("nav-auth");
-    
-    if (localStorage.getItem("ruolo")) {
-        navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
 
-        document.getElementById("logoutLink").addEventListener("click", (e) => {
+    const navAuth = document.getElementById("nav-auth");
+    if (localStorage.getItem("ruolo")) {
+      navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+      document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Sei sicuro di voler uscire?")) {
-        localStorage.removeItem("ruolo");
-        localStorage.removeItem("userId");
-        alert("Logout effettuato");
-        window.location.reload();
+          localStorage.removeItem("ruolo");
+          localStorage.removeItem("userId");
+          alert("Logout effettuato");
+          window.location.reload();
         }
-        // Se premi "Annulla", non succede nulla
-    });
+      });
     } else {
-        navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+      navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
 
     const ruolo = localStorage.getItem("ruolo");
+    if (ruolo === "artigiano") {
+      document.getElementById("nav-nuovo").style.display = "";
+      document.getElementById("nav-modifica").style.display = "";
+    } else {
+      document.getElementById("nav-nuovo").style.display = "none";
+      document.getElementById("nav-modifica").style.display = "none";
+    }
+  </script>
 
-        if (ruolo === "artigiano") {
-        document.getElementById("nav-nuovo").style.display = "";
-        document.getElementById("nav-modifica").style.display = "";
+  <!-- SCRIPT DI MODIFICA -->
+  <script>
+    document.querySelector("form").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      const form = event.target;
+      const formData = new FormData();
+
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("Utente non autenticato.");
+        return;
+      }
+
+      const nome = form.querySelector("#product-name").value.trim();
+      if (!nome) {
+        alert("Il nome del prodotto è obbligatorio.");
+        return;
+      }
+      formData.append("userId", userId);
+      formData.append("name", nome);
+
+      const descrizione = form.querySelector("#product-description").value.trim();
+      if (descrizione) formData.append("descrizione", descrizione);
+
+      const prezzo = form.querySelector("#product-price").value.trim();
+      if (prezzo) formData.append("prezzo", prezzo);
+
+      const quantita = form.querySelector("#quantity").value.trim();
+      if (quantita) formData.append("quantita", quantita);
+
+      const file = form.querySelector("#product-image").files[0];
+      if (file) formData.append("immagine", file);
+
+      try {
+        const response = await fetch("http://localhost:3000/api/modifica-prodotto", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.success || "Prodotto aggiornato!");
+          window.location.href = "products.html";
         } else {
-        // Nascondi comunque, anche se qualcuno ha forzato visibilità
-        document.getElementById("nav-nuovo").style.display = "none";
-        document.getElementById("nav-modifica").style.display = "none";
+          alert(result.error || "Errore durante la modifica.");
         }
-    </script>
-
-    <section class="edit-product">
-    <section class="hero">
-        <h1>Modifica Prodotto</h1>
-        <form action="" method="POST">
-            <p>
-                <label for="product-name">Nome Prodotto:</label>
-                <input type="text" id="product-name" name="product-name" required>
-            </p>
-            <p>
-                <label for="product-description">Descrizione:</label>
-                <input type="text" id="product-description" name="product-description" required>
-            </p>
-            <p>
-                <label for="product-image">Immagine Prodotto:</label>
-                <input type="file" id="product-image" name="product-image">
-            </p>
-             <p>
-                <label for="product-price">Prezzo:</label>
-                <input type="number" id="product-price" name="product-price" required step="0.01" min="0">
-            </p>
-            <label>Quantità:
-            <input type="number" id="quantity" required step="1" min="0">
-        </label>
-            <div class="buttons">
-                <button type="submit">Salva Modifiche</button>
-                <button type="button" onclick="window.location.href='products.html'">Annulla</button>
-            </div>
-        </form>
-    </section>
+      } catch (error) {
+        console.error("Errore:", error);
+        alert("Errore di rete o del server.");
+      }
+    });
+  </script>
 </body>
 </html>

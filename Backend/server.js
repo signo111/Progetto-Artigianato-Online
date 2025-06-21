@@ -392,6 +392,122 @@ client.query(`SELECT setval('prodotti_id_seq', (SELECT MAX(id) FROM prodotti))`,
   }
 });
 
+//modifica prodotti
+app.post("/api/modifica-prodotto", upload.single("immagine"), (req, res) => {
+  const { name, prezzo, descrizione, quantita, userId } = req.body;
+
+  const disponibilita = quantita && quantita > 0;
+  const immagine = req.file ? req.file.filename : null;
+
+  if (!userId || !name) {
+    return res.status(400).json({ message: "Campi obbligatori mancanti (userId o name)" });
+  }
+
+  const check = `SELECT * FROM prodotti WHERE name = $1 AND id_utente = $2`;
+  client.query(check, [name, userId], (err, results) => {
+    if (err) return res.status(500).json({ message: "Errore DB nella verifica" });
+    if (results.rows.length === 0) {
+      return res.status(404).json({ message: "Prodotto non trovato o non tuo" });
+    }
+
+    // Costruisci dinamicamente i campi da aggiornare
+    const fields = [];
+    const values = [];
+    let i = 1;
+
+    if (prezzo) {
+      fields.push(`prezzo = $${i++}`);
+      values.push(prezzo);
+    }
+    if (descrizione) {
+      fields.push(`descrizione = $${i++}`);
+      values.push(descrizione);
+    }
+    if (quantita) {
+      fields.push(`quantita = $${i++}`);
+      values.push(quantita);
+      fields.push(`disponibilita = $${i++}`);
+      values.push(disponibilita);
+    }
+    if (immagine) {
+      fields.push(`immagine = $${i++}`);
+      values.push(immagine);
+    }
+
+    if (fields.length === 0) {
+      return res.status(400).json({ message: "Nessun campo da aggiornare" });
+    }
+
+    // Completa la query
+    const updateQuery = `
+      UPDATE prodotti SET ${fields.join(", ")}
+      WHERE name = $${i++} AND id_utente = $${i}
+    `;
+    values.push(name, userId);
+
+    client.query(updateQuery, values, (updateErr) => {
+      if (updateErr) {
+        console.error("Errore update:", updateErr);
+        return res.status(500).json({ message: "Errore durante aggiornamento" });
+      }
+      res.json({ message: "Prodotto aggiornato con successo" });
+    });
+  });
+});
+
+//modifica profilo utente
+app.post("/api/modifica-account", async (req, res) => {
+  const { userId, username, email, password } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ message: "ID utente mancante" });
+  }
+
+  try {
+    // Verifica che esista
+    const check = await client.query("SELECT * FROM utenti WHERE id = $1", [userId]);
+    if (check.rows.length === 0) {
+      return res.status(404).json({ message: "Utente non trovato" });
+    }
+
+    // Costruiamo solo i campi presenti
+    const fields = [];
+    const values = [];
+    let i = 1;
+
+    if (username) {
+      fields.push(`name = $${i++}`);
+      values.push(username);
+    }
+    if (email) {
+      fields.push(`email = $${i++}`);
+      values.push(email);
+    }
+    if (password) {
+      const hashed = await bcrypt.hash(password, 10);
+      fields.push(`password = $${i++}`);
+      values.push(hashed);
+    }
+
+    if (fields.length === 0) {
+      return res.status(400).json({ message: "Nessun campo da aggiornare" });
+    }
+
+    const updateQuery = `
+      UPDATE utenti SET ${fields.join(", ")}
+      WHERE id = $${i}
+      RETURNING id
+    `;
+    values.push(userId);
+
+    const result = await client.query(updateQuery, values);
+    res.json({ message: "Account aggiornato con successo", id: result.rows[0].id });
+
+  } catch (err) {
+    console.error("Errore durante aggiornamento account:", err);
+    res.status(500).json({ message: "Errore server" });
+  }
+});
 
 app.listen(3000,()=>{
     console.log("port connected")
