@@ -217,7 +217,7 @@ app.put("/api/update-cart-quantity", async (req, res) => {
 app.get('/api/prodotti', async (req, res) => {
   try {
     const result = await client.query(
-      'SELECT prodotti.id, prodotti.name, prezzo, descrizione, disponibilita, prodotti.immagine, quantita, id_utente, prodotti.created_at,utenti.name FROM prodotti inner join utenti on prodotti.id_utente= utenti.id'
+      'SELECT prodotti.id, prezzo, descrizione, disponibilita, prodotti.immagine, quantita, id_utente, prodotti.created_at,utenti.name, prodotti.name FROM prodotti inner join utenti on prodotti.id_utente= utenti.id'
     );
     // Decodifica immagine se necessario
     result.rows.forEach(row => {
@@ -277,23 +277,47 @@ app.post("/api/complete-order", async (req, res) => {
 // Restituisce tutti gli ordini dell'utente se non si è loggati come amministratore altrimenti stampa tutti gli ordini 
 app.get('/api/orders/:userId', async (req, res) => {
   const userId = req.params.userId;
-  const isAdmin = req.user && req.user.role === 'amministratore'; // Assicurati che req.user sia disponibile tramite autenticazione middleware
+  console.log(`➡️ Richiesta ordini per userId: ${userId}`);
 
   try {
-    let orders;
+    // 1. Recupera il ruolo dell'utente
+    const ruoloResult = await client.query(
+      'SELECT ruolo FROM utenti WHERE id = $1',
+      [userId]
+    );
 
-    if (isAdmin) {
-      orders = await client.query('SELECT * FROM ordine');
-    } else {
-      orders = await client.query('SELECT * FROM ordine WHERE id_utente = $1', [userId]);
+    console.log("📄 Risultato query ruolo:", ruoloResult.rows);
+
+    if (ruoloResult.rows.length === 0) {
+      console.warn("⚠️ Utente non trovato");
+      return res.status(404).json({ error: "Utente non trovato" });
     }
 
+    const ruolo = ruoloResult.rows[0].ruolo;
+    console.log(`👤 Ruolo utente: ${ruolo}`);
+
+    // 2. Se è amministratore, prendi tutti gli ordini
+    let orders;
+    if (ruolo === 'amministratore') {
+      console.log("🔓 Accesso come amministratore: recupero tutti gli ordini");
+      orders = await client.query('SELECT * FROM ordine');
+    } else {
+      console.log("🔒 Accesso come utente normale: recupero ordini personali");
+      orders = await client.query(
+        'SELECT * FROM ordine WHERE id_utente = $1',
+        [userId]
+      );
+    }
+
+    console.log(`📦 Numero ordini trovati: ${orders.rows.length}`);
     res.json(orders.rows);
+
   } catch (err) {
-    console.error("Errore recupero ordini:", err);
+    console.error("❌ Errore recupero ordini:", err);
     res.status(500).json({ error: "Errore recupero ordini" });
   }
 });
+
 
 
 // Inserimento prodotto (endpoint alternativo)

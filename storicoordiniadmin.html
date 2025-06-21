@@ -192,6 +192,7 @@
 
 
     fetch(`http://localhost:3000/api/orders/${userId}`)
+    
         .then(response => response.json())
         .then(orders => {
         const tbody = document.getElementById("orderTableBody");
