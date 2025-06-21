@@ -158,20 +158,26 @@ filterSelect.addEventListener('change', function () {
     case 'Nome Z-A':
       sorted.sort((a, b) => b.name.localeCompare(a.name));
       break;
-    case 'Disponibilità':
+   case 'Disponibilità':
+  sorted.sort((a, b) => {
+    if (a.disponibilità === b.disponibilità) {
+      return a.name.localeCompare(b.name); // ordina alfabeticamente se disponibilità è uguale
+    }
+    return b.disponibilità - a.disponibilità; // true (1) prima di false (0)
+  });
+  break;
     case 'Maggior quantità':
-      sorted.sort((a, b) => b.disponibilita - a.disponibilita);
+      sorted.sort((a, b) => b.quantita - a.quantita);
       break;
     case 'Minore quantità':
-      sorted.sort((a, b) => a.disponibilita - b.disponibilita);
+      sorted.sort((a, b) => a.quantita - b.quantita);
       break;
     case 'Artigiano':
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        sorted = products.filter(p => p.id_utente == userId);
-      }
-      break;
-    // 'Caricato di Recente' richiederebbe un campo timestamp, opzionale da aggiungere
+       sorted.sort((a, b) => a.utenti.name.localeCompare(b.utenti.name));
+  break;
+    case 'Caricato di Recente':
+  sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  break;
     default:
       // Nessun filtro o reset
       break;
