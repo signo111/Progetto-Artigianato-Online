@@ -124,6 +124,9 @@ const ruolo = localStorage.getItem('ruolo');
                         <th>Prezzo</th>
                         <th>Quantità</th>
                         <th>Disponibilità</th>
+                        <th>Aggiorna</th>
+                        <th>Elmina</th>
+                        
                     </tr>
                 </thead>
                 <tbody id="orderTableBody">
@@ -132,7 +135,97 @@ const ruolo = localStorage.getItem('ruolo');
             </table>
         </div>
     </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  fetch("http://localhost:3000/api/prodotti")
+    .then(res => res.json())
+    .then(prodotti => {
+      const tbody = document.getElementById("orderTableBody");
+      prodotti.forEach(prodotto => {
+        const tr = document.createElement("tr");
 
+        tr.innerHTML = `
+          <td>${prodotto.id}</td>
+          <td><input value="${prodotto.name}" class="name" data-id="${prodotto.id}"></td>
+    <td>
+
+  <input value="${prodotto.immagine}" class="immagine" data-id="${prodotto.id}" hidden>
+  <input type="file" class="file-input" data-id="${prodotto.id}" accept="image/*">
+</td>
+
+          <td><input value="${prodotto.descrizione}" class="descrizione" data-id="${prodotto.id}"></td>
+          <td><input type="number" value="${prodotto.prezzo}" class="prezzo" data-id="${prodotto.id}"></td>
+          <td><input type="number" value="${prodotto.quantita}" class="quantita" data-id="${prodotto.id}"></td>
+          <td><input value="${prodotto.disponibilita}" class="disponibilita" data-id="${prodotto.id}"></td>
+          <td><button class="salvaProdotto" data-id="${prodotto.id}">Salva</button></td>
+          <td><button class="eliminaProdotto" data-id="${prodotto.id}">Elimina</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Salvataggio modifiche
+    // ✅ Salvataggio modifiche (versione con FormData)
+document.querySelectorAll(".salvaProdotto").forEach(button => {
+  button.addEventListener("click", () => {
+    const id = button.dataset.id;
+    const name = document.querySelector(`.name[data-id="${id}"]`).value;
+    const descrizione = document.querySelector(`.descrizione[data-id="${id}"]`).value;
+    const prezzo = parseFloat(document.querySelector(`.prezzo[data-id="${id}"]`).value);
+    const quantita = parseInt(document.querySelector(`.quantita[data-id="${id}"]`).value);
+    const disponibilita = document.querySelector(`.disponibilita[data-id="${id}"]`).value;
+    const immaginePrecedente = document.querySelector(`.immagine[data-id="${id}"]`).value;
+    const fileInput = document.querySelector(`.file-input[data-id="${id}"]`);
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("descrizione", descrizione);
+    formData.append("prezzo", prezzo);
+    formData.append("quantita", quantita);
+    formData.append("disponibilita", disponibilita);
+    formData.append("immaginePrecedente", immaginePrecedente);
+
+    if (fileInput && fileInput.files.length > 0) {
+      formData.append("immagine", fileInput.files[0]);
+    }
+
+    fetch(`http://localhost:3000/api/prodotti/${id}`, {
+      method: "PUT",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(result => {
+      alert(result.message);
+      location.reload();
+    })
+    .catch(err => {
+      console.error("Errore aggiornamento:", err);
+      alert("Errore durante l'aggiornamento.");
+    });
+  });
+});
+
+
+      // Eliminazione prodotto
+      document.querySelectorAll(".eliminaProdotto").forEach(button => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.id;
+          if (confirm("Vuoi eliminare questo prodotto?")) {
+            fetch(`http://localhost:3000/api/prodotti/${id}`, { method: "DELETE" })
+              .then(res => res.json())
+              .then(result => {
+                alert(result.message);
+                window.location.reload();
+              })
+              .catch(err => {
+                console.error("Errore eliminazione:", err);
+                alert("Errore durante l'eliminazione.");
+              });
+          }
+        });
+      });
+    });
+});
+</script>
 </body>
     
 </html>

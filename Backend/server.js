@@ -9,8 +9,9 @@ const stripe = require('stripe')('sk_test_51RTTSLFbljXrIje8zNiNi30WK064OWmPaUT4e
 const multer = require('multer');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use('/images', express.static('images'));
 const path = require("path");
+const fs = require('fs');
 
 // Serve la cartella principale del progetto (la cartella padre rispetto a Backend)
 app.use(express.static(path.join(__dirname, "..")));  // Serve tutti i file statici dalla root
@@ -441,6 +442,14 @@ app.post("/api/modifica-prodotto", upload.single("immagine"), (req, res) => {
       WHERE name = $${i++} AND id_utente = $${i}
     `;
     values.push(name, userId);
+
+    if (immagine) {
+  const vecchiaImmagine = results.rows[0].immagine;
+  const pathVecchia = path.join(__dirname, 'images', vecchiaImmagine.toString('utf8'));
+  if (fs.existsSync(pathVecchia)) {
+    fs.unlinkSync(pathVecchia);
+  }
+}
     client.query(updateQuery, values, (updateErr) => {
       if (updateErr) {
         console.error("Errore update:", updateErr);
@@ -549,7 +558,61 @@ app.get('/api/utenti', (req, res) => {
   });
 });
 
+// Recupera tutti i prodotti
+app.get('/api/prodotti', async (req, res) => {
+  try {
+    const result = await client.query('SELECT * FROM prodotti');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Errore nel caricamento dei prodotti' });
+  }
+});
 
+// Aggiorna un prodotto
+// ROUTE MODIFICATA: accetta upload + dati
+app.put('/api/prodotti/:id', upload.single('immagine'), async (req, res) => {
+  const { id } = req.params;
+  const { name, descrizione, prezzo, quantita, disponibilita, immaginePrecedente } = req.body;
+
+  try {
+    // 🧱 se c'è un nuovo file, gestiscilo
+    let nomeFinale = immaginePrecedente;
+
+    if (req.file) {
+      nomeFinale = req.file.filename;
+
+      // 🧹 elimina immagine precedente se presente
+      const pathPrecedente = path.join(__dirname, 'images', immaginePrecedente);
+      if (fs.existsSync(pathPrecedente)) {
+        fs.unlinkSync(pathPrecedente);
+      }
+    }
+
+    const immagineHex = Buffer.from(nomeFinale, 'utf8').toString('hex');
+
+    await client.query(
+      `UPDATE prodotti 
+       SET name = $1, immagine = $2, descrizione = $3, prezzo = $4, quantita = $5, disponibilita = $6 
+       WHERE id = $7`,
+      [name, '\\x' + immagineHex, descrizione, prezzo, quantita, disponibilita, id]
+    );
+
+    res.json({ message: 'Prodotto aggiornato con successo' });
+  } catch (err) {
+    console.error('Errore aggiornamento prodotto:', err);
+    res.status(500).json({ error: 'Errore aggiornamento' });
+  }
+});
+
+// Elimina un prodotto
+app.delete('/api/prodotti/:id', async (req, res) => {
+  try {
+    await client.query('DELETE FROM prodotti WHERE id = $1', [req.params.id]);
+    res.json({ message: 'Prodotto eliminato con successo' });
+  } catch (err) {
+    res.status(500).json({ error: 'Errore durante eliminazione' });
+  }
+});
 // Avvia il server sulla porta 3000
 app.listen(3000, () => {
   console.log("port connected");
