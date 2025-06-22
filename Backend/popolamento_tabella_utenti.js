@@ -52,12 +52,10 @@ const client = new Client({
   port: 5432,
   ssl: { rejectUnauthorized: false }
 });
-
 async function popolaDatabase() {
   try {
     await client.connect();
     console.log("▶ Avvio popolamento...");
-
     for (const u of utenti) {
       const hashedPassword = await bcrypt.hash(u.password, 10);
       await client.query(
@@ -66,7 +64,6 @@ async function popolaDatabase() {
       );
       console.log(`✅ Inserito ${u.name}`);
     }
-
     console.log("🎉 Popolamento completato!");
   } catch (err) {
     console.error("❌ Errore:", err);
@@ -74,5 +71,4 @@ async function popolaDatabase() {
     await client.end();
   }
 }
-
 popolaDatabase();

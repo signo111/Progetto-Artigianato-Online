@@ -27,10 +27,7 @@
 <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
                  <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
-           
-
-        </nav>
-        
+        </nav>        
     </header>
     <script>
         // Burger menu toggle
@@ -40,7 +37,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -53,8 +49,7 @@
 const navAuth = document.getElementById("nav-auth");
 if (localStorage.getItem("ruolo")) {
   navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-  
-  // Azione logout
+    // Azione logout
   document.getElementById("logoutLink").addEventListener("click", (e) => {
     e.preventDefault();
     if (confirm("Sei sicuro di voler uscire?")) {
@@ -67,9 +62,7 @@ if (localStorage.getItem("ruolo")) {
 } else {
   navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
 }
-
 const ruolo = localStorage.getItem("ruolo");
-
 if (ruolo === "artigiano") {
   document.getElementById("nav-nuovo").style.display = "";
   document.getElementById("nav-modifica").style.display = "";
@@ -77,8 +70,7 @@ if (ruolo === "artigiano") {
   // Nascondi comunque, anche se qualcuno ha forzato visibilità
   document.getElementById("nav-nuovo").style.display = "none";
   document.getElementById("nav-modifica").style.display = "none";
-}
-      
+} 
     </script>
     <section class="hero">
         <h1>Acquisto non riuscito</h1>

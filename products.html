@@ -29,15 +29,12 @@
       </ul>
     </nav>
   </header>
-
   <script>
     const burger = document.getElementById('menuCheckbox');
     const navList = document.getElementById('nav-list');
-
     burger.onclick = function () {
       navList.classList.toggle('open');
     };
-
     document.addEventListener('click', function (event) {
       if (navList.classList.contains('open')) {
         if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
@@ -45,7 +42,6 @@
         }
       }
     });
-
     const navAuth = document.getElementById("nav-auth");
     if (localStorage.getItem("ruolo")) {
       navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
@@ -61,7 +57,6 @@
     } else {
       navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-
     document.addEventListener('DOMContentLoaded', function () {
       const ruolo = localStorage.getItem('ruolo');
       const navNuovo = document.getElementById('nav-nuovo');
@@ -83,7 +78,6 @@
       }
     });
   </script>
-
   <div class="container">
     <div class="title">Esplora il catalogo</div>
     <div class="filter-bar">
@@ -103,19 +97,16 @@
     </div>
     <div class="listProduct"></div>
   </div>
-
   <script>
     let products = [];
     const listProduct = document.querySelector('.listProduct');
     const filterSelect = document.getElementById('category-filter');
-
     fetch('http://localhost:3000/api/prodotti')
       .then(response => response.json())
       .then(data => {
         products = data;
         renderProducts(products);
       });
-
     function renderProducts(productList) {
       listProduct.innerHTML = '';
       productList.forEach(product => {
@@ -136,11 +127,9 @@
         listProduct.appendChild(newProduct);
       });
     }
-
     filterSelect.addEventListener('change', function () {
       const selected = filterSelect.value;
       let sorted = [...products];
-
       switch (selected) {
         case 'Prezzo più alto':
           sorted.sort((a, b) => b.prezzo - a.prezzo);
@@ -174,7 +163,6 @@
         default:
           break;
       }
-
       renderProducts(sorted);
     });
   </script>

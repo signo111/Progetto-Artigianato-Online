@@ -30,21 +30,17 @@
         </nav>
     </header>
     <script>
-
         const navAuth = document.getElementById("nav-auth");
-
         if (localStorage.getItem("ruolo")) {
             navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
             document.getElementById("logoutLink").addEventListener("click", (e) => {
-            e.preventDefault();
-            if (confirm("Sei sicuro di voler uscire?")) {
-                localStorage.removeItem("ruolo");
-                localStorage.removeItem("userId");
-                alert("Logout effettuato");
-                window.location.href = "index.html";
-            }
-            // Se premi "Annulla", non succede nulla
+                e.preventDefault();
+                if (confirm("Sei sicuro di voler uscire?")) {
+                    localStorage.removeItem("ruolo");
+                    localStorage.removeItem("userId");
+                    alert("Logout effettuato");
+                    window.location.href = "index.html";
+                }
             });
         } else {
             navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
@@ -56,7 +52,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -73,35 +68,27 @@
         <p>Non disponi di un account?</p>
         <a href="registrati.html">Registrati ora</a>
     </section>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const ruolo = localStorage.getItem('ruolo');
-
-    const navNuovo = document.getElementById('nav-nuovo');
-    const navModifica = document.getElementById('nav-modifica');
-    const navAcc = document.getElementById('nav-acc');
-
-    if (ruolo === 'artigiano') {
-        navNuovo.style.display = '';
-        navModifica.style.display = '';
-        navAcc.style.display = '';
-    } else if (ruolo === 'cliente') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = '';
-    } else {
-        // Nessun ruolo -> utente non loggato
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-    }
-});
+        const ruolo = localStorage.getItem('ruolo');
+        const navNuovo = document.getElementById('nav-nuovo');
+        const navModifica = document.getElementById('nav-modifica');
+        const navAcc = document.getElementById('nav-acc');
+        if (ruolo === 'artigiano') {
+            navNuovo.style.display = '';
+            navModifica.style.display = '';
+            navAcc.style.display = '';
+        } else if (ruolo === 'cliente') {
+            navNuovo.style.display = 'none';
+            navModifica.style.display = 'none';
+            navAcc.style.display = '';
+        } else {
+            // Nessun ruolo -> utente non loggato
+            navNuovo.style.display = 'none';
+            navModifica.style.display = 'none';
+            navAcc.style.display = 'none';
+        }
+        });
     </script>
-
-
-
 </body>
-
-
 </html>

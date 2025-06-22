@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dettagli Prodotto</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
@@ -37,7 +36,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -68,123 +66,9 @@
         <div class="listProduct"></div>
     </div>
 
-    <script>        //prendi i dati dei prodotti dal file JSON
-
-      /*  const ruolo = localStorage.getItem("ruolo");
-        document.getElementById("nav-nuovo").style.display = ruolo === "artigiano" ? "" : "none";
-        document.getElementById("nav-modifica").style.display = ruolo === "artigiano" ? "" : "none";
-        
-        let products = null;
-        fetch('/images/products.json')
-        .then(response => response.json())
-        .then(data => {
-            products = data;
-            showDetail();
-        })
-
-        function showDetail(){
-            let detail = document.querySelector('.detail');
-            let productID = new URLSearchParams(window.location.search).get('id');
-            let thisProduct = products.filter(value =>{
-                return value.id == productID;
-            })[0]; //prende il primo prodotto che corrisponde all'id
-            //se il prodotto non c'è ritorna alla home page
-            if(!thisProduct){
-                window.location.href = '/';
-            }
-            detail.querySelector('.image img').src = thisProduct.image;
-            detail.querySelector('.name').innerText = thisProduct.name;
-            detail.querySelector('.price').innerText = '€' + thisProduct.price;
-            detail.querySelector('.description').innerText = thisProduct.description;
-            
-            //lista prodotti simili
-            let listProduct = document.querySelector('.listProduct');
-            (products.filter(value => value.id != productID))
-            .forEach(product => {
-                let newProduct = document.createElement('a');
-                newProduct.href = '/details.html?id='+product.id;
-                newProduct.classList.add('item');
-                newProduct.innerHTML = `
-                        <img src="${product.image}" alt="Immagine Prodotto">
-                        <h2>${product.name}</h2>
-                        <div class="price">${product.price}</div>
-            `;
-            listProduct.appendChild(newProduct);
-            });
-            
-        }
-
-        document.getElementById('checkoutBtn').onclick = function() {
-            window.location.href = 'cart.html';
-        };
-
-
-        const navAuth = document.getElementById("nav-auth");
-        if (localStorage.getItem("ruolo")) {
-            navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
-            document.getElementById("logoutLink").addEventListener("click", (e) => {
-                e.preventDefault();
-                if (confirm("Sei sicuro di voler uscire?")) {
-                localStorage.removeItem("ruolo");
-                localStorage.removeItem("userId");
-                localStorage.removeItem(`cart_${localStorage.getItem("userId")}`);
-                alert("Logout effettuato");
-                window.location.reload();
-                }
-                // Se premi "Annulla", non succede nulla
-            });
-        } else {
-            navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-        }
-
-        
-        document.getElementById('addToCartBtn').addEventListener('click', function () {
-  const userId = localStorage.getItem("userId");
-  const cartKey = userId ? `cart_${userId}` : "cart_guest";
-
-  alert("Prodotto aggiunto al carrello!");
-
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-  const productID = new URLSearchParams(window.location.search).get('id');
-  const thisProduct = products.find(p => p.id == productID);
-
-  let existingProduct = cart.find(p => p.id === thisProduct.id);
-  if (existingProduct) {
-    existingProduct.quantity += 1;
-  } else {
-    cart.push({
-      id: thisProduct.id,
-      name: thisProduct.name,
-      image: thisProduct.image,
-      price: thisProduct.price,
-      quantity: 1
-    });
-  }
-
-  localStorage.setItem(cartKey, JSON.stringify(cart));
-
-  // Solo se loggato: salva anche sul backend
-  if (userId) {
-    fetch("http://localhost:3000/api/add-to-cart", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id_utente: parseInt(userId),
-        id_prodotto: thisProduct.id,
-        prezzo_totale: thisProduct.price,
-        stato_carrello: true
-      })
-    })
-    .then(res => res.ok ? res.json() : Promise.reject("Errore server"))
-    .then(data => console.log(data))
-    .catch(err => console.error("Errore DB:", err));
-  }
-});*/
+<script>
 let products = null;
 let thisProduct = null;
-
 // Carica i prodotti dal backend e mostra i dettagli
 fetch('http://localhost:3000/api/prodotti')
   .then(response => response.json())
@@ -192,21 +76,17 @@ fetch('http://localhost:3000/api/prodotti')
     products = data;
     showDetail();
   });
-
 function showDetail() {
   const productID = new URLSearchParams(window.location.search).get('id');
   thisProduct = products.find(p => p.id == productID);
-
   if (!thisProduct) {
     window.location.href = '/';
     return;
   }
-
   document.getElementById("productImage").src = thisProduct.immagine;
   document.querySelector(".name").innerText = thisProduct.prodotto_name;
   document.querySelector(".price").innerText = `€ ${thisProduct.prezzo}`;
   document.querySelector(".description").innerText = thisProduct.descrizione;
-
   const listProduct = document.querySelector('.listProduct');
   products.filter(p => p.id != productID).forEach(product => {
     const newProduct = document.createElement('a');
@@ -220,29 +100,21 @@ function showDetail() {
     listProduct.appendChild(newProduct);
   });
 }
-
 // Pulsante "Checkout"
 document.getElementById('checkoutBtn').onclick = function () {
   window.location.href = 'cart.html';
 };
-
 // Pulsante "Aggiungi al carrello"
 document.getElementById('addToCartBtn').addEventListener('click', function () {
   const userId = localStorage.getItem("userId");
-
   if (!userId) {
     alert("Devi effettuare l'accesso per aggiungere prodotti al carrello!");
     window.location.href = "accedi.html";
     return;
   }
-
-
   const cartKey = userId ? `cart_${userId}` : "cart_guest";
-
   alert("Prodotto aggiunto al carrello!");
-
   let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
   let existingProduct = cart.find(p => p.id === thisProduct.id);
   if (existingProduct) {
     existingProduct.quantity += 1;
@@ -255,9 +127,7 @@ document.getElementById('addToCartBtn').addEventListener('click', function () {
       quantity: 1
     });
   }
-
   localStorage.setItem(cartKey, JSON.stringify(cart));
-
   // Salvataggio backend solo se loggato
   if (userId) {
     fetch("http://localhost:3000/api/add-to-cart", {
@@ -276,16 +146,13 @@ document.getElementById('addToCartBtn').addEventListener('click', function () {
     .catch(err => console.error("Errore DB:", err));
   }
 });
-
 // Mostra voci menu in base al ruolo
 document.addEventListener('DOMContentLoaded', function () {
   const ruolo = localStorage.getItem('ruolo');
-
   const navNuovo = document.getElementById('nav-nuovo');
   const navModifica = document.getElementById('nav-modifica');
   const navAcc = document.getElementById('nav-acc');
   const navAuth = document.getElementById("nav-auth");
-
   if (ruolo === 'artigiano') {
     navNuovo.style.display = '';
     navModifica.style.display = '';
@@ -299,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
     navModifica.style.display = 'none';
     navAcc.style.display = 'none';
   }
-
   // Gestione login/logout
   if (ruolo) {
     navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
@@ -318,35 +184,28 @@ document.addEventListener('DOMContentLoaded', function () {
     navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
   }
 });
-
-    </script>
-    
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-    const ruolo = localStorage.getItem('ruolo');
-
-    const navNuovo = document.getElementById('nav-nuovo');
-    const navModifica = document.getElementById('nav-modifica');
-    const navAcc = document.getElementById('nav-acc');
-
-    if (ruolo === 'artigiano') {
-        navNuovo.style.display = '';
-        navModifica.style.display = '';
-        navAcc.style.display = '';
-    } else if (ruolo === 'cliente') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = '';
-    } else {
-        // Nessun ruolo -> utente non loggato
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-    }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const ruolo = localStorage.getItem('ruolo');
+  const navNuovo = document.getElementById('nav-nuovo');
+  const navModifica = document.getElementById('nav-modifica');
+  const navAcc = document.getElementById('nav-acc');
+  if (ruolo === 'artigiano') {
+    navNuovo.style.display = '';
+    navModifica.style.display = '';
+    navAcc.style.display = '';
+  } else if (ruolo === 'cliente') {
+    navNuovo.style.display = 'none';
+    navModifica.style.display = 'none';
+    navAcc.style.display = '';
+  } else {
+    // Nessun ruolo -> utente non loggato
+    navNuovo.style.display = 'none';
+    navModifica.style.display = 'none';
+    navAcc.style.display = 'none';
+  }
 });
-
-         
-
-        </script>
+</script>
 </body>
 </html>

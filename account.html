@@ -35,21 +35,17 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
             if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
-                navList.classList.remove('open');
+              navList.classList.remove('open');
             }
         }
     });
-
     const navAuth = document.getElementById("nav-auth");
-    
     if (localStorage.getItem("ruolo")) {
     navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
     document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Sei sicuro di voler uscire?")) {
@@ -62,21 +58,16 @@
     } else {
     navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-
     const ruolo = localStorage.getItem("ruolo");
-
     if (ruolo === "artigiano") {
-    document.getElementById("nav-nuovo").style.display = "";
-    document.getElementById("nav-modifica").style.display = "";
+      document.getElementById("nav-nuovo").style.display = "";
+      document.getElementById("nav-modifica").style.display = "";
     } else {
-    // Nascondi comunque, anche se qualcuno ha forzato visibilità
-    document.getElementById("nav-nuovo").style.display = "none";
-    document.getElementById("nav-modifica").style.display = "none";
+      // Nascondi comunque, anche se qualcuno ha forzato visibilità
+      document.getElementById("nav-nuovo").style.display = "none";
+      document.getElementById("nav-modifica").style.display = "none";
     }
     </script>
-
-    
-
   <body>
    <div class="container">
       <div class="title">Informazioni account</div>
@@ -124,7 +115,6 @@
       window.location.href = "accedi.html";
       return;
     }
-
     fetch(`http://localhost:3000/api/account/${userId}`)
       .then(response => response.json())
       .then(data => {
@@ -133,19 +123,15 @@
           alert("Errore nel caricamento dati.");
           return;
         }
-
-        
         document.getElementById("profileImage").src = "images/user_image1.png";
         document.querySelector(".username").innerText = data.name;
         document.querySelector(".email").innerText = data.email;
         document.querySelector(".ruolo").innerText = "Ruolo: " + data.ruolo;
-      
     })
     .catch(error => {
     console.error("Errore fetch:", error);
     alert("Errore di connessione.");
     });
-
     fetch(`http://localhost:3000/api/orders/${userId}`)
         .then(response => response.json())
         .then(orders => {
@@ -164,64 +150,49 @@
     })
     .catch(error => {
     console.error("Errore fetch ordini:", error);
-    });
-
-      
+    });     
   });
-
-  
-
 </script>
-
-
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('DOMContentLoaded', function() {
             // Script navbar
-            const ruolo = localStorage.getItem('ruolo');
-            console.log('Ruolo attuale:', ruolo);
-          document.addEventListener('DOMContentLoaded', function () {
-
-    const navNuovo = document.getElementById('nav-nuovo');
-    const navModifica = document.getElementById('nav-modifica');
-    const navAcc = document.getElementById('nav-acc');
-
-    if (ruolo === 'artigiano') {
-        navNuovo.style.display = '';
-        navModifica.style.display = '';
-        navAcc.style.display = '';
-    } else if (ruolo === 'cliente') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = '';
-    } else {
-        // Nessun ruolo -> utente non loggato
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-    }
-});
-
-            // Script logout
-            const logoutBtn = document.getElementById('logoutBtn');
-              if (logoutBtn) {
+      const ruolo = localStorage.getItem('ruolo');
+      console.log('Ruolo attuale:', ruolo);
+      document.addEventListener('DOMContentLoaded', function () {
+        const navNuovo = document.getElementById('nav-nuovo');
+        const navModifica = document.getElementById('nav-modifica');
+        const navAcc = document.getElementById('nav-acc');
+        if (ruolo === 'artigiano') {
+          navNuovo.style.display = '';
+          navModifica.style.display = '';
+          navAcc.style.display = '';
+        } else if (ruolo === 'cliente') {
+          navNuovo.style.display = 'none';
+          navModifica.style.display = 'none';
+          navAcc.style.display = '';
+        } else {
+          // Nessun ruolo -> utente non loggato
+          navNuovo.style.display = 'none';
+          navModifica.style.display = 'none';
+          navAcc.style.display = 'none';
+        }
+      });
+          // Script logout
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
         logoutBtn.addEventListener('click', function () {
-            const conferma = confirm("Sei sicuro di voler effettuare il logout?");
-            if (conferma) {
-                localStorage.clear();
-                alert("Logout effettuato con successo.");
-                window.location.href = "index.html";
-            }
-            // Altrimenti non fa nulla
+        const conferma = confirm("Sei sicuro di voler effettuare il logout?");
+        if (conferma) {
+          localStorage.clear();
+          alert("Logout effettuato con successo.");
+          window.location.href = "index.html";
+        }
         });
-    }
-});
-
-
+        }
+      });
 document.addEventListener("DOMContentLoaded", function () {
   const deleteBtn = document.getElementById("deleteAccountBtn");
   const userId = localStorage.getItem("userId");
-
   if (deleteBtn && userId) {
     deleteBtn.addEventListener("click", function () {
       if (confirm("Sei sicuro di voler eliminare il tuo account?")) {
@@ -245,9 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-
-    </script>
-
-</body>
-    
+</script>
+</body> 
 </html>

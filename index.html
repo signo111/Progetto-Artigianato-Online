@@ -33,20 +33,16 @@
             </ul>
         </nav>
     </header>
-
     <section class="hero" id="hero-content">
         <!-- Questo contenuto sarà sostituito via JS -->
     </section>
-
     <script>
         // Burger menu toggle
         const burger = document.getElementById('menuCheckbox');
         const navList = document.getElementById('nav-list');
-
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         document.addEventListener('click', function(event) {
             if (navList.classList.contains('open')) {
                 if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
@@ -54,7 +50,6 @@
                 }
             }
         });
-
         // Gestione login/logout
         const navAuth = document.getElementById("nav-auth");
         if (localStorage.getItem("ruolo")) {
@@ -72,10 +67,8 @@
         } else {
             navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
         }
-
         document.addEventListener('DOMContentLoaded', function () {
             const ruolo = localStorage.getItem('ruolo');
-
             const navNuovo = document.getElementById('nav-nuovo');
             const navModifica = document.getElementById('nav-modifica');
             const navAcc = document.getElementById('nav-acc');
@@ -124,11 +117,11 @@
                 hero.innerHTML = `
                     <h1>Area Amministrativa</h1>
                     <p>Benvenuto nell'area riservata alla gestione della piattaforma.</p>
-                
+                    <div class="admin-links">                
                         <a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
                        <a href="admin_visualizzazione_account.html">Gestione Account</a></li>
                        <a href="storicoordiniadmin.html">Storico Ordini</a></li>
-                    
+                    </div>
                 `;
             } else {
                 hero.innerHTML = `

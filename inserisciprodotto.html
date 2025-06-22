@@ -37,7 +37,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -47,10 +46,8 @@
         }
     });
     const navAuth = document.getElementById("nav-auth");
-    
     if (localStorage.getItem("ruolo")) {
         navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
         document.getElementById("logoutLink").addEventListener("click", (e) => {
             e.preventDefault();
             if (confirm("Sei sicuro di voler uscire?")) {
@@ -64,9 +61,7 @@
     } else {
         navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-
 const ruolo = localStorage.getItem("ruolo");
-
 if (ruolo === "artigiano") {
   document.getElementById("nav-nuovo").style.display = "";
   document.getElementById("nav-modifica").style.display = "";
@@ -78,41 +73,38 @@ if (ruolo === "artigiano") {
     </script>
     <section class="hero">
         <h1>Inserimento Nuovo prodotto</h1>
-                <form id="productForm">
-        <label>Nome:
-            <input type="text" id="name" required>
-        </label>
-         <label>Immagine:
-        <input type="file" id="image" accept="image/*" required>
-    </label>
-        <label>Descrizione:
-            <input type="text-field" id="description" required>
-        </label>
-        <label>Prezzo:
-            <input type="number" id="price" required step="0.01" min="0">
-        </label>
-         <label>Quantità:
-            <input type="number" id="quantity" required step="1" min="0">
-        </label>
-        <button type="submit">Aggiungi Prodotto</button>
-    </form>
+        <form id="productForm">
+            <label>Nome:
+                <input type="text" id="name" required>
+            </label>
+            <label>Immagine:
+                <input type="file" id="image" accept="image/*" required>
+            </label>
+            <label>Descrizione:
+                <input type="text-field" id="description" required>
+            </label>
+            <label>Prezzo:
+                <input type="number" id="price" required step="0.01" min="0">
+            </label>
+            <label>Quantità:
+                <input type="number" id="quantity" required step="1" min="0">
+            </label>
+            <button type="submit">Aggiungi Prodotto</button>
+        </form>
     </section>
 <script>
 document.getElementById("productForm").addEventListener("submit", async function (e) {
     e.preventDefault();
-
     const userId = localStorage.getItem("userId");
     if (!userId) {
         alert("Utente non autenticato.");
         return;
     }
-
     const nome = document.getElementById("name").value;
     const descrizione = document.getElementById("description").value;
     const prezzo = parseFloat(document.getElementById("price").value);
     const quantità = parseInt(document.getElementById("quantity").value, 10);
     const immagine = document.getElementById("image").files[0];
-
     const formData = new FormData();
     formData.append("nome", nome);
     formData.append("descrizione", descrizione);
@@ -120,32 +112,26 @@ document.getElementById("productForm").addEventListener("submit", async function
     formData.append("quantita", quantità);
     formData.append("id_utente", userId);
     formData.append("immagine", immagine);
-
     try {
         for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
-}
-        const res = await fetch("http://localhost:3000/api/prodotti", {
-            method: "POST",
-            body: formData
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-            alert("Prodotto inserito con successo!");
-            window.location.href = "products.html";
-        } else {
-            alert("Errore: " + data.message);
-        }
+    }
+    const res = await fetch("http://localhost:3000/api/prodotti", {
+        method: "POST",
+        body: formData
+    });
+    const data = await res.json();
+    if (res.ok) {
+        alert("Prodotto inserito con successo!");
+        window.location.href = "products.html";
+    } else {
+        alert("Errore: " + data.message);
+    }
     } catch (err) {
         console.error("Errore di rete:", err);
         alert("Errore durante l'invio del prodotto.");
     }
 });
-
-
-
 </script>
-
 </body>
 </html>

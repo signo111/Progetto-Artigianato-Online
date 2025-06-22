@@ -29,7 +29,6 @@
       </ul>
     </nav>
   </header>
-
   <main>
     <section class="hero">
       <div class="cart-container">
@@ -40,7 +39,6 @@
       </div>
     </section>
   </main>
-
   <script>
     const burger = document.getElementById("menuCheckbox");
     const navList = document.getElementById("nav-list");
@@ -49,21 +47,18 @@
       if (navList.classList.contains("open") &&
           !navList.contains(event.target) &&
           !burger.contains(event.target)) {
-        navList.classList.remove("open");
+          navList.classList.remove("open");
       }
     });
-
     const navAuth = document.getElementById("nav-auth");
     const ruolo = localStorage.getItem("ruolo");
     const userId = localStorage.getItem("userId");
     const cartKey = userId ? `cart_${userId}` : "cart_guest";
     let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
     if (ruolo) {
       navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
       document.getElementById("nav-nuovo").style.display = ruolo === "artigiano" ? "" : "none";
       document.getElementById("nav-modifica").style.display = ruolo === "artigiano" ? "" : "none";
-
       document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Sei sicuro di voler uscire?")) {
@@ -75,7 +70,6 @@
         }
       });
     }
-
     async function updateCart() {
       const userId = localStorage.getItem("userId");
       if (!userId) {
@@ -83,16 +77,13 @@
         document.getElementById("totalPrice").textContent = "0.00";
         return;
       }
-
       try {
         const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
         const cart = await res.json();
         console.log("Carrello ricevuto dal backend:", cart);
-
         let total = 0;
         const cartContainer = document.getElementById("cart");
         cartContainer.innerHTML = "";
-
         if (cart.length === 0) {
           cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
         } else {
@@ -120,48 +111,46 @@
         document.getElementById("totalPrice").textContent = "0.00";
       }
     }
-
     async function updateQuantity(id_prodotto, quantity) {
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
-  try {
-    const res = await fetch("http://localhost:3000/api/update-cart-quantity", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: parseInt(userId),
-        prodottoId: id_prodotto,
-        quantity: parseInt(quantity)
-      }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      updateCart(); // aggiorna la vista dopo la modifica
-    } else {
-      alert(data.error || "Errore durante l'aggiornamento");
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+      try {
+        const res = await fetch("http://localhost:3000/api/update-cart-quantity", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: parseInt(userId),
+            prodottoId: id_prodotto,
+            quantity: parseInt(quantity)
+          }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          updateCart(); // aggiorna la vista dopo la modifica
+        } else {
+          alert(data.error || "Errore durante l'aggiornamento");
+        }
+      } catch (err) {
+        alert("Errore di connessione");
+      }
     }
-  } catch (err) {
-    alert("Errore di connessione");
-  }
-}
-
     async function removeItem(id_prodotto) {
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
-  try {
-    const res = await fetch("http://localhost:3000/api/remove-from-cart", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: parseInt(userId), prodottoId: id_prodotto }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      alert(data.message);
-      updateCart(); // aggiorna la vista dopo la rimozione
-    } else {
-      alert(data.error || "Errore durante la rimozione");
-    }
-  } catch (err) {
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+      try {
+        const res = await fetch("http://localhost:3000/api/remove-from-cart", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: parseInt(userId), prodottoId: id_prodotto }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          updateCart(); // aggiorna la vista dopo la rimozione
+        } else {
+          alert(data.error || "Errore durante la rimozione");
+        }
+      } catch (err) {
     alert("Errore di connessione");
   }
 }
@@ -171,28 +160,23 @@
         window.location.href = "accedi.html";
         return;
       }
-
       const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
       const cart = await res.json();
-
       if (cart.length === 0) {
         alert("Il carrello è vuoto!");
         return;
       }
-
       const items = cart.map((item) => ({
         name: item.name,
         prezzo: item.prezzo,
         quantita: item.quantita,
       }));
-
       try {
         const res = await fetch("http://localhost:3000/create-checkout-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ items }),
         });
-
         const data = await res.json();
         if (data.url) {
           window.location.href = data.url;
@@ -204,17 +188,14 @@
         alert("Si è verificato un errore durante il pagamento.");
       }
     }
-
     updateCart();
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
     const ruolo = localStorage.getItem('ruolo');
-
     const navNuovo = document.getElementById('nav-nuovo');
     const navModifica = document.getElementById('nav-modifica');
     const navAcc = document.getElementById('nav-acc');
-
     if (ruolo === 'artigiano') {
         navNuovo.style.display = '';
         navModifica.style.display = '';

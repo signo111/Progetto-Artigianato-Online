@@ -29,7 +29,6 @@
       </ul>
     </nav>
   </header>
-
   <section class="hero">
     <h1>Accedi al tuo account</h1>
     <form id="loginForm">
@@ -47,22 +46,17 @@
     <a href="registrati.html">Registrati ora</a><p></p>
     <a href="index.html">Torna alla home</a>
   </section>
-
   <script>
     const navAuth = document.getElementById("nav-auth");
-
     document.addEventListener("DOMContentLoaded", function () {
       // Menu burger
       const burger = document.getElementById("menuCheckbox");
       const navList = document.getElementById("nav-list");
-
       burger.onclick = function () {
         navList.classList.toggle("open");
       };
-
       if (localStorage.getItem("ruolo")) {
         navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
         document.getElementById("logoutLink").addEventListener("click", (e) => {
           e.preventDefault();
           if (confirm("Sei sicuro di voler uscire?")) {
@@ -71,12 +65,10 @@
             alert("Logout effettuato");
             window.location.href = "index.html";
           }
-          // Se premi "Annulla", non succede nulla
         });
       } else {
       navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
       }
-
       document.addEventListener("click", function (event) {
         if (navList.classList.contains("open")) {
           if (!navList.contains(event.target) && !burger.contains(event.target)) {
@@ -84,32 +76,28 @@
           }
         }
       });
-
       // Mostra le voci admin se ruolo è 'artigiano'
       const ruolo = localStorage.getItem("ruolo");
-    document.addEventListener('DOMContentLoaded', function () {
-    const ruolo = localStorage.getItem('ruolo');
-
-    const navNuovo = document.getElementById('nav-nuovo');
-    const navModifica = document.getElementById('nav-modifica');
-    const navAcc = document.getElementById('nav-acc');
-
-    if (ruolo === 'artigiano') {
+      document.addEventListener('DOMContentLoaded', function () {
+      const ruolo = localStorage.getItem('ruolo');
+      const navNuovo = document.getElementById('nav-nuovo');
+      const navModifica = document.getElementById('nav-modifica');
+      const navAcc = document.getElementById('nav-acc');
+      if (ruolo === 'artigiano') {
         navNuovo.style.display = '';
         navModifica.style.display = '';
         navAcc.style.display = '';
-    } else if (ruolo === 'cliente') {
+      } else if (ruolo === 'cliente') {
         navNuovo.style.display = 'none';
         navModifica.style.display = 'none';
         navAcc.style.display = '';
-    } else {
+      } else {
         // Nessun ruolo -> utente non loggato
         navNuovo.style.display = 'none';
         navModifica.style.display = 'none';
         navAcc.style.display = 'none';
-    }
-});
-
+      }
+      });
       // Login
       const loginForm = document.getElementById("loginForm");
       if (loginForm) {
@@ -117,31 +105,26 @@
           e.preventDefault();
           const username = document.getElementById("username").value;
           const password = document.getElementById("password").value;
-
           try {
             const res = await fetch("http://localhost:3000/api/login", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ username, password })
-            });
-
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+          });
             const data = await res.json();
             console.log("Risposta backend:", data);
-
             if (res.ok) {
-              localStorage.setItem("ruolo", data.ruolo);
-              localStorage.setItem("userId", data.userId); 
-  
-              if (data.ruolo === "artigiano") {
-    alert("Benvenuto, artigiano!");
-} else if (data.ruolo === "cliente") {
-    alert("Benvenuto, cliente!");
-} else if (data.ruolo === "amministratore") {
-    alert("Benvenuto, amministratore!");
-} else {
-    alert("Login effettuato!");
-}
-
+            localStorage.setItem("ruolo", data.ruolo);
+            localStorage.setItem("userId", data.userId); 
+            if (data.ruolo === "artigiano") {
+              alert("Benvenuto, artigiano!");
+            } else if (data.ruolo === "cliente") {
+              alert("Benvenuto, cliente!");
+            } else if (data.ruolo === "amministratore") {
+              alert("Benvenuto, amministratore!");
+            } else {
+             alert("Login effettuato!");
+            }
               window.location.href = "index.html";
             } else {
               alert(data.error || "Credenziali non valide");
@@ -153,7 +136,6 @@
         });
       }
     });
- 
-  </script>
+</script>
 </body>
 </html>

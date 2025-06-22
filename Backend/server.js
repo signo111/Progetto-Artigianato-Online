@@ -38,7 +38,6 @@ getData();
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body; // Serve per ottenere i dati inviati dal client 
   // (ad esempio da un form di login) nel body della richiesta HTTP POST
-
   console.log("Tentativo login:", username);
   try {
     const result = await client.query("SELECT * FROM utenti WHERE name = $1", [username]);
@@ -249,25 +248,21 @@ app.post("/api/complete-order", async (req, res) => {
       "SELECT * FROM carrello WHERE id_utente = $1 AND stato_carrello = true",
       [userId]
     );
-
     // Calcola il totale dell'ordine
     let totale = 0;
     carrello.rows.forEach(item => {
       totale += Number(item.quantita) * Number(item.prezzo_totale);
     });
-
     // Crea un solo ordine con il totale
     await client.query(
       "INSERT INTO ordine (id_utente, totale, stato_ordine, chiusura_ordine) VALUES ($1, $2, $3, NOW())",
       [userId, totale, 'completato']
     );
-
     // Svuota il carrello dell'utente
     await client.query(
       "DELETE FROM carrello WHERE id_utente = $1 AND stato_carrello = true",
       [userId]
     );
-
     res.json({ message: "Ordine completato e carrello svuotato" });
   } catch (err) {
     console.error("Errore completamento ordine:", err);
@@ -279,24 +274,19 @@ app.post("/api/complete-order", async (req, res) => {
 app.get('/api/orders/:userId', async (req, res) => {
   const userId = req.params.userId;
   console.log(`➡️ Richiesta ordini per userId: ${userId}`);
-
   try {
     // 1. Recupera il ruolo dell'utente
     const ruoloResult = await client.query(
       'SELECT ruolo FROM utenti WHERE id = $1',
       [userId]
     );
-
     console.log("📄 Risultato query ruolo:", ruoloResult.rows);
-
     if (ruoloResult.rows.length === 0) {
       console.warn("⚠️ Utente non trovato");
       return res.status(404).json({ error: "Utente non trovato" });
     }
-
     const ruolo = ruoloResult.rows[0].ruolo;
     console.log(`👤 Ruolo utente: ${ruolo}`);
-
     // 2. Se è amministratore, prendi tutti gli ordini
     let orders;
     if (ruolo === 'amministratore') {
@@ -309,10 +299,8 @@ app.get('/api/orders/:userId', async (req, res) => {
         [userId]
       );
     }
-
     console.log(`📦 Numero ordini trovati: ${orders.rows.length}`);
     res.json(orders.rows);
-
   } catch (err) {
     console.error("❌ Errore recupero ordini:", err);
     res.status(500).json({ error: "Errore recupero ordini" });
@@ -363,14 +351,12 @@ app.post("/api/prodotti", upload.single("immagine"), (req, res) => {
   if (!id_utente) {
     return res.status(400).json({ message: "ID utente mancante." });
   }
-
   // Costruisce la query SQL per inserire un nuovo prodotto nel database.
   // I valori ($1, $2, ...) sono segnaposto che verranno sostituiti con i dati reali forniti dall'utente.
   const sql = `
     INSERT INTO prodotti (name, descrizione, prezzo, quantita, id_utente, immagine, disponibilita)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING id`;
-
     // Esegue la query di inserimento nel database PostgreSQL.
     // Il secondo parametro è un array con i valori da inserire nei segnaposto della query.
     // La funzione di callback gestisce il risultato o eventuali errori.
@@ -442,7 +428,6 @@ app.post("/api/modifica-prodotto", upload.single("immagine"), (req, res) => {
       WHERE name = $${i++} AND id_utente = $${i}
     `;
     values.push(name, userId);
-
     if (immagine) {
   const vecchiaImmagine = results.rows[0].immagine;
   const pathVecchia = path.join(__dirname, 'images', vecchiaImmagine.toString('utf8'));
@@ -507,14 +492,11 @@ app.post("/api/modifica-account", async (req, res) => {
 });
 app.delete('/api/utenti/:id', async (req, res) => {
     const userId = req.params.id;
-
     try {
         const result = await client.query('DELETE FROM utenti WHERE id = $1', [userId]);
-
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Utente non trovato' });
         }
-
         res.json({ message: 'Utente eliminato con successo' });
     } catch (error) {
         console.error('Errore durante l\'eliminazione dell\'utente:', error);
@@ -526,7 +508,6 @@ app.delete('/api/utenti/:id', async (req, res) => {
 app.put('/api/utenti/:id', async(req, res) => {
   const { id } = req.params;
   const { ruolo, password } = req.body;
-
   // Se viene fornita anche la password, aggiorna entrambi
   if (password && password.trim() !== "") {
       const hashedPassword = await bcrypt.hash(password, 10); // 👈 await ora è valido!
@@ -576,30 +557,24 @@ app.get('/api/prodotti', async (req, res) => {
 app.put('/api/prodotti/:id', upload.single('immagine'), async (req, res) => {
   const { id } = req.params;
   const { name, descrizione, prezzo, quantita, disponibilita, immaginePrecedente } = req.body;
-
   try {
     // 🧱 se c'è un nuovo file, gestiscilo
     let nomeFinale = immaginePrecedente;
-
     if (req.file) {
       nomeFinale = req.file.filename;
-
       // 🧹 elimina immagine precedente se presente
       const pathPrecedente = path.join(__dirname, 'images', immaginePrecedente);
       if (fs.existsSync(pathPrecedente)) {
         fs.unlinkSync(pathPrecedente);
       }
     }
-
     const immagineHex = Buffer.from(nomeFinale, 'utf8').toString('hex');
-
     await client.query(
       `UPDATE prodotti 
        SET name = $1, immagine = $2, descrizione = $3, prezzo = $4, quantita = $5, disponibilita = $6 
        WHERE id = $7`,
       [name, '\\x' + immagineHex, descrizione, prezzo, quantita, disponibilita, id]
     );
-
     res.json({ message: 'Prodotto aggiornato con successo' });
   } catch (err) {
     console.error('Errore aggiornamento prodotto:', err);

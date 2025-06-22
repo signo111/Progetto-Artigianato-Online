@@ -29,7 +29,6 @@
       </ul>
     </nav>
   </header>
-
   <section class="edit-product">
     <section class="hero">
       <h1>Modifica Prodotto</h1>
@@ -61,15 +60,12 @@
       </form>
     </section>
   </section>
-
   <script>
     const burger = document.getElementById("menuCheckbox");
     const navList = document.getElementById("nav-list");
-
     burger.onclick = function () {
       navList.classList.toggle("open");
     };
-
     document.addEventListener("click", function (event) {
       if (navList.classList.contains("open")) {
         if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
@@ -77,7 +73,6 @@
         }
       }
     });
-
     const navAuth = document.getElementById("nav-auth");
     if (localStorage.getItem("ruolo")) {
       navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
@@ -93,7 +88,6 @@
     } else {
       navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-
     const ruolo = localStorage.getItem("ruolo");
     if (ruolo === "artigiano") {
       document.getElementById("nav-nuovo").style.display = "";
@@ -103,20 +97,16 @@
       document.getElementById("nav-modifica").style.display = "none";
     }
   </script>
-
-  <!-- SCRIPT DI MODIFICA -->
   <script>
     document.querySelector("form").addEventListener("submit", async function(event) {
       event.preventDefault();
       const form = event.target;
       const formData = new FormData();
-
       const userId = localStorage.getItem("userId");
       if (!userId) {
         alert("Utente non autenticato.");
         return;
       }
-
       const nome = form.querySelector("#product-name").value.trim();
       if (!nome) {
         alert("Il nome del prodotto è obbligatorio.");
@@ -124,25 +114,19 @@
       }
       formData.append("userId", userId);
       formData.append("name", nome);
-
       const descrizione = form.querySelector("#product-description").value.trim();
       if (descrizione) formData.append("descrizione", descrizione);
-
       const prezzo = form.querySelector("#product-price").value.trim();
       if (prezzo) formData.append("prezzo", prezzo);
-
       const quantita = form.querySelector("#quantity").value.trim();
       if (quantita) formData.append("quantita", quantita);
-
       const file = form.querySelector("#product-image").files[0];
       if (file) formData.append("immagine", file);
-
       try {
         const response = await fetch("http://localhost:3000/api/modifica-prodotto", {
           method: "POST",
           body: formData
         });
-
         const result = await response.json();
         if (response.ok) {
           alert(result.success || "Prodotto aggiornato!");

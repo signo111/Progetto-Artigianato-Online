@@ -7,9 +7,6 @@
     <title>Artigianato Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
-
-
 <body>
     <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
@@ -33,12 +30,9 @@
         </nav>
     </header>
     <script>
-
         const navAuth = document.getElementById("nav-auth");
-
         if (localStorage.getItem("ruolo")) {
             navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
             document.getElementById("logoutLink").addEventListener("click", (e) => {
             e.preventDefault();
             if (confirm("Sei sicuro di voler uscire?")) {
@@ -47,7 +41,6 @@
                 alert("Logout effettuato");
                 window.location.href = "index.html";
             }
-        // Se premi "Annulla", non succede nulla
             });
         } else {
             navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
@@ -59,7 +52,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -94,10 +86,7 @@
         <a href="login.html">Accedi ora</a>
         <p class="ActionButton">Non sei interessato?</p>
         <a href="index.html">Torna alla home</a>    
-        
 </body>
-
-
     <script>
     document.addEventListener("DOMContentLoaded", function() {
     const form = document.querySelector("form");
@@ -107,24 +96,20 @@
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const ruolo = document.getElementById("artisan").checked ? "artigiano" : "cliente";
-        
         // Controllo password sicura
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
         if (!passwordRegex.test(password)) {
             alert("La password deve contenere almeno 8 caratteri, una lettera maiuscola, un numero e un carattere speciale.");
             return;
         }
-
         try {
         const res = await fetch("http://localhost:3000/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, email, password, ruolo })
         });
-
         const data = await res.json();
         console.log("Risposta backend:", data); // <-- Vedi la risposta in console
-
         if (res.ok) {
             console.log("ID ricevuto dal backend:", data.id);
             localStorage.setItem("ruolo", ruolo);
@@ -145,11 +130,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const ruolo = localStorage.getItem('ruolo');
-
     const navNuovo = document.getElementById('nav-nuovo');
     const navModifica = document.getElementById('nav-modifica');
     const navAcc = document.getElementById('nav-acc');
-
     if (ruolo === 'artigiano') {
         navNuovo.style.display = '';
         navModifica.style.display = '';
@@ -167,6 +150,4 @@
 });
 </script>
 </body>
-</html>
-
 </html>

@@ -29,35 +29,31 @@
             </ul>
         </nav>
     </header>
-
-
     <section class="edit-product">
-<section class="hero">
-        <h1>Modifica informazioni Account</h1>
-        <form id="modifica-form" method="POST">
-  <p>
-    <label for="username">Nome utente:</label>
-    <input type="text" id="username" name="username">
-  </p>
-  <p>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email">
-  </p>
-  <p>
-    <label for="password">Nuova Password:</label>
-    <input type="password" id="password" name="password">
-  </p>
-  <p>
-    <button type="submit">Salva Modifiche</button>
-  </p>
-</form>
+      <section class="hero">
+      <h1>Modifica informazioni Account</h1>
+      <form id="modifica-form" method="POST">
+        <p>
+          <label for="username">Nome utente:</label>
+          <input type="text" id="username" name="username">
+        </p>
+        <p>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email">
+        </p>
+        <p>
+          <label for="password">Nuova Password:</label>
+          <input type="password" id="password" name="password">
+        </p>
+        <p>
+        <button type="submit">Salva Modifiche</button>
+        </p>
+      </form>
     </section>
     <script>
         const navAuth = document.getElementById("nav-auth");
-
         if (localStorage.getItem("ruolo")) {
             navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
             document.getElementById("logoutLink").addEventListener("click", (e) => {
                 e.preventDefault();
                 if (confirm("Sei sicuro di voler uscire?")) {
@@ -66,7 +62,6 @@
                 alert("Logout effettuato");
                 window.location.href = "index.html";
                 }
-                // Se premi "Annulla", non succede nulla
             });
         } else {
             navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
@@ -78,7 +73,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -88,40 +82,32 @@
         }
     });
     </script>    
- <!-- SCRIPT DI MODIFICA -->
 <script>
      document.querySelector("form").addEventListener("submit", async function(event) {
     event.preventDefault();
-
     const form = event.target;
     const userId = localStorage.getItem("userId");
-
     if (!userId) {
       alert("Utente non autenticato.");
       return;
     }
-
     const username = form.querySelector("#username").value.trim();
     const email = form.querySelector("#email").value.trim();
     const password = form.querySelector("#password").value.trim();
-
     if (!username && !email && !password) {
       alert("Compila almeno un campo per modificare l'account.");
       return;
     }
-
     const body = { userId };
     if (username) body.username = username;
     if (email) body.email = email;
     if (password) body.password = password;
-
     try {
       const response = await fetch("http://localhost:3000/api/modifica-account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
-
       const result = await response.json();
       if (response.ok) {
         alert("Dati account aggiornati con successo.");

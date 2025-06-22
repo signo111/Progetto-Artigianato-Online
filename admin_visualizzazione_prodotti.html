@@ -26,7 +26,6 @@
                 <li id="nav-admin1" style="display: none;"><a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
                 <li id="nav-admin2" style="display: none;"><a href="admin_visualizzazione_account.html">Gestione Account</a></li>
                 <li id="nav-admin3" style="display: none;"><a href="storicoordiniadmin.html">Storico Ordini</a></li>
-
                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
         </nav>
@@ -39,7 +38,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -48,11 +46,9 @@
             }
         }
     });
-
     const navAuth = document.getElementById("nav-auth");
 if (localStorage.getItem("ruolo")) {
   navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-  
     document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Sei sicuro di voler uscire?")) {
@@ -65,16 +61,14 @@ if (localStorage.getItem("ruolo")) {
     } else {
     navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-
-const ruolo = localStorage.getItem('ruolo');
-
+    const ruolo = localStorage.getItem('ruolo');
     const navNuovo = document.getElementById('nav-nuovo');
     const navModifica = document.getElementById('nav-modifica');
     const navAcc = document.getElementById('nav-acc');
-        const navAdmin1 = document.getElementById('nav-admin1');
+    const navAdmin1 = document.getElementById('nav-admin1');
     const navAdmin2 = document.getElementById('nav-admin2');
     const navAdmin3 = document.getElementById('nav-admin3');
-        const carello = document.getElementById('carrello');
+    const carello = document.getElementById('carrello');
     const prodotti = document.getElementById('prodotti');
    if (ruolo === 'amministratore') {
         navNuovo.style.display = 'none';
@@ -109,9 +103,6 @@ const ruolo = localStorage.getItem('ruolo');
         navAdmin3.style.display = 'none';
     }
     </script>
-
-    
-
   <body>
    <!-- Storico ordini -->
         <div class="tabella">
@@ -127,8 +118,7 @@ const ruolo = localStorage.getItem('ruolo');
                         <th>Quantità</th>
                         <th>Disponibilità</th>
                         <th>Aggiorna</th>
-                        <th>Elimina</th>
-                        
+                        <th>Elimina</th>                
                     </tr>
                 </thead>
                 <tbody id="orderTableBody">
@@ -145,10 +135,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const tbody = document.getElementById("orderTableBody");
       prodotti.forEach(prodotto => {
         const tr = document.createElement("tr");
-
         tr.innerHTML = `
           <td data-label="ID Prodotto">${prodotto.id}</td>
-          <td data-label="Nome"><input value="${prodotto.name}" class="name" data-id="${prodotto.id}"></td>
+          <td data-label="Nome"><input value="${prodotto.prodotto_name}" class="name" data-id="${prodotto.id}"></td>
           <td data-label="Immagine"><input value="${prodotto.immagine}" class="immagine" data-id="${prodotto.id}" hidden>
           <input type="file" class="file-input" data-id="${prodotto.id}" accept="image/*">
           </td>
@@ -162,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
         tbody.appendChild(tr);
       });
-
       // Salvataggio modifiche
     // ✅ Salvataggio modifiche (versione con FormData)
 document.querySelectorAll(".salvaProdotto").forEach(button => {
@@ -175,7 +163,6 @@ document.querySelectorAll(".salvaProdotto").forEach(button => {
     const disponibilita = document.querySelector(`.disponibilita[data-id="${id}"]`).value;
     const immaginePrecedente = document.querySelector(`.immagine[data-id="${id}"]`).value;
     const fileInput = document.querySelector(`.file-input[data-id="${id}"]`);
-
     const formData = new FormData();
     formData.append("name", name);
     formData.append("descrizione", descrizione);
@@ -183,11 +170,9 @@ document.querySelectorAll(".salvaProdotto").forEach(button => {
     formData.append("quantita", quantita);
     formData.append("disponibilita", disponibilita);
     formData.append("immaginePrecedente", immaginePrecedente);
-
     if (fileInput && fileInput.files.length > 0) {
       formData.append("immagine", fileInput.files[0]);
     }
-
     fetch(`http://localhost:3000/api/prodotti/${id}`, {
       method: "PUT",
       body: formData
@@ -203,8 +188,6 @@ document.querySelectorAll(".salvaProdotto").forEach(button => {
     });
   });
 });
-
-
       // Eliminazione prodotto
       document.querySelectorAll(".eliminaProdotto").forEach(button => {
         button.addEventListener("click", () => {
@@ -227,5 +210,4 @@ document.querySelectorAll(".salvaProdotto").forEach(button => {
 });
 </script>
 </body>
-    
 </html>

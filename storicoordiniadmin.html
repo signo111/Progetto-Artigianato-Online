@@ -26,7 +26,6 @@
                 <li id="nav-admin1" style="display: none;"><a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
                 <li id="nav-admin2" style="display: none;"><a href="admin_visualizzazione_account.html">Gestione Account</a></li>
                 <li id="nav-admin3" style="display: none;"><a href="storicoordiniadmin.html">Storico Ordini</a></li>
-
                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
         </nav>
@@ -39,7 +38,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -48,73 +46,63 @@
             }
         }
     });
-
     const navAuth = document.getElementById("nav-auth");
-    
     if (localStorage.getItem("ruolo")) {
-    navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
-    document.getElementById("logoutLink").addEventListener("click", (e) => {
+      navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+      document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Sei sicuro di voler uscire?")) {
-        localStorage.removeItem("ruolo");
-        alert("Logout effettuato");
-        window.location.href = "index.html";
+          localStorage.removeItem("ruolo");
+          alert("Logout effettuato");
+          window.location.href = "index.html";
         }
-        // Se premi "Annulla", non succede nulla
     });
     } else {
-    navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+      navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-
     const ruolo = localStorage.getItem("ruolo");
-
     const navNuovo = document.getElementById('nav-nuovo');
     const navModifica = document.getElementById('nav-modifica');
     const navAcc = document.getElementById('nav-acc');
-        const navAdmin1 = document.getElementById('nav-admin1');
+    const navAdmin1 = document.getElementById('nav-admin1');
     const navAdmin2 = document.getElementById('nav-admin2');
     const navAdmin3 = document.getElementById('nav-admin3');
-        const carello = document.getElementById('carrello');
+    const carello = document.getElementById('carrello');
     const prodotti = document.getElementById('prodotti');
-   if (ruolo === 'amministratore') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-         carello.style.display='none'
-          prodotti.style.display='none'
-        navAdmin1.style.display = '';
-        navAdmin2.style.display = '';
-        navAdmin3.style.display = '';
+    if (ruolo === 'amministratore') {
+      navNuovo.style.display = 'none';
+      navModifica.style.display = 'none';
+      navAcc.style.display = 'none';
+      carello.style.display='none'
+      prodotti.style.display='none'
+      navAdmin1.style.display = '';
+      navAdmin2.style.display = '';
+      navAdmin3.style.display = '';
     } else if (ruolo === 'artigiano') {
-        navNuovo.style.display = '';
-        navModifica.style.display = '';
-        navAcc.style.display = '';
-        navAdmin1.style.display = 'none';
-        navAdmin2.style.display = 'none';
-        navAdmin3.style.display = 'none';
+      navNuovo.style.display = '';
+      navModifica.style.display = '';
+      navAcc.style.display = '';
+      navAdmin1.style.display = 'none';
+      navAdmin2.style.display = 'none';
+      navAdmin3.style.display = 'none';
     } else if (ruolo === 'cliente') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = '';
-        navAdmin1.style.display = 'none';
-        navAdmin2.style.display = 'none';
-        navAdmin3.style.display = 'none';
+      navNuovo.style.display = 'none';
+      navModifica.style.display = 'none';
+      navAcc.style.display = '';
+      navAdmin1.style.display = 'none';
+      navAdmin2.style.display = 'none';
+      navAdmin3.style.display = 'none';
     } else {
-        // Nessun ruolo
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-        navAdmin1.style.display = 'none';
-        navAdmin2.style.display = 'none';
-        navAdmin3.style.display = 'none';
+      // Nessun ruolo
+      navNuovo.style.display = 'none';
+      navModifica.style.display = 'none';
+      navAcc.style.display = 'none';
+      navAdmin1.style.display = 'none';
+      navAdmin2.style.display = 'none';
+      navAdmin3.style.display = 'none';
     }
     </script>
-
-    
-
   <body>
-
    <!-- Storico ordini -->
         <div class="tabella">
             <h2>Storico Ordini</h2>
@@ -138,7 +126,6 @@
   burger.onclick = function () {
     navList.classList.toggle("open");
   };
-
   document.addEventListener("click", function (event) {
     if (navList.classList.contains("open")) {
       if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
@@ -146,7 +133,6 @@
       }
     }
   });
-
   if (ruolo) {
     navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
     document.getElementById("logoutLink").addEventListener("click", (e) => {
@@ -161,7 +147,6 @@
   } else {
     navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
   }
-
   // Gestione visibilità link artigiano
   if (ruolo === "artigiano") {
     document.getElementById("nav-nuovo").style.display = "";
@@ -170,7 +155,6 @@
     document.getElementById("nav-nuovo").style.display = "none";
     document.getElementById("nav-modifica").style.display = "none";
   }
-
   // Aggiunta link per admin
   if (ruolo === "amministratore") {
     const adminLinks = `
@@ -189,34 +173,26 @@
       window.location.href = "accedi.html";
       return;
     }
-
-
     fetch(`http://localhost:3000/api/orders/${userId}`)
-    
-        .then(response => response.json())
-        .then(orders => {
-        const tbody = document.getElementById("orderTableBody");
-        tbody.innerHTML = "";
-        orders.forEach(order => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-            <td data-label="ID Ordine">${order.id_ordine}</td>
-            <td data-label="Data">${order.chiusura_ordine ? new Date(order.chiusura_ordine).toLocaleString() : ""}</td>
-            <td data-label="Totale">${order.totale || order.prezzo || ""}</td>
-            <td data-label="Stato">${order.stato_ordine}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+      .then(response => response.json())
+      .then(orders => {
+      const tbody = document.getElementById("orderTableBody");
+      tbody.innerHTML = "";
+      orders.forEach(order => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+        <td data-label="ID Ordine">${order.id_ordine}</td>
+        <td data-label="Data">${order.chiusura_ordine ? new Date(order.chiusura_ordine).toLocaleString() : ""}</td>
+        <td data-label="Totale">${order.totale || order.prezzo || ""}</td>
+        <td data-label="Stato">${order.stato_ordine}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     })
     .catch(error => {
     console.error("Errore fetch ordini:", error);
-    });
-
-      
-  });
-
-  
-
+    });     
+  });  
 </script>
 </body>
 </html>

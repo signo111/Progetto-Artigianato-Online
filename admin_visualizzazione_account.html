@@ -26,7 +26,6 @@
                 <li id="nav-admin1" style="display: none;"><a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
                 <li id="nav-admin2" style="display: none;"><a href="admin_visualizzazione_account.html">Gestione Account</a></li>
                 <li id="nav-admin3" style="display: none;"><a href="storicoordiniadmin.html">Storico Ordini</a></li>
-
                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
             </ul>
         </nav>
@@ -39,7 +38,6 @@
         burger.onclick = function() {
             navList.classList.toggle('open');
         };
-
         // chiusura
         document.addEventListener('click', function(event) {
         if (navList.classList.contains('open')) {
@@ -48,72 +46,64 @@
             }
         }
     });
-
     const navAuth = document.getElementById("nav-auth");
-if (localStorage.getItem("ruolo")) {
-  navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-  
-  // Azione logout
-    document.getElementById("logoutLink").addEventListener("click", (e) => {
-        e.preventDefault();
-        if (confirm("Sei sicuro di voler uscire?")) {
-        localStorage.removeItem("ruolo");
-        alert("Logout effettuato");
-        window.location.href = "index.html";
-        }
+      if (localStorage.getItem("ruolo")) {
+        navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+        // Azione logout
+        document.getElementById("logoutLink").addEventListener("click", (e) => {
+          e.preventDefault();
+          if (confirm("Sei sicuro di voler uscire?")) {
+            localStorage.removeItem("ruolo");
+            alert("Logout effettuato");
+            window.location.href = "index.html";
+          }
         // Se premi "Annulla", non succede nulla
-    });
-    } else {
-    navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-    }
-
-const ruolo = localStorage.getItem("ruolo");
-
-
+        });
+      } else {
+        navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
+      }
+    const ruolo = localStorage.getItem("ruolo");
     const navNuovo = document.getElementById('nav-nuovo');
     const navModifica = document.getElementById('nav-modifica');
     const navAcc = document.getElementById('nav-acc');
-        const navAdmin1 = document.getElementById('nav-admin1');
+    const navAdmin1 = document.getElementById('nav-admin1');
     const navAdmin2 = document.getElementById('nav-admin2');
     const navAdmin3 = document.getElementById('nav-admin3');
-        const carello = document.getElementById('carrello');
+    const carello = document.getElementById('carrello');
     const prodotti = document.getElementById('prodotti');
-   if (ruolo === 'amministratore') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-         carello.style.display='none'
-          prodotti.style.display='none'
-        navAdmin1.style.display = '';
-        navAdmin2.style.display = '';
-        navAdmin3.style.display = '';
+    if (ruolo === 'amministratore') {
+      navNuovo.style.display = 'none';
+      navModifica.style.display = 'none';
+      navAcc.style.display = 'none';
+      carello.style.display='none'
+      prodotti.style.display='none'
+      navAdmin1.style.display = '';
+      navAdmin2.style.display = '';
+      navAdmin3.style.display = '';
     } else if (ruolo === 'artigiano') {
-        navNuovo.style.display = '';
-        navModifica.style.display = '';
-        navAcc.style.display = '';
-        navAdmin1.style.display = 'none';
-        navAdmin2.style.display = 'none';
-        navAdmin3.style.display = 'none';
+      navNuovo.style.display = '';
+      navModifica.style.display = '';
+      navAcc.style.display = '';
+      navAdmin1.style.display = 'none';
+      navAdmin2.style.display = 'none';
+      navAdmin3.style.display = 'none';
     } else if (ruolo === 'cliente') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = '';
-        navAdmin1.style.display = 'none';
-        navAdmin2.style.display = 'none';
-        navAdmin3.style.display = 'none';
+      navNuovo.style.display = 'none';
+      navModifica.style.display = 'none';
+      navAcc.style.display = '';
+      navAdmin1.style.display = 'none';
+      navAdmin2.style.display = 'none';
+      navAdmin3.style.display = 'none';
     } else {
-        // Nessun ruolo
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-        navAdmin1.style.display = 'none';
-        navAdmin2.style.display = 'none';
-        navAdmin3.style.display = 'none';
+      // Nessun ruolo
+      navNuovo.style.display = 'none';
+      navModifica.style.display = 'none';
+      navAcc.style.display = 'none';
+      navAdmin1.style.display = 'none';
+      navAdmin2.style.display = 'none';
+      navAdmin3.style.display = 'none';
     }
     </script>
-
-    
-
   <body>
    <!-- Storico ordini -->
         <div class="tabella">
@@ -121,13 +111,13 @@ const ruolo = localStorage.getItem("ruolo");
             <table>
                 <thead>
                     <tr>
-                        <th>ID Utente</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                       <th>Ruolo</th>
-                         <th>Password</th>
-                        <th>Modifica</th>
-                        <th>Elimina</th>
+                      <th>ID Utente</th>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Ruolo</th>
+                      <th>Password</th>
+                      <th>Modifica</th>
+                      <th>Elimina</th>
                     </tr>
                 </thead>
                 <tbody id="orderTableBody">
@@ -144,50 +134,43 @@ document.addEventListener("DOMContentLoaded", function () {
       const tbody = document.getElementById("orderTableBody");
       data.forEach(utente => {
         const tr = document.createElement("tr");
-
         tr.innerHTML = `
           <td data-label="ID Utente">${utente.id}</td>
           <td data-label="Nome">${utente.name}</td>
           <td data-label="Email">${utente.email}</td>
-        
           <td data-label="Ruolo">
             <select data-id="${utente.id}" class="selectRuolo">
               <option value="cliente" ${utente.ruolo === "cliente" ? "selected" : ""}>cliente</option>
               <option value="artigiano" ${utente.ruolo === "artigiano" ? "selected" : ""}>artigiano</option>
-              <option value="amministratore" ${utente.ruolo === "amministratore" ? "selected" : ""}>amministratore</option>
             </select>
           </td>
           <td data-label="Password"><input type="password" class="nuovaPassword" data-id="${utente.id}" placeholder="Nuova password"></td>
           <td data-label="Modifica"><button class="salvaBtn" data-id="${utente.id}">Salva</button></td>
           <td data-label="Elimina"><button class="eliminaBtn" data-id="${utente.id}">Elimina</button></td>
         `;
-
         tbody.appendChild(tr);
       });
-
       // Listener per salvataggio ruolo
       document.querySelectorAll(".salvaBtn").forEach(button => {
-  button.addEventListener("click", () => {
-    const id = button.getAttribute("data-id");
-    const nuovoRuolo = document.querySelector(`select[data-id="${id}"]`).value;
-    const nuovaPassword = document.querySelector(`input.nuovaPassword[data-id="${id}"]`).value;
-
-    fetch(`http://localhost:3000/api/utenti/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ruolo: nuovoRuolo, password: nuovaPassword })
-    })
-    .then(res => res.json())
-    .then(result => {
-      alert(result.message);
-    })
-    .catch(err => {
-      console.error("Errore aggiornamento:", err);
-      alert("Errore durante il salvataggio.");
-    });
-  });
-});
-
+        button.addEventListener("click", () => {
+          const id = button.getAttribute("data-id");
+          const nuovoRuolo = document.querySelector(`select[data-id="${id}"]`).value;
+          const nuovaPassword = document.querySelector(`input.nuovaPassword[data-id="${id}"]`).value;
+          fetch(`http://localhost:3000/api/utenti/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ruolo: nuovoRuolo, password: nuovaPassword })
+          })
+          .then(res => res.json())
+          .then(result => {
+            alert(result.message);
+          })
+          .catch(err => {
+            console.error("Errore aggiornamento:", err);
+            alert("Errore durante il salvataggio.");
+          });
+        });
+      });
       // Listener per eliminazione
       document.querySelectorAll(".eliminaBtn").forEach(button => {
         button.addEventListener("click", () => {
@@ -196,20 +179,18 @@ document.addEventListener("DOMContentLoaded", function () {
             fetch(`http://localhost:3000/api/utenti/${id}`, { method: "DELETE" })
               .then(res => res.json())
               .then(result => {
-                alert(result.message);
-                window.location.reload(); // aggiorna la tabella
-              })
-              .catch(err => {
-                console.error("Errore eliminazione:", err);
-                alert("Errore durante l'eliminazione.");
-              });
+              alert(result.message);
+              window.location.reload(); // aggiorna la tabella
+            })
+            .catch(err => {
+              console.error("Errore eliminazione:", err);
+              alert("Errore durante l'eliminazione.");
+            });
           }
         });
       });
     });
 });
 </script>
-
 </body>
-    
 </html>
