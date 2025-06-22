@@ -143,14 +143,34 @@ document.addEventListener("DOMContentLoaded", function () {
           </td>
 
           <td data-label="Descrizione"><input value="${prodotto.descrizione}" class="descrizione" data-id="${prodotto.id}"></td>
-          <td data-label="Prezzo"><input type="number" value="${prodotto.prezzo}" class="prezzo" data-id="${prodotto.id}"></td>
-          <td data-label="Quantità"><input type="number" value="${prodotto.quantita}" class="quantita" data-id="${prodotto.id}"></td>
-          <td data-label="Disponibilità"><input value="${prodotto.disponibilita}" class="disponibilita" data-id="${prodotto.id}"></td>
+          <td data-label="Prezzo"><input type="number" value="${prodotto.prezzo}" class="prezzo" data-id="${prodotto.id}" step="0.01" min="0"></td>
+          <td data-label="Quantità"><input type="number" value="${prodotto.quantita}" class="quantita" data-id="${prodotto.id}" step="1" min="0"></td>
+          <td data-label="Disponibilità">
+          <select class="disponibilita" data-id="${prodotto.id}">
+          <option value="true" ${prodotto.disponibilita === 'true' ? 'selected' : ''}>true</option>
+          <option value="false" ${prodotto.disponibilita === 'false' ? 'selected' : ''}>false</option>
+  </select>
+</td>
           <td data-label="Aggiorna"><button class="salvaProdotto" data-id="${prodotto.id}">Salva</button></td>
           <td data-label="Elimina"><button class="eliminaProdotto" data-id="${prodotto.id}">Elimina</button></td>
         `;
         tbody.appendChild(tr);
       });
+
+      tbody.addEventListener("input", (e) => {
+  if (e.target.classList.contains("quantita")) {
+    if (parseInt(e.target.value) < 0) {
+      e.target.value = 0;
+    }
+  }
+});
+
+tbody.addEventListener("keydown", (e) => {
+  if (e.target.classList.contains("quantita") && e.key === "-") {
+    e.preventDefault();
+  }
+});
+
       // Salvataggio modifiche
     // ✅ Salvataggio modifiche (versione con FormData)
 document.querySelectorAll(".salvaProdotto").forEach(button => {
@@ -209,5 +229,6 @@ document.querySelectorAll(".salvaProdotto").forEach(button => {
     });
 });
 </script>
+
 </body>
 </html>
