@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.removeItem("userId");
         localStorage.removeItem(`cart_${userId}`);
         alert("Logout effettuato");
-        window.location.reload();
+        window.location.href = "index.html";
       }
     });
   } else {

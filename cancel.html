@@ -60,7 +60,7 @@ if (localStorage.getItem("ruolo")) {
     if (confirm("Sei sicuro di voler uscire?")) {
       localStorage.removeItem("ruolo");
       alert("Logout effettuato");
-      window.location.reload(); // Ricarica la pagina per mostrare 'Accedi'
+      window.location.href = "index.html";
     }
     // Se premi "Annulla", non succede nulla
   });

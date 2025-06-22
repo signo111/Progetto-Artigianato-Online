@@ -552,7 +552,10 @@ app.put('/api/utenti/:id', async(req, res) => {
 });
 
 app.get('/api/utenti', (req, res) => {
-  client.query('SELECT id, name, email, ruolo FROM utenti', (err, result) => {
+  client.query(
+  'SELECT id, name, email, ruolo FROM utenti WHERE name != $1',
+  ['Admin'],
+ (err, result) => {
     if (err) return res.status(500).json({ error: 'Errore nel caricamento utenti' });
     res.json(result.rows);
   });

@@ -55,7 +55,7 @@
         if (confirm("Sei sicuro di voler uscire?")) {
         localStorage.removeItem("ruolo");
         alert("Logout effettuato");
-        window.location.reload();
+        window.location.href = "index.html";
         }
         // Se premi "Annulla", non succede nulla
     });
@@ -204,13 +204,18 @@
 
             // Script logout
             const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function() {
-                    localStorage.clear();
-                    window.location.href = "accedi.html";
-                });
+              if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+            const conferma = confirm("Sei sicuro di voler effettuare il logout?");
+            if (conferma) {
+                localStorage.clear();
+                alert("Logout effettuato con successo.");
+                window.location.href = "index.html";
             }
+            // Altrimenti non fa nulla
         });
+    }
+});
 
 
 document.addEventListener("DOMContentLoaded", function () {
