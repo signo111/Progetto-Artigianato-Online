@@ -125,11 +125,14 @@
         newProduct.innerHTML = `
           <h2>${product.prodotto_name}</h2>
           <img src="${product.immagine}" alt="${product.prodotto_name}">
+          <div class="item-details">
+            <p><strong>Quantità:</strong> ${product.quantita}</p>
           <p><strong>Prezzo:</strong> ${product.prezzo} €</p>
           <p><strong>Descrizione:</strong> ${product.descrizione}</p>
           <p><strong>Artigiano:</strong> ${product.artigiano_name}</p>
           <p><strong>Disponibilità:</strong> ${product.disponibilita ? 'Disponibile' : 'Non disponibile'}</p>
-        `;
+          </div>
+          `;
         listProduct.appendChild(newProduct);
       });
     }
@@ -146,10 +149,10 @@
           sorted.sort((a, b) => a.prezzo - b.prezzo);
           break;
         case 'Nome A-Z':
-          sorted.sort((a, b) => a.name.localeCompare(b.name));
+          sorted.sort((a, b) => a.prodotto_name.localeCompare(b.prodotto_name));
           break;
         case 'Nome Z-A':
-          sorted.sort((a, b) => b.name.localeCompare(a.name));
+          sorted.sort((a, b) => b.prodotto_name.localeCompare(a.prodotto_name));
           break;
         case 'Disponibilità':
           sorted.sort((a, b) => {

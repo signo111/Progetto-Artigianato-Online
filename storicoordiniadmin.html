@@ -200,10 +200,10 @@
         orders.forEach(order => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
-            <td>${order.id_ordine}</td>
-            <td>${order.chiusura_ordine ? new Date(order.chiusura_ordine).toLocaleString() : ""}</td>
-            <td>${order.totale || order.prezzo || ""}</td>
-            <td>${order.stato_ordine}</td>
+            <td data-label="ID Ordine">${order.id_ordine}</td>
+            <td data-label="Data">${order.chiusura_ordine ? new Date(order.chiusura_ordine).toLocaleString() : ""}</td>
+            <td data-label="Totale">${order.totale || order.prezzo || ""}</td>
+            <td data-label="Stato">${order.stato_ordine}</td>
             `;
             tbody.appendChild(tr);
         });
