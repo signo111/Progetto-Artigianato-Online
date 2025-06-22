@@ -218,7 +218,7 @@ app.put("/api/update-cart-quantity", async (req, res) => {
 app.get('/api/prodotti', async (req, res) => {
   try {
     const result = await client.query(
-      'SELECT prodotti.id, prezzo, descrizione, disponibilita, prodotti.immagine, quantita, id_utente, prodotti.created_at,utenti.name, prodotti.name FROM prodotti inner join utenti on prodotti.id_utente= utenti.id'
+      'SELECT prodotti.id, prezzo, descrizione, disponibilita, prodotti.immagine, quantita, id_utente, prodotti.created_at, utenti.name artigiano_name , prodotti.name AS prodotto_name FROM prodotti inner join utenti on prodotti.id_utente= utenti.id'
     );
     // Decodifica immagine se necessario
     result.rows.forEach(row => {

@@ -2,191 +2,181 @@
 <html lang="en">
 <head>
   <link rel="icon" href="images/logo.png" type="image/png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prodotti</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prodotti</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo"><a href="index.html">Artigianato Online</a></div>
-        <nav> <!-- Burger menu che si vede solo su mobile -->
-            <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect y="5" class="burger-menu"/>
-                    <rect y="12.5" class="burger-menu"/>
-                    <rect y="20" class="burger-menu"/>
-                </svg>
-            </button>
-            <ul id="nav-list">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Prodotti</a></li>
-                <li id="nav-acc"><a href="account.html">Account</a></li>
-                <li><a href="cart.html">Carrello</a></li>
-                <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
-                <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
-                 <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
-            </ul>
-        </nav>
-    </header>
-    <script>
-        // Burger menu toggle
-        const burger = document.getElementById('menuCheckbox');
-        const navList = document.getElementById('nav-list');
-        // apertura
-        burger.onclick = function() {
-            navList.classList.toggle('open');
-        };
+  <header>
+    <div class="logo"><a href="index.html">Artigianato Online</a></div>
+    <nav>
+      <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="button">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect y="5" class="burger-menu"/>
+          <rect y="12.5" class="burger-menu"/>
+          <rect y="20" class="burger-menu"/>
+        </svg>
+      </button>
+      <ul id="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Prodotti</a></li>
+        <li id="nav-acc"><a href="account.html">Account</a></li>
+        <li><a href="cart.html">Carrello</a></li>
+        <li id="nav-nuovo" style="display: none;"><a href="inserisciprodotto.html">Nuovo prodotto</a></li>
+        <li id="nav-modifica" style="display: none;"><a href="modificaprodotto.html">Modifica prodotto</a></li>
+        <li id="nav-auth"><a href="accedi.html">Accedi</a></li>
+      </ul>
+    </nav>
+  </header>
 
-        // chiusura
-        document.addEventListener('click', function(event) {
-        if (navList.classList.contains('open')) {
-            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
-                navList.classList.remove('open');
-            }
+  <script>
+    const burger = document.getElementById('menuCheckbox');
+    const navList = document.getElementById('nav-list');
+
+    burger.onclick = function () {
+      navList.classList.toggle('open');
+    };
+
+    document.addEventListener('click', function (event) {
+      if (navList.classList.contains('open')) {
+        if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+          navList.classList.remove('open');
         }
+      }
     });
+
     const navAuth = document.getElementById("nav-auth");
-    
-if (localStorage.getItem("ruolo")) {
-    navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
-
-    document.getElementById("logoutLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    if (confirm("Sei sicuro di voler uscire?")) {
-      localStorage.removeItem("ruolo");
-      localStorage.removeItem("userId");
-      alert("Logout effettuato");
-      window.location.reload();
+    if (localStorage.getItem("ruolo")) {
+      navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
+      document.getElementById("logoutLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (confirm("Sei sicuro di voler uscire?")) {
+          localStorage.removeItem("ruolo");
+          localStorage.removeItem("userId");
+          alert("Logout effettuato");
+          window.location.reload();
+        }
+      });
+    } else {
+      navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
     }
-    // Se premi "Annulla", non succede nulla
-  });
-} else {
-  navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
-}
 
+    document.addEventListener('DOMContentLoaded', function () {
+      const ruolo = localStorage.getItem('ruolo');
+      const navNuovo = document.getElementById('nav-nuovo');
+      const navModifica = document.getElementById('nav-modifica');
+      const navAcc = document.getElementById('nav-acc');
 
-document.addEventListener('DOMContentLoaded', function () {
-    const ruolo = localStorage.getItem('ruolo');
-
-    const navNuovo = document.getElementById('nav-nuovo');
-    const navModifica = document.getElementById('nav-modifica');
-    const navAcc = document.getElementById('nav-acc');
-
-    if (ruolo === 'artigiano') {
+      if (ruolo === 'artigiano') {
         navNuovo.style.display = '';
         navModifica.style.display = '';
         navAcc.style.display = '';
-    } else if (ruolo === 'cliente') {
+      } else if (ruolo === 'cliente') {
         navNuovo.style.display = 'none';
         navModifica.style.display = 'none';
         navAcc.style.display = '';
-    } else {
-        // Nessun ruolo -> utente non loggato
+      } else {
         navNuovo.style.display = 'none';
         navModifica.style.display = 'none';
         navAcc.style.display = 'none';
-    }
-});
-    </script>
+      }
+    });
+  </script>
 
-
-    <div class="container">
-        <div class="title">Esplora il catalogo</div>
-        <!-- Filtro -->
-        <div class="filter-bar">
-            <label for="category-filter">Filtra per categoria:</label>
-            <select id="category-filter" name="category-filter">
-                <option selected>---</option>
-                <option>Artigiano</option>
-                <option>Caricato di Recente</option>
-                <option>Prezzo più alto</option>
-                <option>Prezzo più basso</option>
-                <option>Disponibilità</option>
-                <option>Maggior quantità</option>
-                <option>Minore quantità</option>
-                <option>Nome A-Z</option>
-                <option>Nome Z-A</option>
-            </select>
-        </div>
-        <div class="listProduct"></div>
+  <div class="container">
+    <div class="title">Esplora il catalogo</div>
+    <div class="filter-bar">
+      <label for="category-filter">Filtra per categoria:</label>
+      <select id="category-filter" name="category-filter">
+        <option selected>---</option>
+        <option>Artigiano</option>
+        <option>Caricato di Recente</option>
+        <option>Prezzo più alto</option>
+        <option>Prezzo più basso</option>
+        <option>Disponibilità</option>
+        <option>Maggior quantità</option>
+        <option>Minore quantità</option>
+        <option>Nome A-Z</option>
+        <option>Nome Z-A</option>
+      </select>
     </div>
+    <div class="listProduct"></div>
+  </div>
 
-   <script>
-let products = [];
-const listProduct = document.querySelector('.listProduct');
-const filterSelect = document.getElementById('category-filter');
+  <script>
+    let products = [];
+    const listProduct = document.querySelector('.listProduct');
+    const filterSelect = document.getElementById('category-filter');
 
-fetch('http://localhost:3000/api/prodotti')
-  .then(response => response.json())
-  .then(data => {
-    products = data;
-    renderProducts(products);
-  });
+    fetch('http://localhost:3000/api/prodotti')
+      .then(response => response.json())
+      .then(data => {
+        products = data;
+        renderProducts(products);
+      });
 
-function renderProducts(productList) {
-  listProduct.innerHTML = '';
-  productList.forEach(product => {
-    const newProduct = document.createElement('a');
-    newProduct.href = '/details.html?id=' + product.id;
-    newProduct.classList.add('item');
-    newProduct.innerHTML = `
-      <h2>${product.name}</h2>
-      <img src="${product.immagine}" alt="${product.name}">
-      <p><strong>Prezzo:</strong> ${product.prezzo} €</p>
-      <p><strong>Descrizione:</strong> ${product.descrizione}</p>
-      <p><strong>Disponibilità:</strong> ${product.disponibilita}</p>
-    `;
-    listProduct.appendChild(newProduct);
-  });
-}
-
-filterSelect.addEventListener('change', function () {
-  const selected = filterSelect.value;
-  let sorted = [...products];
-
-  switch (selected) {
-    case 'Prezzo più alto':
-      sorted.sort((a, b) => b.prezzo - a.prezzo);
-      break;
-    case 'Prezzo più basso':
-      sorted.sort((a, b) => a.prezzo - b.prezzo);
-      break;
-    case 'Nome A-Z':
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
-      break;
-    case 'Nome Z-A':
-      sorted.sort((a, b) => b.name.localeCompare(a.name));
-      break;
-   case 'Disponibilità':
-  sorted.sort((a, b) => {
-    if (a.disponibilità === b.disponibilità) {
-      return a.name.localeCompare(b.name); // ordina alfabeticamente se disponibilità è uguale
+    function renderProducts(productList) {
+      listProduct.innerHTML = '';
+      productList.forEach(product => {
+        const newProduct = document.createElement('a');
+        newProduct.href = '/details.html?id=' + product.id;
+        newProduct.classList.add('item');
+        newProduct.innerHTML = `
+          <h2>${product.prodotto_name}</h2>
+          <img src="${product.immagine}" alt="${product.prodotto_name}">
+          <p><strong>Prezzo:</strong> ${product.prezzo} €</p>
+          <p><strong>Descrizione:</strong> ${product.descrizione}</p>
+          <p><strong>Artigiano:</strong> ${product.artigiano_name}</p>
+          <p><strong>Disponibilità:</strong> ${product.disponibilita ? 'Disponibile' : 'Non disponibile'}</p>
+        `;
+        listProduct.appendChild(newProduct);
+      });
     }
-    return b.disponibilità - a.disponibilità; // true (1) prima di false (0)
-  });
-  break;
-    case 'Maggior quantità':
-      sorted.sort((a, b) => b.quantita - a.quantita);
-      break;
-    case 'Minore quantità':
-      sorted.sort((a, b) => a.quantita - b.quantita);
-      break;
-    case 'Artigiano':
-       sorted.sort((a, b) => a.utenti.name.localeCompare(b.utenti.name));
-  break;
-    case 'Caricato di Recente':
-  sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  break;
-    default:
-      // Nessun filtro o reset
-      break;
-  }
 
-  renderProducts(sorted);
-});
-</script>
+    filterSelect.addEventListener('change', function () {
+      const selected = filterSelect.value;
+      let sorted = [...products];
 
+      switch (selected) {
+        case 'Prezzo più alto':
+          sorted.sort((a, b) => b.prezzo - a.prezzo);
+          break;
+        case 'Prezzo più basso':
+          sorted.sort((a, b) => a.prezzo - b.prezzo);
+          break;
+        case 'Nome A-Z':
+          sorted.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'Nome Z-A':
+          sorted.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        case 'Disponibilità':
+          sorted.sort((a, b) => {
+            if (a.disponibilita === b.disponibilita) {
+              return a.name.localeCompare(b.name);
+            }
+            return (b.disponibilita === true ? 1 : 0) - (a.disponibilita === true ? 1 : 0);
+          });
+          break;
+        case 'Maggior quantità':
+          sorted.sort((a, b) => b.quantita - a.quantita);
+          break;
+        case 'Minore quantità':
+          sorted.sort((a, b) => a.quantita - b.quantita);
+          break;
+        case 'Artigiano':
+          sorted.sort((a, b) => a.utenti.name.localeCompare(b.utenti.name));
+          break;
+        case 'Caricato di Recente':
+          sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          break;
+        default:
+          break;
+      }
 
+      renderProducts(sorted);
+    });
+  </script>
 </body>
 </html>
