@@ -296,6 +296,11 @@ app.post("/api/complete-order", async (req, res) => {
 
     }
 
+    // Imposta disponibilita = false per i prodotti esauriti
+    await client.query(
+      "UPDATE prodotti SET disponibilita = false WHERE quantita = 0"
+    );
+
     // Crea un solo ordine con il totale
     await client.query(
       "INSERT INTO ordine (id_utente, totale, stato_ordine, chiusura_ordine) VALUES ($1, $2, $3, NOW())",
