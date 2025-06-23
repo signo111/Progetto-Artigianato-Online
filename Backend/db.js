@@ -13,7 +13,12 @@ const client = new Client({
 });
 
 client.connect()
-  .then(() => { console.log("connected to pg"); })
+  .then(async () => { 
+    console.log("connected to pg"); 
+    await client.query("SET TIME ZONE 'Europe/Rome'"); // <-- aggiungi qui
+    console.log("Fuso orario impostato su Europe/Rome");
+
+  })
   .catch((err) => {
     console.log("can't connect to pg");
     console.error(err); // Stampa l'errore dettagliato
