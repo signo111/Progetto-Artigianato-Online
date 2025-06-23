@@ -137,7 +137,7 @@
 
 // Pulsante "Checkout"
 const checkoutBtn = document.getElementById('checkoutBtn');
-checkoutBtn.onclick = async function () {
+checkoutBtn.onclick = function () {
   const userId = localStorage.getItem("userId");
   if (!userId) {
     alert("Devi effettuare l'accesso per procedere al checkout!");
@@ -149,25 +149,9 @@ checkoutBtn.onclick = async function () {
     alert("Siamo spiacenti, prodotto non disponibile");
     return;
   }
-  try {
-    const res = await fetch('http://localhost:3000/create-checkout-session-single', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: thisProduct.prodotto_name,
-        price: thisProduct.prezzo,
-        quantity: 1
-      })
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Errore nella creazione della sessione di pagamento.");
-    }
-  } catch (err) {
-    alert("Errore durante la richiesta di pagamento.");
-  }
+
+  // Vai direttamente alla pagina carrello
+  window.location.href = "cart.html";
 };
 
 
