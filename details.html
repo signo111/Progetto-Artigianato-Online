@@ -138,6 +138,13 @@
 // Pulsante "Checkout"
 const checkoutBtn = document.getElementById('checkoutBtn');
 checkoutBtn.onclick = async function () {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    alert("Devi effettuare l'accesso per procedere al checkout!");
+    window.location.href = "accedi.html";
+    return;
+  }
+
   if (thisProduct.quantita <= 0 || thisProduct.disponibilita === false) {
     alert("Siamo spiacenti, prodotto non disponibile");
     return;
