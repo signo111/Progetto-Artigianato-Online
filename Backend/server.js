@@ -206,8 +206,11 @@ app.get("/api/account/:id", async (req, res) => {
 app.get("/api/cart/:id_utente", async (req, res) => {
   const id_utente = req.params.id_utente;
   try {
+    //AS quantita_disponibile significa che, nel risultato della query, questo 
+    // campo si chiamerà quantita_disponibile invece di solo quantita
     const result = await client.query(
-      `SELECT c.id_carrello, c.id_prodotto, c.prezzo_totale, c.stato_carrello, c.quantita, p.name, p.immagine, p.prezzo
+      `SELECT c.id_carrello, c.id_prodotto, c.prezzo_totale, c.stato_carrello, c.quantita, p.name, 
+      p.immagine, p.prezzo, p.quantita AS quantita_disponibile
       FROM carrello c
       JOIN prodotti p ON c.id_prodotto = p.id
       WHERE c.id_utente = $1 AND c.stato_carrello = true`,

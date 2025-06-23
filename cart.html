@@ -172,6 +172,19 @@
         alert("Il carrello è vuoto!");
         return;
       }
+
+      // Controllo quantità disponibili
+      const prodottiNonDisponibili = cart.filter(item => item.quantita > (item.quantita_disponibile || item.quantita_db));
+      if (prodottiNonDisponibili.length > 0) {
+        let msg = "Non puoi acquistare questi prodotti in quantità superiore a quella disponibile:\n";
+        prodottiNonDisponibili.forEach(item => {
+          msg += `- ${item.name}: disponibili ${item.quantita_disponibile || item.quantita_db}, richiesti ${item.quantita}\n`;
+        });
+        alert(msg);
+        return;
+      }
+
+
       const items = cart.map((item) => ({
         name: item.name,
         prezzo: item.prezzo,
