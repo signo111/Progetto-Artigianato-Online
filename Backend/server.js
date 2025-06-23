@@ -1,17 +1,45 @@
 // Importa i moduli necessari
+// Importa il framework Express per creare il server web
 const express = require("express");
+
+// Crea un'istanza dell'app Express (il server)
 const app = express();
+
+// Importa il modulo CORS per permettere richieste cross-origin (da domini diversi)
 const cors = require("cors");
+
+// Usa CORS per abilitare richieste da qualsiasi origine
 app.use(cors());
+
+// Importa il client per connettersi al database (modulo personalizzato)
 const { client } = require("./db");
+
+// Importa bcrypt per la gestione sicura delle password (hashing)
 const bcrypt = require("bcrypt");
+
+// Importa Stripe per gestire pagamenti online e inizializza con la chiave API test
 const stripe = require('stripe')('sk_test_51RTTSLFbljXrIje8zNiNi30WK064OWmPaUT4exuXiH2soQYraahkGExdLaBFvFFeSDUTJUBhqaecHABVziDZJiGx00lM6MNpdS');
+
+// Importa multer, middleware per gestire upload di file (es. immagini)
 const multer = require('multer');
+
+// Permette a Express di leggere richieste con body in formato JSON
 app.use(express.json());
+
+// Permette a Express di leggere dati inviati tramite form HTML (application/x-www-form-urlencoded)
 app.use(express.urlencoded({ extended: false }));
+
+// Espone la cartella 'images' come statica, così i file al suo interno possono essere accessibili tramite URL
 app.use('/images', express.static('images'));
+
+// Importa il modulo 'path' per lavorare con i percorsi dei file in modo sicuro e indipendente dal sistema operativo
 const path = require("path");
+
+// Importa il modulo 'fs' (File System) per leggere, scrivere o modificare file sul disco
 const fs = require('fs');
+
+// Importa la variabile 'name' dal modulo 'ejs' (motore di template per generare HTML dinamico)
+// (Nota: questa importazione non è comune, solitamente si importa tutto 'ejs' con const ejs = require("ejs"))
 const { name } = require("ejs");
 
 // Serve la cartella principale del progetto (la cartella padre rispetto a Backend)
