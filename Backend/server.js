@@ -113,6 +113,33 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
+
+// crea una checkout session per un singolo prodotto
+// Questo endpoint è utile per pagamenti singoli, ad esempio per un prodotto specifico
+app.post('/create-checkout-session-single', async (req, res) => {  // aggiungere
+  const { name, price, quantity } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: { name },
+          unit_amount: Math.round(price * 100), // prezzo in centesimi
+        },
+        quantity,
+      }],
+      mode: 'payment',
+      success_url: 'http://localhost:5500/success.html',
+      cancel_url: 'http://localhost:5500/cancel.html',
+    });
+    res.json({ url: session.url });
+  } catch (err) {
+    res.status(500).json({ error: 'Errore Stripe' });
+  }
+});
+
+
 // Aggiungi prodotto al carrello
 app.post("/api/add-to-cart", async (req, res) => {
   const { id_utente, id_prodotto, prezzo_totale, stato_carrello, quantita } = req.body;
@@ -187,9 +214,9 @@ app.get("/api/cart/:id_utente", async (req, res) => {
     );
     // Decodifica immagine se presente
     result.rows.forEach(row => {
-      row.immagine = row.immagine
-        ? Buffer.from(row.immagine.slice(2), 'hex').toString()
-        : '';
+      if (!row.immagine) {
+        row.immagine = 'placeholder.png';
+      }
     });
     res.json(result.rows);
   } catch (err) {
@@ -214,22 +241,15 @@ app.put("/api/update-cart-quantity", async (req, res) => {
 });
 
 // Restituisce tutti i prodotti
-app.get('/api/prodotti', async (req, res) => {
+app.get('/api/prodotti', async (req, res) => { 
   try {
     const result = await client.query(
-      'SELECT prodotti.id, prezzo, descrizione, disponibilita, prodotti.immagine, quantita, id_utente, prodotti.created_at, utenti.name artigiano_name , prodotti.name AS prodotto_name FROM prodotti inner join utenti on prodotti.id_utente= utenti.id'
+      'SELECT id, name, prezzo, descrizione, disponibilita, immagine, quantita, id_utente FROM prodotti'
     );
     // Decodifica immagine se necessario
     result.rows.forEach(row => {
-      if (row.immagine && typeof row.immagine === 'string') {
-        try {
-          const hex = row.immagine.replace(/^\\x/, '');
-          const decoded = Buffer.from(hex, 'hex').toString();
-          row.immagine = '/' + decoded;
-        } catch (err) {
-          console.warn(`Errore parsing immagine prodotto ID ${row.id}:`, err);
-          row.immagine = '/images/placeholder.png';
-        }
+      if (!row.immagine) {
+        row.immagine = 'placeholder.png';
       }
     });
     res.json(result.rows);
@@ -253,6 +273,29 @@ app.post("/api/complete-order", async (req, res) => {
     carrello.rows.forEach(item => {
       totale += Number(item.quantita) * Number(item.prezzo_totale);
     });
+
+
+    // Aggiorna la quantità disponibile dei prodotti
+    // Ciclo su tutti gli elementi dentro carrello.rows
+    for (const item of carrello.rows) { // aggiungere
+
+      // Per ogni item (oggetto con almeno item.quantita e item.id_prodotto)
+      // eseguo una query SQL sul database PostgreSQL.
+      // Uso await perché client.query() restituisce una Promise (operazione asincrona).
+      await client.query(
+        // Query SQL:
+        // "Aggiorna la tabella prodotti, sottraendo la quantità dell'item dal campo quantita
+        // solo per il prodotto con id corrispondente"
+        "UPDATE prodotti SET quantita = quantita - $1 WHERE id = $2",
+
+        // Parametri da passare alla query:
+        // $1 → item.quantita (quanto sottrarre)
+        // $2 → item.id_prodotto (quale riga aggiornare)
+        [item.quantita, item.id_prodotto]
+      );
+
+    }
+
     // Crea un solo ordine con il totale
     await client.query(
       "INSERT INTO ordine (id_utente, totale, stato_ordine, chiusura_ordine) VALUES ($1, $2, $3, NOW())",
