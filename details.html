@@ -67,103 +67,43 @@
     </div>
 
 <script>
-  let products = null;
-  let thisProduct = null;
-  // Carica i prodotti dal backend e mostra i dettagli
-  fetch('http://localhost:3000/api/prodotti')
-    .then(response => response.json())
-    .then(data => {
-      products = data;
-      showDetail();
-    });
-
-    function showDetail() {
-      const productID = new URLSearchParams(window.location.search).get('id');
-      thisProduct = products.find(p => p.id == productID);
-
-      if (!thisProduct) {
-        window.location.href = '/';
-        return;
-      }
-
-      document.getElementById("productImage").src = thisProduct.immagine
-        ? `http://localhost:3000/images/${thisProduct.immagine}`
-        : 'http://localhost:3000/images/placeholder.png';
-      document.querySelector(".name").innerText = thisProduct.name;
-      document.querySelector(".price").innerText = `€ ${thisProduct.prezzo}`;
-      document.querySelector(".description").innerText = thisProduct.descrizione;
-
-      // Controllo disponibilità
-      const addToCartBtn = document.getElementById('addToCartBtn');
-      if (thisProduct.quantita <= 0 || thisProduct.disponibilita === false) {
-        addToCartBtn.disabled = true;
-        addToCartBtn.innerText = "Non disponibile";
-        addToCartBtn.onclick = function() {
-          alert("Siamo spiacenti, prodotto non disponibile");
-        };
-
-        checkoutBtn.disabled = true;
-        checkoutBtn.innerText = "Non disponibile";
-        checkoutBtn.onclick = function() {
-          alert("Siamo spiacenti, prodotto non disponibile");
-        };
-
-      } else {
-        addToCartBtn.disabled = false;
-        addToCartBtn.innerText = "Aggiungi al carrello";
-        addToCartBtn.onclick = null; // Usa l'event listener già presente
-
-        checkoutBtn.disabled = false;
-        checkoutBtn.innerText = "Checkout";
-        
-      }
-
-      const listProduct = document.querySelector('.listProduct');
-      products.filter(p => p.id != productID).forEach(product => {
-        const imgSrc = product.immagine
-          ? `http://localhost:3000/images/${product.immagine}`
-          : 'http://localhost:3000/images/placeholder.png';
-        const newProduct = document.createElement('a');
-        newProduct.href = `/details.html?id=${product.id}`;
-        newProduct.classList.add('item');
-        newProduct.innerHTML = `
-          <img src="${imgSrc}" alt="Immagine Prodotto">
-          <h2>${product.name}</h2>
-          <div class="price">${product.prezzo} €</div>
-        `;
-        listProduct.appendChild(newProduct);
-      });
-    }
-
-// Pulsante "Checkout"
-const checkoutBtn = document.getElementById('checkoutBtn');
-checkoutBtn.onclick = async function () {
-  if (thisProduct.quantita <= 0 || thisProduct.disponibilita === false) {
-    alert("Siamo spiacenti, prodotto non disponibile");
+let products = null;
+let thisProduct = null;
+// Carica i prodotti dal backend e mostra i dettagli
+fetch('http://localhost:3000/api/prodotti')
+  .then(response => response.json())
+  .then(data => {
+    products = data;
+    showDetail();
+  });
+function showDetail() {
+  const productID = new URLSearchParams(window.location.search).get('id');
+  thisProduct = products.find(p => p.id == productID);
+  if (!thisProduct) {
+    window.location.href = '/';
     return;
   }
-  try {
-    const res = await fetch('http://localhost:3000/create-checkout-session-single', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: thisProduct.name,
-        price: thisProduct.prezzo,
-        quantity: 1
-      })
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Errore nella creazione della sessione di pagamento.");
-    }
-  } catch (err) {
-    alert("Errore durante la richiesta di pagamento.");
-  }
+  document.getElementById("productImage").src = thisProduct.immagine;
+  document.querySelector(".name").innerText = thisProduct.prodotto_name;
+  document.querySelector(".price").innerText = `€ ${thisProduct.prezzo}`;
+  document.querySelector(".description").innerText = thisProduct.descrizione;
+  const listProduct = document.querySelector('.listProduct');
+  products.filter(p => p.id != productID).forEach(product => {
+    const newProduct = document.createElement('a');
+    newProduct.href = `/details.html?id=${product.id}`;
+    newProduct.classList.add('item');
+    newProduct.innerHTML = `
+      <img src="${product.immagine}" alt="Immagine Prodotto">
+      <h2>${product.prodotto_name}</h2>
+      <div class="price">${product.prezzo} €</div>
+    `;
+    listProduct.appendChild(newProduct);
+  });
+}
+// Pulsante "Checkout"
+document.getElementById('checkoutBtn').onclick = function () {
+  window.location.href = 'cart.html';
 };
-
-
 // Pulsante "Aggiungi al carrello"
 document.getElementById('addToCartBtn').addEventListener('click', function () {
   const userId = localStorage.getItem("userId");

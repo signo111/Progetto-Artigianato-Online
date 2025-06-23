@@ -83,22 +83,16 @@
         console.log("Carrello ricevuto dal backend:", cart);
         let total = 0;
         const cartContainer = document.getElementById("cart");
-        
         cartContainer.innerHTML = "";
         if (cart.length === 0) {
           cartContainer.innerHTML = "<p>Il carrello è vuoto.</p>";
         } else {
           cart.forEach(item => {
-            console.log("item:", item);
-            const imgSrc = item.immagine
-              ? `http://localhost:3000/images/${item.immagine}`
-              : 'http://localhost:3000/images/placeholder.png';
-
-            
+            console.log("immagine:", item.immagine);
             total += parseFloat(item.prezzo) * (item.quantita || 1);
             cartContainer.innerHTML += `
               <div class="cart-item">
-                <img src="${imgSrc}" alt="${item.name}" width="100">
+                <img src="${item.immagine}" alt="${item.name}" width="100">
                 <div class="details">
                   <h3>${item.name}</h3>
                   <p>Prezzo: €${item.prezzo}</p>

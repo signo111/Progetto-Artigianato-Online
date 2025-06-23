@@ -110,24 +110,23 @@
     function renderProducts(productList) {
       listProduct.innerHTML = '';
       productList.forEach(product => {
-        //il browser cercherà sempre le immagini nella cartella imagess
-        const imgSrc = product.immagine
-          ? `http://localhost:3000/images/${product.immagine}`
-          : 'http://localhost:3000/images/placeholder.png';
         const newProduct = document.createElement('a');
         newProduct.href = '/details.html?id=' + product.id;
         newProduct.classList.add('item');
         newProduct.innerHTML = `
-          <h2>${product.name}</h2>
-          <img src="${imgSrc}" alt="${product.name}">
+          <h2>${product.prodotto_name}</h2>
+          <img src="${product.immagine}" alt="${product.prodotto_name}">
+          <div class="item-details">
+            <p><strong>Quantità:</strong> ${product.quantita}</p>
           <p><strong>Prezzo:</strong> ${product.prezzo} €</p>
           <p><strong>Descrizione:</strong> ${product.descrizione}</p>
-          <p><strong>Disponibilità:</strong> ${product.disponibilita}</p>
-        `;
+          <p><strong>Artigiano:</strong> ${product.artigiano_name}</p>
+          <p><strong>Disponibilità:</strong> ${product.disponibilita ? 'Disponibile' : 'Non disponibile'}</p>
+          </div>
+          `;
         listProduct.appendChild(newProduct);
       });
     }
-
     filterSelect.addEventListener('change', function () {
       const selected = filterSelect.value;
       let sorted = [...products];
