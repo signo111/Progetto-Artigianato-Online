@@ -12,6 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/images', express.static('images'));
 const path = require("path");
 const fs = require('fs');
+const { name } = require("ejs");
 
 // Serve la cartella principale del progetto (la cartella padre rispetto a Backend)
 app.use(express.static(path.join(__dirname, "..")));  // Serve tutti i file statici dalla root
@@ -241,17 +242,13 @@ app.put("/api/update-cart-quantity", async (req, res) => {
 });
 
 // Restituisce tutti i prodotti
-app.get('/api/prodotti', async (req, res) => { 
+
+app.get('/api/prodotti', async (req, res) => {
   try {
     const result = await client.query(
-      'SELECT id, name, prezzo, descrizione, disponibilita, immagine, quantita, id_utente FROM prodotti'
+      'SELECT prodotti.id, prezzo, descrizione, disponibilita, prodotti.immagine, quantita, id_utente, prodotti.created_at, utenti.name AS artigiano_name , prodotti.name AS prodotto_name FROM prodotti inner join utenti on prodotti.id_utente= utenti.id'
     );
-    // Decodifica immagine se necessario
-    result.rows.forEach(row => {
-      if (!row.immagine) {
-        row.immagine = 'placeholder.png';
-      }
-    });
+ 
     res.json(result.rows);
   } catch (err) {
     console.error("Errore query prodotti:", err);
@@ -586,14 +583,14 @@ app.get('/api/utenti', (req, res) => {
 });
 
 // Recupera tutti i prodotti
-app.get('/api/prodotti', async (req, res) => {
+/*app.get('/api/prodotti', async (req, res) => {
   try {
     const result = await client.query('SELECT * FROM prodotti');
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: 'Errore nel caricamento dei prodotti' });
   }
-});
+});*/
 
 // Aggiorna un prodotto
 // ROUTE MODIFICATA: accetta upload + dati

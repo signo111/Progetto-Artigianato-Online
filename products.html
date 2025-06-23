@@ -118,12 +118,16 @@
         newProduct.href = '/details.html?id=' + product.id;
         newProduct.classList.add('item');
         newProduct.innerHTML = `
-          <h2>${product.name}</h2>
-          <img src="${imgSrc}" alt="${product.name}">
+          <h2>${product.prodotto_name}</h2>
+         <img src="${imgSrc}" alt="Immagine Prodotto">
+          <div class="item-details">
+            <p><strong>Quantità:</strong> ${product.quantita}</p>
           <p><strong>Prezzo:</strong> ${product.prezzo} €</p>
           <p><strong>Descrizione:</strong> ${product.descrizione}</p>
-          <p><strong>Disponibilità:</strong> ${product.disponibilita}</p>
-        `;
+          <p><strong>Artigiano:</strong> ${product.artigiano_name}</p>
+          <p><strong>Disponibilità:</strong> ${product.disponibilita ? 'Disponibile' : 'Non disponibile'}</p>
+          </div>
+          `;
         listProduct.appendChild(newProduct);
       });
     }

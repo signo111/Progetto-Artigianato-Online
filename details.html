@@ -89,7 +89,7 @@
       document.getElementById("productImage").src = thisProduct.immagine
         ? `http://localhost:3000/images/${thisProduct.immagine}`
         : 'http://localhost:3000/images/placeholder.png';
-      document.querySelector(".name").innerText = thisProduct.name;
+      document.querySelector(".name").innerText = thisProduct.prodotto_name;
       document.querySelector(".price").innerText = `€ ${thisProduct.prezzo}`;
       document.querySelector(".description").innerText = thisProduct.descrizione;
 
@@ -128,7 +128,7 @@
         newProduct.classList.add('item');
         newProduct.innerHTML = `
           <img src="${imgSrc}" alt="Immagine Prodotto">
-          <h2>${product.name}</h2>
+          <h2>${product.prodotto_name}</h2>
           <div class="price">${product.prezzo} €</div>
         `;
         listProduct.appendChild(newProduct);
@@ -147,7 +147,7 @@ checkoutBtn.onclick = async function () {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: thisProduct.name,
+        name: thisProduct.prodotto_name,
         price: thisProduct.prezzo,
         quantity: 1
       })
@@ -181,7 +181,7 @@ document.getElementById('addToCartBtn').addEventListener('click', function () {
   } else {
     cart.push({
       id: thisProduct.id,
-      name: thisProduct.name,
+      name: thisProduct.prodotto_name,
       image: thisProduct.immagine,
       price: thisProduct.prezzo,
       quantity: 1
