@@ -1,3 +1,5 @@
+/*
+
 const { Client } = require("pg");
 
 const client = new Client({
@@ -22,6 +24,32 @@ client.connect()
   .catch((err) => {
     console.log("can't connect to pg");
     console.error(err); // Stampa l'errore dettagliato
+  });
+
+module.exports = { client };
+
+
+*/
+
+const { Client } = require("pg");
+
+const client = new Client({
+  host: "localhost",
+  user: "postgres",
+  database: "DBArtigianato",
+  password: "",
+  port: 5432
+});
+
+client.connect()
+  .then(async () => { 
+    console.log("connected to pg"); 
+    await client.query("SET TIME ZONE 'Europe/Rome'");
+    console.log("Fuso orario impostato su Europe/Rome");
+  })
+  .catch((err) => {
+    console.log("can't connect to pg");
+    console.error(err);
   });
 
 module.exports = { client };

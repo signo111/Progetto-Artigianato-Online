@@ -68,10 +68,9 @@
         "image": "images/54.jpg",
         "description": "Description of Product 54",
         "price": 59.99
-    }
-]
+    },
 
- {
+    {
         "id": 55,
         "name": "prodotto 69",
         "image": "images/1750452882334.jpeg",
