@@ -68,18 +68,18 @@ const utenti = [
 async function popolaDatabase() {
   try {
     await client.connect();
-    console.log("▶ Avvio popolamento...");
+    console.log("Avvio popolamento...");
     for (const u of utenti) {
       const hashedPassword = await bcrypt.hash(u.password, 10);
       await client.query(
         'INSERT INTO utenti (name, email, password, ruolo, immagine) VALUES ($1, $2, $3, $4, $5)',
         [u.name, u.email, hashedPassword, u.ruolo, defaultImageBuffer]
       );
-      console.log(`✅ Inserito ${u.name}`);
+      console.log(`Inserito ${u.name}`);
     }
-    console.log("🎉 Popolamento completato!");
+    console.log("Popolamento completato!");
   } catch (err) {
-    console.error("❌ Errore:", err);
+    console.error("Errore:", err);
   } finally {
     await client.end();
   }

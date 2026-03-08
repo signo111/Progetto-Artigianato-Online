@@ -74,7 +74,13 @@
       }
       
       document.addEventListener("DOMContentLoaded", async function() {
-        const userId = localStorage.getItem("userId");
+        const urlParams = new URLSearchParams(window.location.search);
+        const userIdFromUrl = urlParams.get('userId');
+        let userId = localStorage.getItem("userId");
+        if (userIdFromUrl && !userId) {
+          userId = userIdFromUrl;
+          localStorage.setItem("userId", userId);
+        }
         if (userId) {
           await fetch("http://localhost:3000/api/complete-order", {
             method: "POST",

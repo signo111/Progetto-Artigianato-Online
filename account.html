@@ -140,7 +140,7 @@
         orders.forEach(order => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
-            <td>${order.id_ordine}</td>
+            <td>${order.id}</td>
             <td>${order.chiusura_ordine ? new Date(order.chiusura_ordine).toLocaleString() : ""}</td>
             <td>${order.totale || order.prezzo || ""}</td>
             <td>${order.stato_ordine}</td>

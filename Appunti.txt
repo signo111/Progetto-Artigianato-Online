@@ -25,3 +25,17 @@ node Backend\server.js
 
 installato modulo .env con:
 npm install dotenv
+
+Stripe:
+test@gmail.com
+4242424242424242
+12/34
+123
+Nome Test
+
+credenziali sito:
+nome: Samu1
+email: samu@gmail.com
+password: 54;:I4(Iv"E7
+
+controllare nuovo prodotto e modifica prodotto, il resto funziona.

@@ -115,16 +115,27 @@ app.post("/api/register", async (req, res) => {
 
 // Stripe checkout session
 app.post("/create-checkout-session", async (req, res) => {
-  const items = req.body.items;
+  const { items, userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ error: "Utente non loggato" });
+  }
+
+  // Verifica che l'utente esista
+  const checkUser = await client.query("SELECT id FROM utenti WHERE id = $1", [userId]);
+  if (checkUser.rows.length === 0) {
+    return res.status(400).json({ error: "Utente non valido" });
+  }
+
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: "Nessun prodotto nel carrello" });
   }
-  // Prepara i prodotti per Stripe
+
   const line_items = items.map(item => ({
     price_data: {
       currency: "eur",
       product_data: { name: item.name },
-      unit_amount: Math.round(Number(item.prezzo) * 100), // in centesimi
+      unit_amount: Math.round(Number(item.prezzo) * 100),
     },
     quantity: item.quantita || 1,
   }));
@@ -134,7 +145,7 @@ app.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: "http://localhost:5500/success.html",
+      success_url: `http://localhost:5500/success.html?userId=${userId}`,
       cancel_url: "http://localhost:5500/cancel.html",
     });
     res.json({ url: session.url });
@@ -147,8 +158,19 @@ app.post("/create-checkout-session", async (req, res) => {
 
 // crea una checkout session per un singolo prodotto
 // Questo endpoint è utile per pagamenti singoli, ad esempio per un prodotto specifico
-app.post('/create-checkout-session-single', async (req, res) => {  // aggiungere
-  const { name, price, quantity } = req.body;
+app.post('/create-checkout-session-single', async (req, res) => {
+  const { name, price, quantity, userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ error: "Utente non loggato" });
+  }
+
+  // Verifica che l'utente esista
+  const checkUser = await client.query("SELECT id FROM utenti WHERE id = $1", [userId]);
+  if (checkUser.rows.length === 0) {
+    return res.status(400).json({ error: "Utente non valido" });
+  }
+
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -158,15 +180,17 @@ app.post('/create-checkout-session-single', async (req, res) => {  // aggiungere
           product_data: { name },
           unit_amount: Math.round(price * 100), // prezzo in centesimi
         },
-        quantity,
+        quantity: quantity || 1,
       }],
       mode: 'payment',
-      success_url: 'http://localhost:5500/success.html',
+      success_url: `http://localhost:5500/success.html?userId=${userId}`,
       cancel_url: 'http://localhost:5500/cancel.html',
     });
+
     res.json({ url: session.url });
   } catch (err) {
-    res.status(500).json({ error: 'Errore Stripe' });
+    console.error("Errore Stripe:", err);
+    res.status(500).json({ error: 'Errore durante la creazione della sessione di pagamento' });
   }
 });
 
@@ -292,6 +316,13 @@ app.get('/api/prodotti', async (req, res) => {
 // Completa ordine: crea un ordine e svuota il carrello
 app.post("/api/complete-order", async (req, res) => {
   const { userId } = req.body;
+  const userIdInt = parseInt(userId);
+  console.log("userId ricevuto:", userId, typeof userId, "parsed:", userIdInt);
+  const checkUser = await client.query("SELECT id FROM utenti WHERE id = $1", [userIdInt]);
+  console.log("checkUser rows:", checkUser.rows.length);
+  if (checkUser.rows.length === 0) {
+    return res.status(400).json({ error: "Utente non valido" });
+  }
   try {
     // Prendi tutti i prodotti nel carrello dell'utente
     const carrello = await client.query(

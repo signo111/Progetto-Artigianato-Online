@@ -39,7 +39,7 @@ const prodotti = [
 async function popolaProdotti() {
   try {
     await client.connect();
-    console.log("▶ Avvio inserimento prodotti...");
+    console.log("Avvio inserimento prodotti...");
 
     for (const p of prodotti) {
       const disponibilita = p.quantita > 0;
@@ -48,16 +48,16 @@ async function popolaProdotti() {
          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
         [p.name, p.immagine, p.descrizione, p.prezzo, p.quantita, disponibilita, p.id_utente]
       );
-      console.log(`✅ Inserito: ${p.name}`);
+      console.log(`Inserito: ${p.name}`);
     }
 
-    console.log("🧹 Pulizia record con name NULL...");
+    console.log("Pulizia record con name NULL...");
     await client.query(`DELETE FROM prodotti WHERE name IS NULL`);
-    console.log("🗑️ Record eliminati!");
+    console.log("Record eliminati!");
 
-    console.log("🎉 Inserimento e pulizia completati con successo!");
+    console.log("Inserimento e pulizia completati con successo!");
   } catch (err) {
-    console.error("❌ Errore:", err);
+    console.error("Errore:", err);
   } finally {
     await client.end();
   }

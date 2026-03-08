@@ -192,10 +192,10 @@
       }));
       try {
         const res = await fetch("http://localhost:3000/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ items }),
-        });
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items, userId: parseInt(userId) }),
+      });
         const data = await res.json();
         if (data.url) {
           window.location.href = data.url;

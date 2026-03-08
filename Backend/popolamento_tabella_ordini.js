@@ -40,7 +40,7 @@ const ordini = [
 async function popolaOrdini() {
   try {
     await client.connect();
-    console.log("▶ Avvio inserimento ordini...");
+    console.log("Avvio inserimento ordini...");
 
     for (const o of ordini) {
       await client.query(
@@ -48,12 +48,12 @@ async function popolaOrdini() {
          VALUES ($1, $2, $3, $4)`,
         [o.id_utente, o.stato, o.chiusura, o.totale]
       );
-      console.log(`✅ Ordine inserito per utente ${o.id_utente} (${o.stato})`);
+      console.log(`Ordine inserito per utente ${o.id_utente} (${o.stato})`);
     }
 
-    console.log("🎉 Inserimento ordini completato!");
+    console.log("Inserimento ordini completato!");
   } catch (err) {
-    console.error("❌ Errore:", err);
+    console.error("Errore:", err);
   } finally {
     await client.end();
   }
