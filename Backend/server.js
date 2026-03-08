@@ -14,6 +14,8 @@ app.use(cors());
 // Importa il client per connettersi al database (modulo personalizzato)
 const { client } = require("./db");
 
+require("dotenv").config();
+
 // Importa bcrypt per la gestione sicura delle password (hashing)
 const bcrypt = require("bcrypt");
 

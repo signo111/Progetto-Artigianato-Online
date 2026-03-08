@@ -3,10 +3,32 @@ const path = require('path');
 const { Client } = require('pg');
 const bcrypt = require('bcrypt');
 const { name } = require('ejs');
+require("dotenv").config();
 
 // Percorso immagine utente di default
 const defaultImagePath = path.join(__dirname, '../images/user_image1.png');
 const defaultImageBuffer = fs.readFileSync(defaultImagePath);
+
+/*
+// Configurazione PostgreSQL
+const client = new Client({
+  host: 'databaseartigianato1.cx2eimkaozun.eu-north-1.rds.amazonaws.com',
+  user: 'postgres',
+  password: '',
+  database: 'DBArtigianato',
+  port: 5432,
+  ssl: { rejectUnauthorized: false }
+});
+
+*/
+
+const client = new Client({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
+});
 
 // Lista utenti completa (30)
 const utenti = [
@@ -43,15 +65,6 @@ const utenti = [
   {name:'admin', email:'admin@example.com', password: 'AdminSicuro2025!', ruolo: 'amministratore'}
 ];
 
-// Configurazione PostgreSQL
-const client = new Client({
-  host: 'databaseartigianato1.cx2eimkaozun.eu-north-1.rds.amazonaws.com',
-  user: 'postgres',
-  password: 'PasDB2025!',
-  database: 'DBArtigianato',
-  port: 5432,
-  ssl: { rejectUnauthorized: false }
-});
 async function popolaDatabase() {
   try {
     await client.connect();

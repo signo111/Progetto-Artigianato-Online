@@ -6,7 +6,7 @@ const client = new Client({
   host: "databaseartigianato1.cx2eimkaozun.eu-north-1.rds.amazonaws.com",
   user: "postgres",
   database: "DBArtigianato",
-  password: "PasDB2025!",
+  password: "",
   port: 5432,
   ssl: {
     require: true,
@@ -33,12 +33,14 @@ module.exports = { client };
 
 const { Client } = require("pg");
 
+require("dotenv").config();
+
 const client = new Client({
-  host: "localhost",
-  user: "postgres",
-  database: "DBArtigianato",
-  password: "",
-  port: 5432
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 });
 
 client.connect()

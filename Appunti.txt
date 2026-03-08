@@ -1,0 +1,27 @@
+- per il collegamento al db locale creare un file .env del tipo:
+
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=lapassword
+DB_NAME=DBArtigianato
+DB_PORT=5432
+
+dopo aver creato un db locale in pgAdmin con queste credenziali
+
+
+
+- eseguire nel terminale:
+
+node Backend/popolamento_tabella_utenti.js 
+node Backend/popolamento_tabella_prodotti.js 
+node Backend/popolamento_tabella_ordini.js
+
+per popolare le tabelle
+
+
+- per attivare il server:
+
+node Backend\server.js
+
+installato modulo .env con:
+npm install dotenv
