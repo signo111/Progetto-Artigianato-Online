@@ -7,7 +7,7 @@
     <title>Artigianato Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body id="login-page">
     <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
         <nav> <!-- Burger menu che si vede solo su mobile -->
@@ -61,13 +61,26 @@
         }
     });
     </script>
-    <section class="hero">
-        <h1>Efettua l'acceso sul nostro sito</h1>
-        <p>Disponi già di un account?</p>
-        <a href="login.html">login</a>
-        <p>Non disponi di un account?</p>
-        <a href="registrati.html">Registrati ora</a>
-    </section>
+    <main id="main-accedi">
+        <section class="hero">
+            <div id="div-accedi">
+                <h1>Efettua l'acceso sul nostro sito</h1>
+                <p>Disponi già di un account?</p>
+                <a href="login.html">login</a>
+                <p>Non disponi di un account?</p>
+                <a href="registrati.html">Registrati ora</a>
+            </div>
+            
+        </section>
+    </main>
+    <footer>
+        <div id="footer-div">
+            <ul>
+                <li>Contatti</li>
+            </ul>
+        </div>
+    </footer>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
         const ruolo = localStorage.getItem('ruolo');
@@ -90,5 +103,6 @@
         }
         });
     </script>
+    
 </body>
 </html>

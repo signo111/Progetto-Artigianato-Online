@@ -7,7 +7,7 @@
   <title>Artigianato Online</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body id="login-page">
   <header>
     <div class="logo"><a href="index.html">Artigianato Online</a></div>
     <nav>
@@ -29,23 +29,32 @@
       </ul>
     </nav>
   </header>
-  <section class="hero">
-    <h1>Accedi al tuo account</h1>
-    <form id="loginForm">
-      <p>
-        <label for="username">Nome utente:</label>
-        <input type="text" id="username" name="username" required />
-      </p>
-      <p>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
-      </p>
-      <button type="submit">Accedi</button>
-    </form>
-    <p>Non hai un account?</p> 
-    <a href="registrati.html">Registrati ora</a><p></p>
-    <a href="index.html">Torna alla home</a>
-  </section>
+  <main>
+    <section class="hero">
+      <h1>Accedi al tuo account</h1>
+      <form id="loginForm">
+        <p>
+          <label for="username">Nome utente:</label>
+          <input type="text" id="username" name="username" required />
+        </p>
+        <p>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+        </p>
+        <button type="submit">Accedi</button>
+      </form>
+      <p>Non hai un account?</p> 
+      <a href="registrati.html">Registrati ora</a><p></p>
+      <a href="index.html">Torna alla home</a>
+    </section>
+    <footer>
+        <div id="footer-div">
+            <ul>
+                <li>Contatti</li>
+            </ul>
+        </div>
+    </footer>
+  </main>
   <script>
     const navAuth = document.getElementById("nav-auth");
     document.addEventListener("DOMContentLoaded", function () {
@@ -116,6 +125,41 @@
             if (res.ok) {
             localStorage.setItem("ruolo", data.ruolo);
             localStorage.setItem("userId", data.userId); 
+            // Trasferisci carrello ospite al carrello utente
+            const guestCart = JSON.parse(localStorage.getItem("cart_guest")) || [];
+            if (guestCart.length > 0) {
+              const userCartKey = `cart_${data.userId}`;
+              let userCart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+              // Unisci i carrelli, sommando quantità per prodotti esistenti
+              guestCart.forEach(guestItem => {
+                const existing = userCart.find(item => item.id === guestItem.id);
+                if (existing) {
+                  existing.quantity += guestItem.quantity;
+                } else {
+                  userCart.push(guestItem);
+                }
+              });
+              localStorage.setItem(userCartKey, JSON.stringify(userCart));
+              // Salva nel backend
+              userCart.forEach(item => {
+                fetch("http://localhost:3000/api/add-to-cart", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    id_utente: parseInt(data.userId),
+                    id_prodotto: item.id,
+                    prezzo_totale: item.price * item.quantity,
+                    stato_carrello: true,
+                    quantita: item.quantity
+                  })
+                })
+                .then(res => res.ok ? res.json() : Promise.reject("Errore server"))
+                .then(data => console.log("Trasferito:", data))
+                .catch(err => console.error("Errore DB trasferimento:", err));
+              });
+              // Rimuovi carrello ospite
+              localStorage.removeItem("cart_guest");
+            }
             if (data.ruolo === "artigiano") {
               alert("Benvenuto, artigiano!");
             } else if (data.ruolo === "cliente") {

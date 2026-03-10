@@ -80,6 +80,9 @@
   </script>
   <div class="container">
     <div class="title">Esplora il catalogo</div>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Cerca per nome prodotto..." />
+    </div>
     <div class="filter-bar">
       <label for="category-filter">Filtra per categoria:</label>
       <select id="category-filter" name="category-filter">
@@ -96,19 +99,30 @@
       </select>
     </div>
     <div class="listProduct"></div>
+    <div class="mess-ricerca"></div>
   </div>
   <script>
     let products = [];
     const listProduct = document.querySelector('.listProduct');
+    const messRc = document.querySelector('.mess-ricerca');
     const filterSelect = document.getElementById('category-filter');
+    const searchInput = document.getElementById('search-input');
+    let filteredProducts = [];
+
     fetch('http://localhost:3000/api/prodotti')
       .then(response => response.json())
       .then(data => {
         products = data;
-        renderProducts(products);
+        filteredProducts = [...products];
+        renderProducts(filteredProducts);
       });
+
     function renderProducts(productList) {
       listProduct.innerHTML = '';
+      if (productList.length === 0) {
+        messRc.innerHTML = '<p style="text-align: center; font-size: 1.2em; color: #666; margin-top: 50px;">Nessun prodotto corrispondente <br> alla ricerca</p>';
+        return;
+      }
       productList.forEach(product => {
         //il browser cercherà sempre le immagini nella cartella imagess
         const imgSrc = product.immagine
@@ -132,9 +146,19 @@
       });
     }
 
-    filterSelect.addEventListener('change', function () {
+    // Ricerca reattiva per nome prodotto
+    searchInput.addEventListener('input', function () {
+      const searchTerm = searchInput.value.toLowerCase();
+      filteredProducts = products.filter(product =>
+        product.prodotto_name.toLowerCase().includes(searchTerm)
+      );
+      // Reapplica l'ordinamento corrente dopo la ricerca
+      applySort(filteredProducts);
+    });
+
+    function applySort(productList) {
       const selected = filterSelect.value;
-      let sorted = [...products];
+      let sorted = [...productList];
       switch (selected) {
         case 'Prezzo più alto':
           sorted.sort((a, b) => b.prezzo - a.prezzo);
@@ -169,7 +193,19 @@
           break;
       }
       renderProducts(sorted);
+    }
+
+    filterSelect.addEventListener('change', function () {
+      applySort(filteredProducts);
     });
   </script>
+
+  <footer>
+        <div id="footer-div">
+            <ul>
+                <li>Contatti</li>
+            </ul>
+        </div>
+  </footer>
 </body>
 </html>

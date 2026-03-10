@@ -7,7 +7,7 @@
     <title>Artigianato Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body id="body-index">
     <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
         <nav>
@@ -33,9 +33,20 @@
             </ul>
         </nav>
     </header>
-    <section class="hero" id="hero-content">
-        <!-- Questo contenuto sarà sostituito via JS -->
-    </section>
+    <main id="main-index">
+        <section class="hero" id="hero-content">
+            <!-- Questo contenuto sarà sostituito via JS -->
+        </section>
+    </main>
+
+    <footer>
+        <div id="footer-div">
+            <ul id="ul-footer">
+                <li>Contatti</li>
+            </ul>
+        </div>
+    </footer>
+    
     <script>
         // Burger menu toggle
         const burger = document.getElementById('menuCheckbox');
@@ -115,22 +126,29 @@
             // Contenuto dinamico homepage
             if (ruolo === 'amministratore') {
                 hero.innerHTML = `
-                    <h1>Area Amministrativa</h1>
-                    <p>Benvenuto nell'area riservata alla gestione della piattaforma.</p>
-                    <div class="admin-links">                
-                        <a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
-                       <a href="admin_visualizzazione_account.html">Gestione Account</a></li>
-                       <a href="storicoordiniadmin.html">Storico Ordini</a></li>
+                    <div class="div-hero-main2">
+                        <h1>Area Amministrativa</h1>
+                        <p>Benvenuto nell'area riservata alla gestione della piattaforma.</p>
+                        <div class="admin-links">
+                            <a href="admin_visualizzazione_prodotti.html">Gestione Prodotti</a></li>
+                            <a href="admin_visualizzazione_account.html">Gestione Account</a></li>
+                            <a href="storicoordiniadmin.html">Storico Ordini</a></li>
+                        </div>
                     </div>
+                    
                 `;
             } else {
                 hero.innerHTML = `
-                    <h1>Benvenuti su Artigianato Online</h1>
-                    <p>Scopri i migliori prodotti artigianali realizzati con passione e cura.</p>
-                    <a href="products.html">Esplora i Prodotti</a>
+                    <div class="div-hero-main">
+                        <h1>Benvenuti su Artigianato Online</h1>
+                        <p>Scopri i migliori prodotti artigianali realizzati con passione e cura.</p>
+                        <a href="products.html">Esplora i Prodotti</a>
+                    </div>
                 `;
             }
         });
     </script>
+
+    
 </body>
 </html>

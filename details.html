@@ -158,11 +158,6 @@ checkoutBtn.onclick = function () {
 // Pulsante "Aggiungi al carrello"
 document.getElementById('addToCartBtn').addEventListener('click', function () {
   const userId = localStorage.getItem("userId");
-  if (!userId) {
-    alert("Devi effettuare l'accesso per aggiungere prodotti al carrello!");
-    window.location.href = "accedi.html";
-    return;
-  }
   const cartKey = userId ? `cart_${userId}` : "cart_guest";
   alert("Prodotto aggiunto al carrello!");
   let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
@@ -258,5 +253,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 </script>
+    <footer>
+        <div id="footer-div">
+            <ul>
+                <li>Contatti</li>
+            </ul>
+        </div>
+    </footer>
 </body>
 </html>

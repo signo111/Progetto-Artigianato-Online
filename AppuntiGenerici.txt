@@ -1,0 +1,66 @@
+- per il collegamento al db locale creare un file .env del tipo:
+
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=lapassword
+DB_NAME=DBArtigianato
+DB_PORT=5432
+
+dopo aver creato un db locale in pgAdmin con queste credenziali
+
+
+
+- eseguire nel terminale:
+
+node Backend/popolamento_tabella_utenti.js 
+node Backend/popolamento_tabella_prodotti.js 
+node Backend/popolamento_tabella_ordini.js
+
+per popolare le tabelle
+
+
+- per attivare il server:
+
+node Backend\server.js
+
+installato modulo .env con:
+npm install dotenv
+
+Stripe:
+test@gmail.com
+4242424242424242
+12/34
+123
+Nome Test
+
+credenziali sito:
+nome: Samu1
+email: samu@gmail.com
+password: 54;:I4(Iv"E7
+
+credenziali sito:
+nome: admin
+email: admin@gmail.com
+password: fliX'84F7|R~
+
+
+controllare nuovo prodotto e modifica prodotto, il resto funziona. aggiungere immagini 
+alla query sql di prodotti, ripristinare la funzione dell'aggiunta di prodotti
+da non loggato che poi rimangono nel carrello da loggato
+
+---
+
+PROBLEMA FOOTER CART.HTML (RISOLTO):
+In cart.html il footer era sempre visibile e copriva il contenuto.
+CAUSA: La struttura HTML comprendeva header - main - footer come flex items diretti di body.
+Il main aveva overflow-y: auto per scrollare il contenuto interno, ma il footer rimava fisso come flex item di body,
+sovrapponendosi al contenuto scrollabile.
+SOLUZIONE: Spostare il footer DENTRO il main (come ultimo elemento), così che scorra insieme al contenuto.
+Aggiungere margin-top: 30px al footer per creare la distanza richiesta.
+HTML: header - main (contiene hero e footer) - niente sotto
+CSS: #cart-page main { overflow-y: auto }, #cart-page footer { flex-shrink: 0; margin-top: 30px }
+PATTERN: In layout scrollabile, gli elementi che devono scorrere insieme vanno nello stesso contenitore scrollabile.
+I flex items del contenitore scrollabile rimangono sempre visibili (fixed). Inserire gli elementi in ordine gerarchico corretto.
+
+
+Implementare aggiunta immagine profilo in modifica account

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="icon" href="images/logo.png" type="image/png">
     <meta charset="UTF-8">
@@ -7,15 +8,17 @@
     <title>Artigianato Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body id="register-page">
     <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
         <nav> <!-- Burger menu che si vede solo su mobile -->
             <button class="burger" id="menuCheckbox" aria-label="Apri menu" type="checkbox">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect y="5" class="burger-menu"/>
-                    <rect y="12.5" class="burger-menu"/>
-                    <rect y="20" class="burger-menu"/>
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true">
+                    <rect y="5" class="burger-menu" />
+                    <rect y="12.5" class="burger-menu" />
+                    <rect y="20" class="burger-menu" />
                 </svg>
             </button>
             <ul id="nav-list">
@@ -34,13 +37,13 @@
         if (localStorage.getItem("ruolo")) {
             navAuth.innerHTML = '<a href="#" id="logoutLink">Logout</a>';
             document.getElementById("logoutLink").addEventListener("click", (e) => {
-            e.preventDefault();
-            if (confirm("Sei sicuro di voler uscire?")) {
-                localStorage.removeItem("ruolo");
-                localStorage.removeItem("userId");
-                alert("Logout effettuato");
-                window.location.href = "index.html";
-            }
+                e.preventDefault();
+                if (confirm("Sei sicuro di voler uscire?")) {
+                    localStorage.removeItem("ruolo");
+                    localStorage.removeItem("userId");
+                    alert("Logout effettuato");
+                    window.location.href = "index.html";
+                }
             });
         } else {
             navAuth.innerHTML = '<a href="accedi.html">Accedi</a>';
@@ -49,105 +52,128 @@
         const burger = document.getElementById('menuCheckbox');
         const navList = document.getElementById('nav-list');
         // apertura
-        burger.onclick = function() {
+        burger.onclick = function () {
             navList.classList.toggle('open');
         };
         // chiusura
-        document.addEventListener('click', function(event) {
-        if (navList.classList.contains('open')) {
-            if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
-                navList.classList.remove('open');
+        document.addEventListener('click', function (event) {
+            if (navList.classList.contains('open')) {
+                if (!navList.contains(event.target) && event.target !== burger && !burger.contains(event.target)) {
+                    navList.classList.remove('open');
+                }
             }
-        }
-    });
-    </script>
-    <section class="hero">
-        <h1>Registrati al nostro sito</h1>
-        <form action="" method="">
-            <p>
-                <label for="username">Nome utente:</label>
-                <input type="text" id="username" name="username" required>
-            </p>
-            <p>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </p>
-            <p>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </p>
-                <p class="checkbox-container">
-        <input type="checkbox" id="artisan" name="artisan">
-        <label for="artisan">Sei un artigiano?</label>
-    </p>
-            <button type="submit">Registrati</button>
-        </form>
-        <p class="ActionButton"> hai già un account? </p>
-        <a href="login.html">Accedi ora</a>
-        <p class="ActionButton">Non sei interessato?</p>
-        <a href="index.html">Torna alla home</a>    
-</body>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    const form = document.querySelector("form");
-    form.addEventListener("submit", async function(e) {
-        e.preventDefault();
-        const username = document.getElementById("username").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const ruolo = document.getElementById("artisan").checked ? "artigiano" : "cliente";
-        // Controllo password sicura
-        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
-        if (!passwordRegex.test(password)) {
-            alert("La password deve contenere almeno 8 caratteri, una lettera maiuscola, un numero e un carattere speciale.");
-            return;
-        }
-        try {
-        const res = await fetch("http://localhost:3000/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password, ruolo })
         });
-        const data = await res.json();
-        console.log("Risposta backend:", data); // <-- Vedi la risposta in console
-        if (res.ok) {
-            console.log("ID ricevuto dal backend:", data.id);
-            localStorage.setItem("ruolo", ruolo);
-            localStorage.setItem("userId", data.id); 
-            alert(data.message || "Registrazione completata!");
-            // window.location.href = "index.html"; // Sblocca se vuoi reindirizzare
-            window.location.href = "index.html";
-        } else {
-            alert(data.error || "Errore di registrazione");
-        }
-        } catch (err) {
-        alert("Errore di rete o server");
-        console.error(err);
-        }
-    });
-    });
     </script>
+
+
+
+    <main>
+        <section class="hero">
+            <div id="div-reg">
+                <h1>Registrati al nostro sito</h1>
+                <form action="" method="">
+                    <p>
+                        <label for="username">Nome utente:</label>
+                        <input type="text" id="username" name="username" required>
+                    </p>
+                    <p>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </p>
+                    <p>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </p>
+                    <p class="checkbox-container">
+                        <input type="checkbox" id="artisan" name="artisan">
+                        <label for="artisan">Sei un artigiano?</label>
+                    </p>
+                    <button type="submit">Registrati</button>
+                </form>
+                <p class="ActionButton"> hai già un account? </p>
+                <a href="login.html">Accedi ora</a>
+                <p class="ActionButton">Non sei interessato?</p>
+                <a href="index.html">Torna alla home</a>
+            </div>
+
+
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div id="footer-div">
+            <ul id="ul-footer">
+                <li>Contatti</li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const ruolo = document.getElementById("artisan").checked ? "artigiano" : "cliente";
+            // Controllo password sicura
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert("La password deve contenere almeno 8 caratteri, una lettera maiuscola, un numero e un carattere speciale.");
+                return;
+            }
+            try {
+                const res = await fetch("http://localhost:3000/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, email, password, ruolo })
+                });
+                const data = await res.json();
+                console.log("Risposta backend:", data); // <-- Vedi la risposta in console
+                if (res.ok) {
+                    console.log("ID ricevuto dal backend:", data.id);
+                    localStorage.setItem("ruolo", ruolo);
+                    localStorage.setItem("userId", data.id);
+                    alert(data.message || "Registrazione completata!");
+                    // window.location.href = "index.html"; // Sblocca se vuoi reindirizzare
+                    window.location.href = "index.html";
+                } else {
+                    alert(data.error || "Errore di registrazione");
+                }
+            } catch (err) {
+                alert("Errore di rete o server");
+                console.error(err);
+            }
+        });
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const ruolo = localStorage.getItem('ruolo');
-    const navNuovo = document.getElementById('nav-nuovo');
-    const navModifica = document.getElementById('nav-modifica');
-    const navAcc = document.getElementById('nav-acc');
-    if (ruolo === 'artigiano') {
-        navNuovo.style.display = '';
-        navModifica.style.display = '';
-        navAcc.style.display = '';
-    } else if (ruolo === 'cliente') {
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = '';
-    } else {
-        // Nessun ruolo -> utente non loggato
-        navNuovo.style.display = 'none';
-        navModifica.style.display = 'none';
-        navAcc.style.display = 'none';
-    }
-});
+        const ruolo = localStorage.getItem('ruolo');
+        const navNuovo = document.getElementById('nav-nuovo');
+        const navModifica = document.getElementById('nav-modifica');
+        const navAcc = document.getElementById('nav-acc');
+        if (ruolo === 'artigiano') {
+            navNuovo.style.display = '';
+            navModifica.style.display = '';
+            navAcc.style.display = '';
+        } else if (ruolo === 'cliente') {
+            navNuovo.style.display = 'none';
+            navModifica.style.display = 'none';
+            navAcc.style.display = '';
+        } else {
+            // Nessun ruolo -> utente non loggato
+            navNuovo.style.display = 'none';
+            navModifica.style.display = 'none';
+            navAcc.style.display = 'none';
+        }
+    });
 </script>
+
 </body>
+
 </html>

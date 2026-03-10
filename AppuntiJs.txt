@@ -1,0 +1,67 @@
+## Spiegazione Discorsiva del File server.js
+
+Il file `server.js` rappresenta il cuore del backend dell'applicazione web "Artigianato Online", un e-commerce per prodotti artigianali. È scritto in Node.js utilizzando il framework Express.js e integra diverse tecnologie per gestire autenticazione, database, pagamenti e upload di file. Di seguito, una spiegazione dettagliata e discorsiva di tutti i componenti utilizzati, organizzata per sezioni logiche.
+
+### 1. **Importazione dei Moduli e Configurazione Iniziale**
+   - **Express.js**: Framework principale per costruire il server web. Permette di definire route, middleware e gestire richieste HTTP. Viene creato un'istanza `app` che rappresenta il server.
+   - **CORS (Cross-Origin Resource Sharing)**: Middleware che abilita richieste da domini diversi (es. frontend su localhost:5500 e backend su localhost:3000). Essenziale per applicazioni full-stack.
+   - **Database Client (da db.js)**: Modulo personalizzato che esporta un client PostgreSQL per interagire con il database. Utilizza `pg` per connessioni asincrone.
+   - **dotenv**: Carica variabili d'ambiente da un file `.env`, come chiavi API o credenziali database, per sicurezza.
+   - **bcrypt**: Libreria per hashing delle password. Trasforma password in hash irreversibili per storage sicuro.
+   - **Stripe**: Servizio di pagamento online. Inizializzato con chiave segreta di test per creare sessioni di checkout sicure.
+   - **Multer**: Middleware per gestire upload di file (immagini). Configurato per salvare file nella cartella `images` con nomi univoci basati su timestamp.
+   - **Path e FS (File System)**: Moduli built-in di Node.js. `path` gestisce percorsi file in modo cross-platform; `fs` permette lettura/scrittura/cancellazione file (es. gestione immagini).
+   - **EJS**: Motore di template per generare HTML dinamico lato server (sebbene qui sia importato solo parzialmente).
+
+   Questi moduli vengono configurati con middleware come `express.json()` per parsing JSON, `express.urlencoded()` per form, e `express.static()` per servire file statici (immagini, CSS, JS).
+
+### 2. **Route di Base e Servizio File Statici**
+   - **Route Radice (`/`)**: Serve `index.html` come homepage.
+   - **Servizio Statico**: Espone cartelle come `images` e la root del progetto, permettendo al frontend di accedere a risorse via URL.
+
+### 3. **Autenticazione Utente**
+   - **Login (`/api/login`)**: Verifica username e password. Usa bcrypt per confrontare hash. Restituisce ruolo e ID utente se valido.
+   - **Registrazione (`/api/register`)**: Crea nuovo utente dopo verifica email unica. Hasha password e assegna ruolo (cliente/artigiano).
+   - **Modifica Account (`/api/modifica-account`)**: Aggiorna username, email o password. Costruisce query dinamiche per aggiornare solo campi forniti.
+   - **Gestione Utenti Admin**: Endpoint per ottenere, aggiornare o eliminare utenti (escluso Admin). Utile per pannello amministratore.
+
+### 4. **Gestione Prodotti**
+   - **Recupero Prodotti (`/api/prodotti`)**: Query con JOIN per ottenere prodotti con nome artigiano. Restituisce lista completa.
+   - **Inserimento Prodotti**: Due endpoint (`/api/insert-product` e `/api/prodotti` con upload). Il secondo usa Multer per immagini, salva file e aggiorna database.
+   - **Modifica Prodotti (`/api/modifica-prodotto`)**: Verifica proprietà utente, costruisce update dinamico. Gestisce sostituzione immagini (cancella vecchie).
+   - **Aggiornamento/Eliminazione**: Endpoint PUT/DELETE per admin, con gestione immagini (cancellazione file fisici).
+
+### 5. **Carrello e Ordini**
+   - **Aggiunta al Carrello (`/api/add-to-cart`)**: Incrementa quantità se prodotto già presente, altrimenti inserisce nuovo.
+   - **Rimozione/Aggiornamento Carrello**: DELETE per rimuovere, PUT per cambiare quantità.
+   - **Recupero Carrello (`/api/cart/:id_utente`)**: JOIN con prodotti per dettagli completi.
+   - **Completamento Ordine (`/api/complete-order`)**: Calcola totale, aggiorna quantità prodotti, marca esauriti come non disponibili, crea ordine e svuota carrello.
+   - **Recupero Ordini (`/api/orders/:userId`)**: Restituisce ordini personali o tutti se admin.
+
+### 6. **Pagamenti con Stripe**
+   - **Sessione Checkout Multipla (`/create-checkout-session`)**: Crea sessione per carrello intero. Verifica utente, prepara line_items (prezzi in centesimi), reindirizza a URL Stripe.
+   - **Sessione Singola (`/create-checkout-session-single`)**: Per acquisti diretti di un prodotto.
+
+### 7. **Gestione File e Immagini**
+   - **Multer Storage**: Configurato per salvare immagini in `images/` con nomi timestampati per unicità.
+   - **Pulizia Immagini**: Durante update/cancellazione prodotti, elimina file fisici per risparmiare spazio.
+   - **Sequenza ID**: Riallinea sequenza PostgreSQL per ID prodotti dopo inserimenti.
+
+### 8. **Sicurezza e Best Practices**
+   - **Hashing Password**: bcrypt con salt rounds (10) per protezione.
+   - **Validazione Input**: Controlli su campi obbligatori, esistenza utenti/prodotti.
+   - **Gestione Errori**: Try-catch per query DB, logging errori, risposte JSON strutturate con codici HTTP appropriati (400, 401, 404, 500).
+   - **Parametrizzazione Query**: Usa placeholder ($1, $2) per prevenire SQL injection.
+   - **Middleware CORS**: Abilita comunicazione sicura tra frontend e backend.
+
+### 9. **Avvio Server**
+   - **app.listen(3000)**: Avvia server su porta 3000, pronto a ricevere richieste.
+
+### Considerazioni Architetturali
+- **Architettura RESTful**: Endpoint ben definiti per CRUD operations.
+- **Asincronia**: Uso di `async/await` per operazioni DB e Stripe, evitando callback hell.
+- **Scalabilità**: Separazione logica (autenticazione, prodotti, pagamenti), facilitando manutenzione.
+- **Integrazione Frontend**: Risposte JSON consumate da JavaScript lato client (fetch API).
+- **Database PostgreSQL**: Relazionale con tabelle per utenti, prodotti, carrello, ordini. JOIN per dati correlati.
+
+Questo server gestisce un flusso completo: registrazione/login, gestione prodotti, carrello, checkout sicuro e ordini, con attenzione a sicurezza, performance e user experience.
