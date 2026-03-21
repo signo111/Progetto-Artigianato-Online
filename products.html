@@ -7,7 +7,7 @@
   <title>Prodotti</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body id="products-page">
   <header>
     <div class="logo"><a href="index.html">Artigianato Online</a></div>
     <nav>
@@ -78,29 +78,34 @@
       }
     });
   </script>
-  <div class="container">
-    <div class="title">Esplora il catalogo</div>
-    <div class="search-bar">
-      <input type="text" id="search-input" placeholder="Cerca per nome prodotto..." />
+  <main id="main-products">
+    <video class="bg-video" autoplay muted loop playsinline aria-hidden="true">
+            <source src="videos/video2.mp4" type="video/mp4">
+    </video>
+    <div class="container">
+      <div class="title">Esplora il catalogo</div>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Cerca per nome prodotto..." />
+      </div>
+      <div class="filter-bar">
+        <label id="lab-filtra" for="category-filter">Filtra per categoria:</label>
+        <select id="category-filter" name="category-filter">
+          <option selected>---</option>
+          <option>Artigiano</option>
+          <option>Caricato di Recente</option>
+          <option>Prezzo più alto</option>
+          <option>Prezzo più basso</option>
+          <option>Disponibilità</option>
+          <option>Maggior quantità</option>
+          <option>Minore quantità</option>
+          <option>Nome A-Z</option>
+          <option>Nome Z-A</option>
+        </select>
+      </div>
+      <div class="listProduct"></div>
+      <div class="mess-ricerca"></div>
     </div>
-    <div class="filter-bar">
-      <label for="category-filter">Filtra per categoria:</label>
-      <select id="category-filter" name="category-filter">
-        <option selected>---</option>
-        <option>Artigiano</option>
-        <option>Caricato di Recente</option>
-        <option>Prezzo più alto</option>
-        <option>Prezzo più basso</option>
-        <option>Disponibilità</option>
-        <option>Maggior quantità</option>
-        <option>Minore quantità</option>
-        <option>Nome A-Z</option>
-        <option>Nome Z-A</option>
-      </select>
-    </div>
-    <div class="listProduct"></div>
-    <div class="mess-ricerca"></div>
-  </div>
+  </main>
   <script>
     let products = [];
     const listProduct = document.querySelector('.listProduct');
@@ -122,6 +127,8 @@
       if (productList.length === 0) {
         messRc.innerHTML = '<p style="text-align: center; font-size: 1.2em; color: #666; margin-top: 50px;">Nessun prodotto corrispondente <br> alla ricerca</p>';
         return;
+      }else{
+        messRc.innerHTML = '<p style="text-align: center; font-size: 1.2em; color: #666; margin-top: 50px;"></p>'
       }
       productList.forEach(product => {
         //il browser cercherà sempre le immagini nella cartella imagess
@@ -133,7 +140,9 @@
         newProduct.classList.add('item');
         newProduct.innerHTML = `
           <h2>${product.prodotto_name}</h2>
+          <br>
          <img src="${imgSrc}" alt="Immagine Prodotto">
+         <br> <br>
           <div class="item-details">
             <p><strong>Quantità:</strong> ${product.quantita}</p>
           <p><strong>Prezzo:</strong> ${product.prezzo} €</p>

@@ -29,7 +29,7 @@
       </ul>
     </nav>
   </header>
-  <main>
+  <main id="main-cart">
     <section class="hero">
       <div class="cart-container">
         <h2>Il tuo Carrello</h2>
@@ -39,14 +39,14 @@
         <button class="checkout-btn" onclick="checkout()">Procedi al pagamento</button>
       </div>
     </section>
-    <footer>
-        <div id="footer-div">
-            <ul>
-                <li>Contatti</li>
-            </ul>
-        </div>
-    </footer>
   </main>
+  <footer>
+      <div id="footer-div">
+          <ul>
+              <li>Contatti</li>
+          </ul>
+      </div>
+  </footer>
   <script>
     const burger = document.getElementById("menuCheckbox");
     const navList = document.getElementById("nav-list");
@@ -99,10 +99,15 @@
             <div class="cart-item">
               
               <div class="details">
-                <img src="${imgSrc}" alt="${item.name}" width="100">
-                <h3>${item.name}</h3>
-                <p>Prezzo: €${item.price}</p>
-                <p>Quantità: <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)" />
+                <div id="det-img">
+                  <img src="${imgSrc}" alt="${item.name}" width="100">
+                </div>
+                <div id="det-info">
+                  <h3>${item.name}</h3>
+                  <p>Prezzo: €${item.price}</p>
+                  <p>Quantità: <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)" />
+                </div>
+                
               </div>
               <div class="actions">
                 <button onclick="removeItem(${item.id})">Rimuovi</button>

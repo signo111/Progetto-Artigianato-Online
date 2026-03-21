@@ -1,3 +1,11 @@
+*{
+    overflow-x: hidden;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+
+}
+
 html, body{
     overflow-x: hidden;
     height: 100vh;
@@ -12,6 +20,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: #f9f9f9;
+
 }
 
 main {
@@ -38,7 +47,7 @@ footer {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 #cart-page footer {
@@ -48,15 +57,33 @@ footer {
 
 #body-index {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* fa crescere il body almeno quanto la finestra */
 }
 
+#body-index .hero {
+    height: auto;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0px;
+}
+
 #main-index {
-    flex: 1; /* il main occupa tutto lo spazio disponibile tra header e footer */
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: hidden;
+    min-height: 0;
+    width: 100%;
+    padding: 20px 0;
 }
 
 
@@ -64,12 +91,12 @@ footer {
 
 
 header {
-    display: inline-flex;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #f4f4f4;
-    border-bottom: 1px solid #ddd;
+    background-color: #2D1B0E;
+    border-bottom: 2px solid #D4A853;
     width: 100vw;
     min-width: 100%;
     box-sizing: border-box;
@@ -133,13 +160,13 @@ header {
         right: -250px;
         width: 220px;
         height: 100vh;
-        background: #fff;
+        background: #2D1B0E;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
         gap: 0;
         padding: 60px 20px 20px 20px;
-        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        box-shadow: -2px 0 10px rgba(0,0,0,0.3);
         transition: right 0.3s;
         z-index: 1001;
         display: flex;
@@ -156,12 +183,13 @@ header {
         width: 100%;
         display: block;
         padding: 10px 0;
-        color: #333;
+        color: #F5E6D3;
     }
 }
 .logo {
     font-size: 1.5em;
     font-weight: bold;
+    color: #F5E6D3;
 }
 nav ul {
     list-style: none;
@@ -175,30 +203,32 @@ nav ul li {
 }
 nav ul li a {
     text-decoration: none;
-    color: #333;
+    color: #F5E6D3;
     font-weight: bold;
 }
 nav ul li a:hover {
-    color: #007BFF;
+    color: #D4A853;
 }
 .hero {
     text-align: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    flex: 1;
+    padding: 10px 20px 10px 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 500px;
-    flex-shrink: 0;
+    margin: auto;
+    
 }
 #cart-page .hero {
     height: auto;
     flex-shrink: 1;
-    justify-content: flex-start;
-    padding-top: 30px;
 }
+
+main-cart{
+    flex: 1;
+
+}
+
 .hero h1 {
     font-size: 2.5em;
     margin-bottom: 20px;
@@ -225,12 +255,37 @@ a{
 
 /* lista prodotti*/
 .container {                
-    width: 900px;
-    max-width: 90vw;
+    width: 80%;
     margin: auto;
-    padding-top: 10px;
+    margin: 20px 150px;
     text-align: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 0px 20px;
 }
+
+.title{
+    color: #fff;
+}
+
+#lab-filtra{
+    color: #fff;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.edit-product::-webkit-scrollbar {
+    display: none;
+}
+
+#main-products::-webkit-scrollbar {
+    display: none;
+}
+
 .title {
     font-size: xx-large;
     padding: 20px 0;
@@ -247,7 +302,6 @@ a{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    margin-bottom: 40px;
 }
 .listProduct .item {
     background-color: #eeeee6;
@@ -672,7 +726,9 @@ form input[type="file"] {
     cursor: pointer;
 }
 .cart-container {
-    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
     margin: auto;
     padding-left: clamp(10px, 5%, 300px);
     padding-right: clamp(10px, 5%, 300px);
@@ -681,12 +737,154 @@ form input[type="file"] {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
+    max-height: calc(100vh - 180px);
+}
+
+#cart {
+    overflow-y: auto;
+    max-height: 45vh;
+    padding-right: 6px;
+}
+
+.edit-product{
+    flex: 1;
+    background: linear-gradient(180deg, #d9c1a0 0%, #b98f61 52%, #8e663f 100%);
+}
+
+/* Layout dedicato a modificaprodotto.html per evitare sovrapposizioni
+   con header/footer dovute agli stili globali della hero. */
+#edit-product-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#edit-product-page .edit-product {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 24px;
+}
+
+#edit-product-page .hero {
+    height: auto;
+    min-height: 0;
+    flex-shrink: 1;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 16px 40px rgba(77, 53, 30, 0.42);
+    padding: 28px;
+}
+
+#insert-product-page {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #d9c1a0 0%, #b98f61 52%, #8e663f 100%);
+}
+
+#insert-product-page .hero {
+    flex: 1;
+    width: 100%;
+    max-width: 900px;
+    margin: 24px auto;
+    text-align: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 16px 40px rgba(77, 53, 30, 0.12);
+    padding: 28px;
+    overflow: visible;
+}
+
+#insert-product-page form {
+    width: min(100%, 560px);
+    max-width: 560px;
+    overflow: visible;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+#insert-product-page form label {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+#insert-product-page form input,
+#insert-product-page form textarea,
+#insert-product-page form select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.lab-mod{
+    margin-bottom: 20px;
+}
+
+#insert-product-page,
+#insert-product-page .hero,
+#insert-product-page form {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#insert-product-page::-webkit-scrollbar,
+#insert-product-page .hero::-webkit-scrollbar,
+#insert-product-page form::-webkit-scrollbar {
+    display: none;
+}
+
+#account-page {
+    min-height: 100vh;
+    height: auto;
+    background: linear-gradient(180deg, #d9c1a0 0%, #b98f61 52%, #8e663f 100%);
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#account-page::-webkit-scrollbar {
+    display: none;
+}
+
+#edit-product-page form {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+#account-page .container {
+    width: min(100%, 1200px);
+    margin: 24px auto;
+    padding: 12px 24px;
+}
+
+#account-page .container,
+#account-page .tabella,
+#account-page .account {
+    background: rgba(255, 255, 255, 0.58);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: 0 14px 34px rgba(77, 53, 30, 0.11);
+    overflow: visible;
+    max-height: none;
 }
 
 #linea-cart{
-    width: 70%;
+    width: 100%;
     background-color: linear-gradient(transparent, #ddd, transparent);
+    margin: 10px auto;
 }
 
 
@@ -705,9 +903,21 @@ form input[type="file"] {
     border-radius: 10px;
 }
 .cart-item .details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     flex: 1;
-    padding-left: 15px;
+    gap: 20px
 }
+
+#det-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: left;
+}
+
 .cart-item .details h3 {
     margin: 0;
 }
@@ -862,8 +1072,7 @@ form input[type="file"] {
 #login-page, #register-page {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
 }
 
 #login-page header, #register-page header {
@@ -877,39 +1086,251 @@ form input[type="file"] {
 
 #login-page footer, #register-page footer {
     flex-shrink: 0;
-    margin-top: 30px;
+    margin-top: 0;
     width: 100%;
 }
 
 #login-page .hero, #register-page .hero {
-    /* make the hero area expand with its content instead of a fixed 500px height
-       and ensure form elements start below the header */
     height: auto;
-    flex-shrink: 1;
-    justify-content: flex-start;
-    padding-top: 60px; /* roughly the header height + a bit of breathing room */
-    margin-bottom: 20px;
+    min-height: 0;
+    width: 100%;
+    justify-content: center;
+    padding: 20px;
+    margin: 0;
 }
 
 #body-index .hero {
-    /* same as above for index page */
     height: auto;
-    flex-shrink: 1;
-    justify-content: flex-start;
-    padding-top: 60px;
-    margin-bottom: 20px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
 }
 
 /* remove any manual offsets on inner divs; the flexbox rules above handle
    placement so there is no need for an ugly #div-reg margin hack */
 
-#div-accedi{
-    margin-top: 100px;
+#main-accedi,
+#main-login,
+#main-register,
+#main-products {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0;
 }
 
-#hero-content{
-    padding-bottom: auto;
+#main-accedi .bg-video,
+#main-login .bg-video,
+#main-register .bg-video,
+#main-products .bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
 }
+
+#main-accedi::before,
+#main-login::before,
+#main-register::before,
+#main-products::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.38);
+    z-index: 1;
+    pointer-events: none;
+}
+
+#main-accedi .hero,
+#main-login .hero,
+#main-register .hero {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    width: 100%;
+    max-width: 900px;
+}
+
+#main-accedi .hero a,
+#main-login .hero a,
+#main-register .hero a{
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+#main-products .container {
+    position: relative;
+    z-index: 2;
+}
+
+.auth-panel,
+#div-accedi,
+#div-login,
+#div-reg {
+    height: auto;
+    padding: 30px 40px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    text-align: center;
+    max-width: 560px;
+    width: min(92vw, 560px);
+    max-height: 72vh;
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+
+}
+
+#div-accedi,
+#div-login,
+#div-reg {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.65) rgba(255, 255, 255, 0.14);
+}
+
+#div-accedi::-webkit-scrollbar,
+#div-login::-webkit-scrollbar,
+#div-reg::-webkit-scrollbar {
+    width: 8px;
+}
+
+#div-accedi::-webkit-scrollbar-track,
+#div-login::-webkit-scrollbar-track,
+#div-reg::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+}
+
+#username:hover, #email:hover, #password:hover, #artisan:hover, 
+#product-name:hover, #product-description:hover, #product-image:hover, 
+#product-price:hover, #quantity:hover{
+    background: rgba(100, 0, 20, 0.35);
+}
+
+#productForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#div-accedi::-webkit-scrollbar-thumb,
+#div-login::-webkit-scrollbar-thumb,
+#div-reg::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.58);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.button{
+    padding: 10px 0px;
+}
+
+#div-accedi::-webkit-scrollbar-thumb:hover,
+#div-login::-webkit-scrollbar-thumb:hover,
+#div-reg::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.82);
+}
+
+#main-accedi .auth-panel h1,
+#main-login .auth-panel h1,
+#main-register .auth-panel h1,
+#main-accedi .auth-panel p,
+#main-login .auth-panel p,
+#main-register .auth-panel p {
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+
+#login-page form,
+#register-page form {
+    background-color: rgba(18, 10, 6, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: none;
+}
+
+#login-page form label,
+#register-page form label {
+    color: #F5E6D3;
+}
+
+#login-page form input,
+#register-page form input {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+#main-index .bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#main-index::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* euivale a scrivere: top: 0; right: 0; bottom: 0; left: 0; */
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1;
+    pointer-events: none;
+}
+
+#main-index .hero {
+    position: relative;
+    z-index: 10;
+    color: #fff;
+    width: 100%;
+    max-width: 900px;
+}
+
+#main-index .hero a {
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+#products-page {
+    display: block;
+    min-height: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#products-page::-webkit-scrollbar {
+    display: none;
+}
+
+#main-products {
+    flex: 0 0 auto;
+    position: relative;
+}
+
+#products-page footer {
+    margin-top: 0;
+}
+
+#products-page .mess-ricerca {
+    margin: 12px auto;
+}
+
 
 
 /* Layout generale per login e register */
@@ -932,22 +1353,42 @@ form input[type="file"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #fff;
+    background-color: #1A0F06;
+    color: #F5E6D3;
     width: 100%;
     height: auto;
     padding: 15px 0;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-    flex-shrink: 0; /* non deve ridursi */
+    border-top: 2px solid #D4A853;
+    flex-shrink: 0;
+}
+
+#footer-div ul {
+    list-style: none;
+}
+
+#footer-div li,
+#footer-div a {
+    color: #F5E6D3;
 }
 
 .div-hero-main{
-    
-    padding-top: 8%;
+    padding: 30px 40px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    color: #fff;
+}
+
+.div-hero-main h1,
+.div-hero-main p {
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
 .div-hero-main2{
-    
-    padding-top: 8%;
+    padding: 10px 0px 10px 0px;
+    margin: auto;
 }
 
 .mess-ricerca{
@@ -960,4 +1401,23 @@ form input[type="file"] {
     text-align: center;
     font-size: 1.2em;
     color: #666;
+}
+
+.div-hero-main, .div-hero-main2{
+    animation: scroll-oriz 2s ease-out;
+}
+
+.div-hero-main p, .div-hero-main2 p{
+    font-style: italic;
+}
+
+@keyframes scroll-oriz{
+    0%{
+        transform: translateX(300px);
+        opacity: 0.5;
+    }
+    100%{
+        transform: translateX(0px);
+        opacity: 1;
+    }
 }

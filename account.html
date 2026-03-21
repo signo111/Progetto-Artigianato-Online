@@ -1,11 +1,12 @@
 <html>
-   <head>
+  <head>
     <link rel="icon" href="images/logo.png" type="image/png">
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Informazioni account</title>
       <link rel="stylesheet" href="style.css">
     </head>
+  <body id="account-page">
     <header>
         <div class="logo"><a href="index.html">Artigianato Online</a></div>
         <nav> <!-- Burger menu che si vede solo su mobile -->
@@ -68,7 +69,6 @@
       document.getElementById("nav-modifica").style.display = "none";
     }
     </script>
-  <body>
    <div class="container">
       <div class="title">Informazioni account</div>
       <div class="account">
@@ -106,7 +106,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
  <script>
   document.addEventListener("DOMContentLoaded", function () {
     const userId = localStorage.getItem("userId");

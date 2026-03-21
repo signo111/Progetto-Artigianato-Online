@@ -67,9 +67,12 @@
 
 
 
-    <main>
+    <main id="main-register">
+        <video class="bg-video" autoplay muted loop playsinline aria-hidden="true">
+            <source src="videos/video_artigianato.mp4" type="video/mp4">
+        </video>
         <section class="hero">
-            <div id="div-reg">
+            <div id="div-reg" class="auth-panel">
                 <h1>Registrati al nostro sito</h1>
                 <form action="" method="">
                     <p>
@@ -88,10 +91,11 @@
                         <input type="checkbox" id="artisan" name="artisan">
                         <label for="artisan">Sei un artigiano?</label>
                     </p>
-                    <button type="submit">Registrati</button>
+                    <button class="button" type="submit">Registrati</button>
                 </form>
                 <p class="ActionButton"> hai già un account? </p>
                 <a href="login.html">Accedi ora</a>
+                <br> <br>
                 <p class="ActionButton">Non sei interessato?</p>
                 <a href="index.html">Torna alla home</a>
             </div>

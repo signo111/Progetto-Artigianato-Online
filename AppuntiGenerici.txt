@@ -64,3 +64,6 @@ I flex items del contenitore scrollabile rimangono sempre visibili (fixed). Inse
 
 
 Implementare aggiunta immagine profilo in modifica account
+
+
+sistemare la pagina account.html
